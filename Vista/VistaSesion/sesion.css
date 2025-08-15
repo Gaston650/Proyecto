@@ -1,0 +1,252 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&family=Tiny5&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+
+body {
+  background-color: #fff;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.contenedor {
+  display: flex;
+  width: 90%;
+  max-width: 1200px;
+  height: 90vh;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.formulario {
+  flex: 1;
+  padding: 40px;
+  background-color: white;
+}
+
+.formulario h1 {
+  font-family: 'Georgia', serif;
+  font-size: 36px;
+  margin-bottom: 30px;
+}
+
+.formulario input[type="email"],
+.formulario input[type="password"] {
+  width: 100%;
+  padding: 15px;
+  margin: 10px 0 20px 0;
+  border-radius: 25px;
+  border: 2px solid #333;
+  outline: none;
+}
+
+.formulario form label{
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+}
+
+.fila {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.olvido {
+  color: black;
+  text-decoration: none;
+}
+
+.botones {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.btn {
+  flex: 1;
+  padding: 12px;
+  text-align: center;
+  background-color: #000;
+  color: white;
+  border-radius: 25px;
+  font-weight: bold;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+  display: inline-block;
+  font-size: 14px;
+}
+
+
+.btn:hover {
+  background-color: #333;
+}
+
+.conecta {
+  text-align: center;
+  font-size: 14px;
+  margin: 20px 0 10px;
+}
+
+.redes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.red {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  border: 2px solid #ccc;
+  border-radius: 25px;
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.red:hover {
+  background-color: #f1f1f1;
+}
+
+.imagen {
+  flex: 1;
+  background-image: url('https://colombia.unir.net/wp-content/uploads/sites/4/2021/08/developing-programmer-development-website-design-and-coding-picture-id1299719315.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.input-con-ico {
+  position: relative;
+  width: 100%;
+}
+
+.input-con-ico input[type="password"],
+.input-con-ico input[type="text"] {
+  width: 100%;
+  display: flex;
+  padding-right: 40px; 
+  box-sizing: border-box;
+  padding: 15px;
+  margin: 10px 0 20px 0;
+  border-radius: 25px;
+  border: 2px solid #333;
+  outline: none;
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+}
+
+.icono-ojo {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+  font-size: 22px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Estilos para los radio buttons de tipo de usuario */
+.tipo-usuario label {
+  display: inline-flex;
+  align-items: center;
+  background: #f3f6fa;
+  border-radius: 20px;
+  padding: 8px 18px;
+  margin-right: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+  border: 1px solid #e0e6ed;
+}
+
+.tipo-usuario label:hover {
+  background: #e0e6ed;
+}
+
+.tipo-usuario input[type="radio"] {
+  accent-color: #2d89ef;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+    height: auto;
+    padding: 1rem;
+  }
+
+  .contenedor {
+    flex-direction: column;
+    height: auto;
+    width: 100%;
+    box-shadow: none;
+  }
+
+  .imagen {
+    display: none; /* Oculta imagen lateral en dispositivos móviles */
+  }
+
+  .formulario {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .formulario h1 {
+    font-size: 28px;
+    text-align: center;
+  }
+
+  .tipo-usuario {
+    justify-content: center;
+    text-align: center;
+    flex-wrap: wrap;
+  }
+
+  .tipo-usuario label {
+    margin: 6px;
+  }
+
+  .botones {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .conecta,
+  .login,
+  .fila {
+    text-align: center;
+  }
+
+  .redes {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .red {
+    width: 100%;
+    max-width: 300px;
+    justify-content: center;
+  }
+}
+
