@@ -1,5 +1,4 @@
 <?php
-
 require_once __DIR__ . '/../conexion.php';
 
 class empresaModelo {
@@ -14,43 +13,51 @@ class empresaModelo {
         }
     }
 
-    public function insertarEmpresa($nombre, $email, $zona, $logo, $rut, $password, $telefono) {
-        // Insertar empresa (sin teléfono)
-        $sql = "INSERT INTO empresas_proveedor 
-            (nombre_empresa, email_empresa, zona_cobertura, logo, rut, contraseña) 
-            VALUES (?, ?, ?, ?, ?, ?)";
-        $stmt = $this->conexion->prepare($sql);
+    // Insertar empresa (sin el teléfono)
+    public function insertarEmpresa($nombre, $email, $logo, $password, $rut) {
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT); // encriptamos la contraseña
 
+        $sql = "INSERT INTO empresas_proveedor (nombre_empresa, email_empresa, logo, contraseña, rut) 
+                VALUES (?, ?, ?, ?, ?)";
+        $stmt = $this->conexion->prepare($sql);
         if (!$stmt) {
             die("Error al preparar consulta: " . $this->conexion->error);
         }
-
-        $stmt->bind_param("ssssss", $nombre, $email, $zona, $logo, $rut, $password);
-
-        $result = $stmt->execute();
-
-        // Obtener el id_empresa recién insertado
-        $id_empresa = $this->conexion->insert_id;
-
-        $stmt->close();
-
-        // Insertar teléfono en la tabla telefono_empresa
-        if ($result && $id_empresa) {
-            $sqlTel = "INSERT INTO telefono_empresa (id_empresa, telefono) VALUES (?, ?)";
-            $stmtTel = $this->conexion->prepare($sqlTel);
-
-            if (!$stmtTel) {
-                die("Error al preparar consulta de teléfono: " . $this->conexion->error);
-            }
-
-            $stmtTel->bind_param("is", $id_empresa, $telefono);
-            $resultTel = $stmtTel->execute();
-            $stmtTel->close();
-
-            return $resultTel;
+        $stmt->bind_param("sssss", $nombre, $email, $logo, $hashedPassword, $rut);
+        if ($stmt->execute()) {
+            $id_empresa = $stmt->insert_id;
+            $stmt->close();
+            return $id_empresa;
         }
-
+        $stmt->close();
         return false;
+    }
+
+    // Insertar teléfono de empresa
+    public function insertarTelefono($id_empresa, $telefono) {
+        $sql = "INSERT INTO telefono_empresa (id_empresa, telefono) VALUES (?, ?)";
+        $stmt = $this->conexion->prepare($sql);
+        if (!$stmt) {
+            die("Error al preparar consulta insertarTelefono: " . $this->conexion->error);
+        }
+        $stmt->bind_param("is", $id_empresa, $telefono);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    // Obtener empresa por email
+    public function obtenerEmpresa($email) {
+        $sql = "SELECT id_empresa, nombre_empresa, contraseña, logo FROM empresas_proveedor WHERE email_empresa = ?";
+        $stmt = $this->conexion->prepare($sql);
+        if (!$stmt) {
+            die("Error al preparar consulta: " . $this->conexion->error);
+        }
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $empresa = $result->fetch_assoc();
+        $stmt->close();
+        return $empresa ?: false;
     }
 }
 ?>

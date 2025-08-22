@@ -9,6 +9,17 @@ class empresaControlador {
     }
 
     public function guardarEmpresa($nombre, $email, $zona, $logo, $rut, $password, $telefono) {
-        return $this->modelo->insertarEmpresa($nombre, $email, $zona, $logo, $rut, $password, $telefono);
+        // Insertar la empresa (sin el teléfono)
+        $id_empresa = $this->modelo->insertarEmpresa($nombre, $email, $logo, $password, $rut);
+        
+        if ($id_empresa) {
+            // Insertar el teléfono en la tabla telefono_empresa
+            $this->modelo->insertarTelefono($id_empresa, $telefono);
+            return true;
+        }
+
+        return false;
     }
 }
+?>
+
