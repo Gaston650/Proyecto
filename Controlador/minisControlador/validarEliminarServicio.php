@@ -23,4 +23,5 @@ if (isset($_POST['id_servicio'])) {
     header("Location: ../../Vista/VistaServicios/serviciosEmpresa.php");
     exit();
 }
+echo "prueba";
 ?>
