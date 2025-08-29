@@ -1,9 +1,19 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 class controladorCerrarSesion {
     public function cerrar() {
-        session_start();
-        session_unset();
+        // Limpiamos todas las variables de sesión
+        $_SESSION = [];
+
+        // Destruimos la sesión
         session_destroy();
-        return true;
+
+        // Redirigimos al inicio de sesión
+        header("Location: ../index.php.");
+        exit();
     }
 }
+?>

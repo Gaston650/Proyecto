@@ -1,8 +1,14 @@
 <?php
 session_start();
+require_once __DIR__ . '/../../Controlador/superControlador/superControlador.php';
+
 $img = (isset($_SESSION['user_image']) && !empty($_SESSION['user_image']))
     ? $_SESSION['user_image']
-    : 'perfil-vacio.png';
+    : '../../IMG/perfil-vacio.png';
+
+$perfilWrapper = new perfilControladorWrapper();
+$perfil = $perfilWrapper->obtenerPerfil($_SESSION['user_id']) ?? [];
+$metodoPagoActual = $perfilWrapper->obtenerMetodoPago($_SESSION['user_id']) ?? 'tarjeta';
 ?>
 
 <!DOCTYPE html>
@@ -10,61 +16,71 @@ $img = (isset($_SESSION['user_image']) && !empty($_SESSION['user_image']))
 <head>
   <meta charset="UTF-8">
   <title>Editar Perfil - Cliente</title>
-    <link rel="stylesheet" href="editarPerfil.css">
+  <link rel="stylesheet" href="editarPerfil.css">
 </head>
 <body>
 
   <div class="container">
     <h2>Editar Perfil</h2>
 
-    <form action="editarPerfilCliente.php" method="POST">
+    <?php if (isset($_GET['exito'])): ?>
+      <div class="mensaje-exito">
+        Tus cambios se guardaron correctamente.
+      </div>
+    <?php elseif (isset($_GET['error'])): ?>
+      <div class="mensaje-error">
+        <?php echo htmlspecialchars($_GET['error']); ?>
+      </div>
+    <?php endif; ?>
+
+    <form action="../../Controlador/minisControlador/validarEditarPerfil.php" method="POST" enctype="multipart/form-data">
       
       <!-- Imagen de perfil -->
-    <div class="profile-pic">
+      <div class="profile-pic">
         <img src="<?php echo htmlspecialchars($img); ?>" alt="Foto de perfil">
         <input type="file" name="imagenPerfil" accept="image/*">
-    </div>
+      </div>
 
       <!-- Nombre -->
       <div class="form-group">
         <label for="nombre">Nombre completo</label>
-        <input type="text" id="nombre" name="nombre">
+        <input type="text" id="nombre" name="nombre"
+          value="<?php echo isset($_SESSION['user_nombre']) ? htmlspecialchars($_SESSION['user_nombre']) : ''; ?>">
       </div>
 
-     <!-- Email -->
-    <div class="form-group">
-        <label for="email">Correo electrónico</label>
-        <input type="email" id="email" name="email" value="<?php echo isset($_SESSION['user_email']) ? htmlspecialchars($_SESSION['user_email']) : ''; ?>" disabled>
-    </div>
-
-      <!-- Teléfono -->
+      <!-- Email (no editable) -->
       <div class="form-group">
-        <label for="telefono">Teléfono</label>
-        <input type="text" id="telefono" name="telefono">
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" name="email" 
+          value="<?php echo isset($_SESSION['user_email']) ? htmlspecialchars($_SESSION['user_email']) : ''; ?>" 
+          disabled>
       </div>
 
       <!-- Dirección -->
       <div class="form-group">
         <label for="direccion">Dirección</label>
-        <textarea id="direccion" name="direccion" rows="2"></textarea>
+        <textarea id="direccion" name="direccion" rows="2"><?php echo htmlspecialchars($perfil['direccion'] ?? ''); ?></textarea>
       </div>
 
-      <!-- Preferencias -->
+      <!-- Ciudad -->
       <div class="form-group">
-        <label>Notificaciones</label>
-        <div class="checkbox-group">
-          <input type="checkbox" id="notif-email" name="notif_email" checked>
-          <label for="notif-email">Recibir notificaciones por correo</label>
-        </div>
+        <label for="ciudad">Ciudad</label>
+        <input type="text" id="ciudad" name="ciudad" value="<?php echo htmlspecialchars($perfil['ciudad'] ?? ''); ?>">
+      </div>
+
+      <!-- Biografía -->
+      <div class="form-group">
+        <label for="biografia">Biografía</label>
+        <textarea id="biografia" name="biografia" rows="4"><?php echo htmlspecialchars($perfil['biografia'] ?? ''); ?></textarea>
       </div>
 
       <!-- Método de pago -->
       <div class="form-group">
         <label for="metodo_pago">Método de pago predeterminado</label>
         <select id="metodo_pago" name="metodo_pago">
-          <option value="tarjeta" selected>Tarjeta</option>
-          <option value="efectivo">Efectivo</option>
-          <option value="paypal">PayPal</option>
+          <option value="tarjeta" <?php echo ($metodoPagoActual == 'tarjeta') ? 'selected' : ''; ?>>Tarjeta</option>
+          <option value="efectivo" <?php echo ($metodoPagoActual == 'efectivo') ? 'selected' : ''; ?>>Efectivo</option>
+          <option value="paypal" <?php echo ($metodoPagoActual == 'paypal') ? 'selected' : ''; ?>>PayPal</option>
         </select>
       </div>
 
@@ -82,8 +98,9 @@ $img = (isset($_SESSION['user_image']) && !empty($_SESSION['user_image']))
 
     </form>
 
-     <div class="volver-inicio">
+    <div class="volver-inicio">
       <a href="../VistaPrincipal/home.php" class="btn-volver">Volver al inicio</a>
+      <a href="../../Controlador/cerrar_sesion.php" class="btn-cerrar-sesion">Cerrar Sesión</a>
     </div>
   </div>
 

@@ -10,7 +10,7 @@ class usuario2Modelo {
     }
 
     public function obtenerUsuario($email){
-        $sql = "SELECT id_usuario AS id, nombre, contraseña, 'cliente' AS tipo FROM usuario WHERE email = ?";
+        $sql = "SELECT id_usuario AS id, nombre, contraseña, 'cliente' AS tipo FROM usuarios WHERE email = ?";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -20,15 +20,35 @@ class usuario2Modelo {
         return $usuario ?: false;
     }
 
-    public function obtenerEmpresa($email){
-        $sql = "SELECT id_empresa AS id, nombre_empresa AS nombre, contraseña, 'empresa' AS tipo FROM empresas_proveedor WHERE email_empresa = ?";
+    public function insertarUsuario($nombre, $email, $password) {
+        $sql = "INSERT INTO usuarios (nombre, email, contraseña) VALUES (?, ?, ?)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("s", $email);
+        if (!$stmt) {
+            return ['exito' => false, 'error' => $this->conn->error];
+        }
+        $hashed = password_hash($password, PASSWORD_DEFAULT);
+        $stmt->bind_param("sss", $nombre, $email, $hashed);
+        $ejec = $stmt->execute();
+        if ($ejec) {
+            $stmt->close();
+            return ['exito' => true];
+        } else {
+            $error = $stmt->error;
+            $stmt->close();
+            return ['exito' => false, 'error' => $error];
+        }
+    }
+
+    public function registrarUsuarioGoogle($nombre, $email) {
+        $sql = "INSERT INTO usuarios (nombre, email) VALUES (?, ?)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ss", $nombre, $email);
         $stmt->execute();
-        $result = $stmt->get_result();
-        $empresa = $result->fetch_assoc();
         $stmt->close();
-        return $empresa ?: false;
+    }
+
+    public function buscarPorEmail($email) {
+        return $this->obtenerUsuario($email);
     }
 }
 ?>
