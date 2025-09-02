@@ -6,105 +6,59 @@
     padding: 0;
 }
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f0f4f8;
-    color: #333;
-    margin: 0;
-    height: 100vh;
+body{
+    overflow-x: hidden;
+    font-family: "Montserrat", sans-serif;
 }
 
 
-nav {
+
+nav{
     width: 100%;
-    background-color: #0077cc;
-    color: white;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between;  
     align-items: center;
     padding: 15px 30px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    position: fixed;
     top: 0;
     left: 0;
     z-index: 1000;
+    
 }
 
-nav h1 {
-    font-size: 1.3rem;
-    font-weight: 600;
+.nav-links{
+    display: flex;
 }
 
-nav form {
+/* Agrega o reemplaza estas reglas en tu home.css */
+
+.nav-links ul {
+    display: flex;
+    gap: 10px; /* Espacio entre los links, ajusta a gusto */
+    list-style: none;
     margin: 0;
+    padding: 0;
 }
 
-nav button {
-    background-color: #005fa3;
-    border: none;
-    color: white;
-    padding: 8px 18px;
-    border-radius: 6px;
-    cursor: pointer;
+nav .nav-links a {
+    text-decoration: none;
+    padding: 1rem;
+    color: black;
     font-size: 1rem;
-    transition: background-color 0.3s ease;
 }
 
-nav button:hover {
-    background-color: #004880;
+nav .nav-links a:hover {
+    color: #007bff;
 }
 
 
-.main-content {
-    padding: 80px 30px 30px; 
-    max-width: 700px;
-    margin: auto;
-    text-align: center;
+nav .nav-links ul li{
+    list-style: none;
 }
 
-@media (max-width: 600px) {
-    nav {
-        flex-direction: column;
-        align-items: center;
-        padding: 15px 20px;
-        gap: 10px;
-    }
-    nav h1 {
-        font-size: 1.1rem;
-        text-align: center;
-    }
-    nav form {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-    }
-    nav button {
-        width: 100%;
-        max-width: 200px;
-        padding: 10px 0;
-        font-size: 1.1rem;
-    }
-}
-
-.main-content {
-    padding: 80px 30px 30px; 
-    max-width: 700px;
-    margin: auto;
-    text-align: center;
-}
-
-.logo-empresa {
-    margin: 20px auto;
-    max-width: 300px;
-    max-height: 150px;
-}
-
-.logo-empresa img {
-    max-width: 100%;
-    max-height: 150px;
-    object-fit: contain;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+.nav-links a.active {
+    border-bottom: 3px solid #007bff;
+    color: #007bff;
+    font-weight: 600;
 }
 
 .foto-perfil {
@@ -115,9 +69,334 @@ nav button:hover {
     background-repeat: no-repeat;
     border-radius: 50%;
     box-shadow: 0 0 5px rgba(0,0,0,0.3); 
-    margin-right: 10px;          
+    margin-right: 10px;
+    transition: transform 0.3s ease;
+              
 }
 .foto-perfil:hover {
   transform: scale(1.1);
+}
+
+    
+.usuario-info {
+    display: flex;
+    align-items: center;
+}
+
+
+.nombre-usuario {
+    font-size: 1rem;
+    color: black;
+    margin-left: 8px; 
+}
+
+
+.hero {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 60px 30px;
+    border-radius: 0;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    margin: 40px 0 0 0;
+    width: 100vw;
+    max-width: 100vw;
+    text-align: center;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    transform: translateX(-50%);
+}
+
+.hero h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #22223b;
+    margin-bottom: 18px;
+    letter-spacing: 1px;
+}
+
+.hero p {
+    font-size: 1.15rem;
+    color: #4a4e69;
+    line-height: 1.7;
+    margin: 0 auto;
+    max-width: 600px;
+}
+
+.sobre-nosotros {
+    padding: 60px 40px;
+    background: #f9f9f9;
+}
+
+.sobre-nosotros .contenedor {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.sobre-nosotros .texto {
+    flex: 1;
+    text-align: left;
+}
+
+.sobre-nosotros .texto h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #222;
+}
+
+.sobre-nosotros .texto p {
+    font-size: 1.1rem;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.sobre-nosotros .imagen {
+    flex: 1;
+    text-align: right;
+}
+
+.sobre-nosotros .imagen img {
+    max-width: 100%;
+    height: auto;
+}
+
+.valores {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    padding: 60px 10%;
+}
+
+.titulo-valores {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 32px;
+    color: #22223b;
+    font-weight: 700;
+}
+
+.valor {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.valor.invertido {
+    flex-direction: row-reverse;
+}
+
+.valor .texto {
+    flex: 1;
+}
+
+.valor .texto h2 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: #222;
+}
+
+.valor .texto p {
+    font-size: 1.1rem;
+    color: #555;
+    line-height: 1.6;
+}
+
+.valor .imagen {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.valor .imagen img {
+    max-width: 350px;
+    height: auto;
+}
+
+.contacto-rapido {
+    background: linear-gradient(120deg, #f5f7fa 0%, #e9ecef 100%);
+    padding: 60px 0 70px 0;
+    text-align: center;
+}
+
+.contacto-rapido h2 {
+    font-size: 2rem;
+    color: #22223b;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.contacto-rapido p {
+    color: #4a4e69;
+    margin-bottom: 28px;
+    font-size: 1.1rem;
+}
+
+.contacto-rapido form {
+    max-width: 500px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 32px 28px 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.form-row input,
+.form-row textarea {
+    flex: 1 1 100%;
+}
+
+.contacto-rapido input,
+.contacto-rapido textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: #f9fafb;
+    transition: border 0.2s;
+    resize: none;
+}
+
+.contacto-rapido input:focus,
+.contacto-rapido textarea:focus {
+    border: 1.5px solid #007bff;
+    outline: none;
+    background: #fff;
+}
+
+.contacto-rapido textarea {
+    min-height: 90px;
+    max-height: 200px;
+}
+
+.contacto-rapido button {
+    background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
+    color: #fff;
+    border: none;
+    padding: 14px 0;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(0,123,255,0.08);
+}
+
+.contacto-rapido button:hover {
+    background: linear-gradient(90deg, #0056b3 0%, #007bff 100%);
+    box-shadow: 0 4px 16px rgba(0,123,255,0.13);
+}
+
+.footer {
+    background: #22223b;
+    color: #fff;
+    padding: 40px 0 20px 0;
+    margin-top: 0;
+}
+
+.footer-contenido {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;
+    padding: 0 30px;
+}
+
+.footer-info {
+    flex: 1 1 300px;
+}
+
+.footer-info h3 {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.footer-info p {
+    color: #d1d5db;
+    font-size: 1rem;
+    margin-bottom: 8px;
+}
+
+.footer-links {
+    flex: 1 1 200px;
+    text-align: center;
+}
+
+.footer-links h4 {
+    color: #fff;
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+    font-weight: 600;
+}
+
+.footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links ul li {
+    margin-bottom: 8px;
+}
+
+.footer-links ul li a {
+    color: #d1d5db;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.2s;
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+}
+
+.footer-links ul li a:hover {
+    color: #007bff;
+}
+
+.footer-instagram {
+    flex: 1 1 300px;
+    text-align: center;
+}
+
+.footer-instagram h4 {
+    color: #fff;
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+    font-weight: 600;
+}
+
+.instagram-logos {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+}
+
+.instagram-logos a img {
+    width: 38px;
+    height: 38px;
+    filter: invert(48%) sepia(98%) saturate(7499%) hue-rotate(316deg) brightness(97%) contrast(101%);
+    transition: transform 0.2s, filter 0.2s;
+}
+
+.instagram-logos a:hover img {
+    transform: scale(1.15) rotate(-8deg);
+    filter: invert(18%) sepia(98%) saturate(7499%) hue-rotate(316deg) brightness(97%) contrast(101%);
 }
 

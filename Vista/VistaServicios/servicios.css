@@ -1,0 +1,337 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&family=Tiny5&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Montserrat", sans-serif;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;  
+    align-items: center;
+    padding: 15px 30px;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.nav-links {
+    display: flex;
+}
+
+nav .nav-links a {
+    text-decoration: none;
+    padding: 1rem;
+    color: black;
+    font-size: 1rem;
+}
+
+nav .nav-links a:hover {
+    color: #007bff;
+}
+
+.nav-links ul {
+    display: flex;
+    gap: 10px; 
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav .nav-links ul li {
+    list-style: none;
+}
+
+.nav-links a.active {
+    border-bottom: 3px solid #007bff;
+    color: #007bff;
+    font-weight: 600;
+}
+
+.foto-perfil {
+    width: 45px;
+    height: 45px;
+    background-size: cover;       
+    background-position: center;  
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3); 
+    margin-right: 10px;
+}
+.foto-perfil:hover {
+    transform: scale(1.1);
+}
+
+.usuario-info {
+    display: flex;
+    align-items: center;
+}
+
+.nombre-usuario {
+    font-size: 1rem;
+    color: black;
+    margin-left: 8px; 
+}
+
+.notificaciones {
+    position: relative;
+    margin-left: 20px;
+    display: inline-block;
+}
+
+.notificaciones .notifications-outline {
+    font-size: 2.5rem;
+    cursor: pointer;
+}
+
+.notificaciones .contador {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 3px 6px;
+}
+
+.titulo-servicios {
+    text-align: center;
+    font-size: 2rem;
+    margin: 20px 0 10px;
+}
+
+.subtitulo-servicios {
+    text-align: center;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.servicios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.servicio-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.servicio-card:hover {
+    transform: translateY(-5px);
+}
+
+.servicio-img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Botones juntos */
+.servicio-botones {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Estilo unificado para ambos botones */
+.btn-contratar,
+.btn-favorito {
+    display: inline-block;
+    text-decoration: none; 
+    border: none;
+    padding: 10px 20px; /* mismo tamaño */
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    text-align: center;
+    font-size: 1rem;
+    transition: background 0.2s, transform 0.1s;
+}
+
+/* Contratar */
+.btn-contratar {
+    background: #1e90ff;
+    color: white;
+}
+.btn-contratar:hover {
+    background: #1c7ed6;
+}
+
+/* Favorito */
+.btn-favorito {
+    background: #e98c22;
+    color: white;
+}
+.btn-favorito:hover {
+    background: #d1781d; 
+    color: #fff;
+}
+
+/* Modal */
+.modal {
+    display: none; 
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6); 
+    transition: all 0.3s ease;
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 30px 25px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    position: relative;
+    animation: modalFade 0.3s ease;
+}
+
+@keyframes modalFade {
+    from {opacity: 0; transform: translateY(-50px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+.close {
+    color: #aaa;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+}
+
+.modal-content h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+}
+
+#form-contratar {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#form-contratar label {
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+#form-contratar input[type="date"],
+#form-contratar input[type="time"],
+#form-contratar textarea {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    width: 100%;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+#form-contratar input[type="date"]:focus,
+#form-contratar input[type="time"]:focus,
+#form-contratar textarea:focus {
+    border-color: #1e90ff;
+    box-shadow: 0 0 5px rgba(30,144,255,0.4);
+    outline: none;
+}
+
+#form-contratar textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+#form-contratar .btn-contratar {
+    background-color: #1e90ff;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background 0.2s, transform 0.1s;
+}
+
+#form-contratar .btn-contratar:hover {
+    background-color: #1c7ed6;
+    transform: translateY(-2px);
+}
+
+/* ============================
+   ESTILO FILTROS
+============================ */
+.filtros {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 25px;
+    padding: 0 10px;
+}
+
+.filtros input,
+.filtros select {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 0.95rem;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+.filtros input:focus,
+.filtros select:focus {
+    border-color: #1e90ff;
+    box-shadow: 0 0 5px rgba(30,144,255,0.4);
+    outline: none;
+}
+
+.filtros button {
+    padding: 10px 20px;
+    background: #1e90ff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.filtros button:hover {
+    background: #1c7ed6;
+    transform: translateY(-2px);
+}

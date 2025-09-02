@@ -1,0 +1,244 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&family=Tiny5&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Montserrat", sans-serif;
+}
+
+body{
+    overflow-x: hidden;
+    background-color: #f9f9f9;
+}
+
+nav{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;  
+    align-items: center;
+    padding: 15px 30px;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.nav-links{
+    display: flex;
+}
+
+nav .nav-links a {
+    text-decoration: none;
+    padding: 1rem;
+    color: black;
+    font-size: 1rem;
+}
+
+nav .nav-links a:hover {
+    color: #007bff;
+}
+
+.nav-links ul {
+    display: flex;
+    gap: 10px; 
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links a.active {
+    border-bottom: 3px solid #007bff;
+    color: #007bff;
+    font-weight: 600;
+}
+
+.foto-perfil {
+    width: 45px;
+    height: 45px;
+    background-size: cover;       
+    background-position: center;  
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3); 
+    margin-right: 10px;
+    transition: transform 0.2s ease;
+}
+
+.foto-perfil:hover {
+    transform: scale(1.1);
+}
+
+.usuario-info {
+    display: flex;
+    align-items: center;
+}
+
+.nombre-usuario {
+    font-size: 1rem;
+    color: black;
+    margin-left: 8px; 
+}
+
+main {
+    padding: 20px;
+}
+
+.titulo {
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.subtitulo {
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.filtros {
+    margin-bottom: 15px;
+}
+
+.filtro-estado {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Tabla de historial */
+.tabla-historial {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+}
+
+.tabla-historial th, .tabla-historial td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.tabla-historial th {
+    background: #2c3e50;
+    color: white;
+}
+
+.estado {
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-weight: bold;
+    text-transform: capitalize;
+    color: #fff;
+}
+
+.estado.pendiente { background-color: #f39c12; }
+.estado.confirmada { background-color: #3498db; }
+.estado.cancelada { background-color: #e74c3c; }
+.estado.completada { background-color: #2ecc71; }
+
+/* Botones acciones */
+.tabla-historial td.acciones {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-detalle, .btn-calificar {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.btn-detalle {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.btn-detalle:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.btn-calificar {
+    background-color: #2ecc71;
+    color: #fff;
+}
+
+.btn-calificar:hover {
+    background-color: #27ae60;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.acciones-contenedor {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.accion-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.input-accion {
+    padding: 6px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 0.95rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.accion-form button {
+    width: 100%;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    padding: 8px;
+    color: white;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.btn-cancelar {
+    background-color: #e74c3c;
+}
+
+.btn-cancelar:hover {
+    background-color: #c0392b;
+}
+
+.btn-guardar {
+    background-color: #27ae60;
+}
+
+.btn-guardar:hover {
+    background-color: #1e8449;
+}
+
+.ver-acciones-btn {
+    padding: 4px 8px;
+    cursor: pointer;
+    border: 1px solid #3498db;
+    border-radius: 5px;
+    background: #3498db;
+    color: white;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+.ver-acciones-btn:hover {
+    background: #2980b9;
+}

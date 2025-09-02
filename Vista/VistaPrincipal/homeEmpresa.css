@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+* { box-sizing:border-box; margin:0; padding:0; }
+
+body { font-family: "Montserrat", sans-serif; background:#f5f5f5; color:#333; }
+
+header { background:#fff; padding:15px 20px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+nav { display:flex; justify-content:space-between; align-items:center; }
+
+.empresa-info { display:flex; align-items:center; gap:10px; }
+.logo-empresa { width:50px; height:50px; border-radius:50%; border:2px solid #007BFF; background-size:cover; background-position:center; cursor:pointer; transition: transform 0.3s ease; }
+.logo-empresa:hover { transform:scale(1.1); }
+.nombre-empresa { font-weight:bold; font-size:1.2em; }
+
+.nav-links { list-style:none; display:flex; gap:15px; }
+.nav-links li a { text-decoration:none; color:#333; font-weight:500; padding:5px 10px; border-radius:5px; transition: background 0.2s; }
+.nav-links li a:hover, .nav-links li a.active { background:#007BFF; color:#fff; }
+
+.notificaciones { position:relative; }
+.notificaciones .contador {
+    position:absolute; top:-5px; right:-5px;
+    background:red; color:#fff; font-size:12px;
+    padding:2px 6px; border-radius:50%; font-weight:bold;
+}
+
+.menu-hamburguesa { display:none; flex-direction:column; gap:5px; cursor:pointer; }
+.menu-hamburguesa span { width:25px; height:3px; background:#007BFF; border-radius:3px; transition: all 0.3s ease; }
+
+main { padding:20px; }
+main h2 { font-size:24px; margin-bottom:10px; }
+.subtitulo { font-size:16px; color:#555; margin-bottom:20px; }
+
+.estadisticas { display:flex; gap:15px; margin-bottom:25px; flex-wrap:wrap; }
+.estadisticas .card { background:#fff; flex:1 1 200px; padding:20px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); text-align:center; }
+.estadisticas .card h3 { margin-bottom:10px; font-size:16px; color:#555; }
+.estadisticas .card p { font-size:20px; font-weight:bold; }
+
+.acciones { margin-bottom:25px; }
+.acciones h3 { margin-bottom:10px; font-size:18px; }
+.acciones-grid { display:flex; gap:10px; flex-wrap:wrap; }
+.acciones-grid .btn { display:inline-block; background:#007BFF; color:#fff; padding:10px 15px; border-radius:8px; text-decoration:none; font-weight:bold; transition:background 0.2s, transform 0.2s; }
+.acciones-grid .btn:hover { background:#0056b3; transform:translateY(-2px); }
+
+.reservas-proximas h3 { margin-bottom:10px; font-size:18px; }
+.reservas-proximas table { width:100%; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+.reservas-proximas th, .reservas-proximas td { padding:12px 15px; text-align:left; }
+.reservas-proximas th { background:#007BFF; color:#fff; font-weight:bold; }
+.reservas-proximas tr:nth-child(even) { background:#f2f2f2; }
+
+.estado { padding:5px 10px; border-radius:12px; color:#fff; font-weight:bold; font-size:0.9em; }
+.estado.pendiente { background:#f39c12; }
+.estado.confirmada { background:#27ae60; }
+
+@media (max-width:1024px) {
+    .estadisticas { flex-direction:column; }
+    .acciones-grid { flex-direction:column; }
+    nav { flex-direction:column; align-items:flex-start; }
+    .nav-links { flex-direction:column; gap:5px; margin-bottom:10px; }
+    .empresa-info { margin-bottom:15px; }
+}
+
+@media (max-width:768px){
+    .menu-hamburguesa { display:flex; }
+    .nav-links { position:absolute; top:70px; right:0; background:#fff; flex-direction:column; width:200px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.2); overflow:hidden; max-height:0; transition:max-height 0.3s ease; }
+    .nav-links.show { max-height:500px; }
+    nav { position:relative; display:flex; }
+    main h2 { font-size:20px; }
+    .subtitulo { font-size:14px; }
+    .acciones-grid .btn { width:100%; text-align:center; }
+    .logo-empresa { width:45px; height:45px; }
+}
+
+@media (max-width:480px){
+    .nav-links li a { padding:5px 8px; font-size:14px; }
+    .reservas-proximas th, .reservas-proximas td { padding:8px 10px; font-size:14px; }
+    .estadisticas .card p { font-size:18px; }
+}

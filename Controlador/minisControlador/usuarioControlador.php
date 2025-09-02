@@ -1,26 +1,29 @@
 <?php
-require_once __DIR__ . '/miniControladorRegistro.php';
+require_once __DIR__ . '/../../Modelo/modeloUsuario.php';
 
-class usuarioControlador {
-    private $registroMini;
+class UsuarioControlador {
+    private $usuarioModelo;
 
-    public function __construct() {
-        $this->registroMini = new miniControladorRegistro();
+    // Constructor recibe la conexión y la pasa al modelo
+    public function __construct($conn) {
+        $this->usuarioModelo = new usuario2Modelo($conn);
     }
 
+    // Guarda un usuario con datos tradicionales
     public function guardarUsuario($nombre, $email, $password) {
-        return $this->registroMini->registrarCliente($nombre, $email, $password);
+        return $this->usuarioModelo->insertarUsuario($nombre, $email, $password);
     }
 
+    // Login mediante Google
     public function loginGoogle($nombre, $email) {
-        $modelo = new usuarioModelo();  // acceso directo al modelo
-        $usuario = $modelo->buscarPorEmail($email);
+        $usuario = $this->usuarioModelo->obtenerUsuario($email); // revisa si existe en usuarios
 
         if (!$usuario) {
-            $modelo->registrarUsuarioGoogle($nombre, $email);
-            $usuario = $modelo->buscarPorEmail($email);
+            $this->usuarioModelo->registrarUsuarioGoogle($nombre, $email);
+            $usuario = $this->usuarioModelo->obtenerUsuario($email);
         }
 
         return $usuario;
     }
 }
+?>
