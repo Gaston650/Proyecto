@@ -16,7 +16,3 @@ btnsEliminar.forEach(btn => {
 cerrarEliminar.addEventListener("click", () => modalEliminar.style.display = "none");
 cancelarEliminar.addEventListener("click", () => modalEliminar.style.display = "none");
 
-// Cerrar modal si se hace click fuera
-window.addEventListener("click", e => {
-    if (e.target === modalEliminar) modalEliminar.style.display = "none";
-});

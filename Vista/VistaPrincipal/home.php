@@ -48,7 +48,7 @@ if (
                     <li><a href="home.php">Inicio</a></li>
                     <li><a href="../VistaServicios/servicios.php">Servicios</a></li>
                     <li><a href="../VistaHistorial/historial.php">Historial</a></li>
-                    <li><a href="../VistaHistorial/historial.php">Reservas</a></li>
+                    <li><a href="../VistaReservas/reservas.php">Reservas</a></li>
                 </ul>
         </div>
        </nav>

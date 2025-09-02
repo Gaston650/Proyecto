@@ -1,17 +1,26 @@
 <?php
 session_start();
+require_once __DIR__ . '/../../Controlador/superControlador/superControlador.php';
 
-// Verificar que haya sesión de empresa
+// Verificar sesión de empresa
 if (!isset($_SESSION['user_id']) || $_SESSION['tipo_usuario'] !== 'empresa') {
     header("Location: ../VistaSesion/inicioSesion.php?error=Debes iniciar sesión como empresa.");
     exit();
 }
 
-// Aquí defines la ruta correcta del logo
+$empresa_id = $_SESSION['user_id'];
 $logo = '/ClickSoft/IMG/empresas/' . $_SESSION['empresa_logo'];
+
+// Instanciar historial
+$historialWrapper = new historialControladorWrapper();
+$reservas_proximas = $historialWrapper->listarReservasEmpresa($empresa_id);
+
+// Página actual para menú activo
+$current_page = basename($_SERVER['PHP_SELF']);
+
+// Contador de reservas pendientes
+$pendientes = array_filter($reservas_proximas, fn($r) => $r['estado_reserva'] === 'pendiente');
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="es">
@@ -32,22 +41,25 @@ $logo = '/ClickSoft/IMG/empresas/' . $_SESSION['empresa_logo'];
             <span class="nombre-empresa"><?php echo htmlspecialchars($_SESSION['user_nombre']); ?></span>
         </div>
 
-         <div class="menu-hamburguesa" id="menu-toggle">
+        <div class="menu-hamburguesa" id="menu-toggle">
             <span></span>
             <span></span>
             <span></span>
         </div>
 
         <ul class="nav-links" id="nav-links">
-            <li><a href="../VistaPrincipal/homeEmpresa.php">Inicio</a></li>
-            <li><a href="../VistaServicios/serviciosEmpresa.php">Mis Servicios</a></li>
-            <li><a href="../VistaReservas/reservasEmpresa.php">Reservas</a></li>
-            <li><a href="../VistaPromociones/promocionesEmpresa.php">Promociones</a></li>
+            <li><a href="../VistaPrincipal/homeEmpresa.php" class="<?= $current_page === 'homeEmpresa.php' ? 'active' : '' ?>">Inicio</a></li>
+            <li><a href="../VistaServicios/serviciosEmpresa.php" class="<?= $current_page === 'serviciosEmpresa.php' ? 'active' : '' ?>">Mis Servicios</a></li>
+            <li><a href="../VistaReservas/reservasEmpresa.php" class="<?= $current_page === 'reservasEmpresa.php' ? 'active' : '' ?>">Reservas</a></li>
+            <li><a href="../VistaPromociones/promocionesEmpresa.php" class="<?= $current_page === 'promocionesEmpresa.php' ? 'active' : '' ?>">Promociones</a></li>
         </ul>
+
         <div class="notificaciones">
             <a href="../VistaNotificaciones/notificaciones.php">
                 <i class="fa-solid fa-bell"></i>
-                <span class="badge">3</span>
+                <?php if(count($pendientes) > 0): ?>
+                    <span class="contador"><?= count($pendientes); ?></span>
+                <?php endif; ?>
             </a>
         </div>
     </nav>
@@ -60,8 +72,8 @@ $logo = '/ClickSoft/IMG/empresas/' . $_SESSION['empresa_logo'];
     <!-- Estadísticas -->
     <section class="estadisticas">
         <div class="card">
-            <h3>Reservas pendientes</h3>
-            <p>8</p>
+            <h3>Reservas próximas</h3>
+            <p><?php echo count(array_filter($reservas_proximas, fn($r) => $r['estado_reserva'] === 'pendiente')); ?></p>
         </div>
         <div class="card">
             <h3>Ventas del mes</h3>
@@ -78,15 +90,18 @@ $logo = '/ClickSoft/IMG/empresas/' . $_SESSION['empresa_logo'];
         <h3>Acciones rápidas</h3>
         <div class="acciones-grid">
             <a href="../VistaServicios/VistaPublicarServicios/publicarServicio.php" class="btn"> Publicar servicio</a>
-            <a href="#" class="btn"> Gestionar servicios</a>
-            <a href="#" class="btn"> Ver reservas</a>
-            <a href="#" class="btn"> Crear promoción</a>
+            <a href="../VistaServicios/serviciosEmpresa.php" class="btn"> Gestionar servicios</a>
+            <a href="../VistaReservas/reservasEmpresa.php" class="btn"> Ver reservas</a>
+            <a href="../VistaPromociones/promocionesEmpresa.php" class="btn"> Crear promoción</a>
         </div>
     </section>
 
     <!-- Reservas próximas -->
     <section class="reservas-proximas">
         <h3>Reservas próximas</h3>
+        <?php if(empty($reservas_proximas)): ?>
+            <p>No hay reservas próximas.</p>
+        <?php else: ?>
         <table>
             <thead>
                 <tr>
@@ -98,24 +113,23 @@ $logo = '/ClickSoft/IMG/empresas/' . $_SESSION['empresa_logo'];
                 </tr>
             </thead>
             <tbody>
+                <?php foreach($reservas_proximas as $reserva): ?>
                 <tr>
-                    <td>Juan Pérez</td>
-                    <td>Limpieza hogar</td>
-                    <td>20/08/2025</td>
-                    <td>15:00</td>
-                    <td><span class="estado pendiente">Pendiente</span></td>
+                    <td><?php echo htmlspecialchars($reserva['nombre_cliente'] ?? 'Desconocido'); ?></td>
+                    <td><?php echo htmlspecialchars($reserva['titulo'] ?? 'Servicio eliminado'); ?></td>
+                    <td><?php echo htmlspecialchars($reserva['fecha_reserva']); ?></td>
+                    <td><?php echo htmlspecialchars($reserva['hora_reserva']); ?></td>
+                    <td><span class="estado <?php echo htmlspecialchars($reserva['estado_reserva']); ?>">
+                        <?php echo ucfirst($reserva['estado_reserva']); ?>
+                    </span></td>
                 </tr>
-                <tr>
-                    <td>Ana López</td>
-                    <td>Jardinería básica</td>
-                    <td>21/08/2025</td>
-                    <td>10:00</td>
-                    <td><span class="estado confirmada">Confirmada</span></td>
-                </tr>
+                <?php endforeach; ?>
             </tbody>
         </table>
+        <?php endif; ?>
     </section>
 </main>
+
 <script src="menuHamburguesa.js"></script>
 </body>
 </html>
