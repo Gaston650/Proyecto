@@ -1,76 +1,49 @@
 Estudio de Factibilidad
+1. Introducción
 
-## 1. Factibilidad Técnica
-### 1.1 Tecnología y Herramientas
-- Lenguajes de programación: PHP (backend), JavaScript/HTML/CSS (frontend).  
-- Base de datos: MySQL.  
-- Control de versiones: Git / GitHub.  
-- Entornos de desarrollo y pruebas: Local + staging en servidor de prueba.  
-- Automatización: Scripts de despliegue y tests unitarios.
+Este estudio de factibilidad tiene como objetivo analizar si el proyecto puede llevarse a cabo con los recursos disponibles, revisando principalmente los aspectos técnicos, operativos y legales.
 
-### 1.2 Requerimientos Técnicos
-- Servidores con PHP >= 8 y MySQL >= 8.  
-- Espacio de almacenamiento suficiente para base de datos y backups.  
-- Conexión estable a internet para sincronización y despliegue remoto.  
-- Acceso a herramientas de CI/CD (GitHub Actions o GitLab CI).
+2. Factibilidad Técnica
 
-### 1.3 Restricciones y Consideraciones
-- Dependencia de servicios externos (Google Login).  
-- Limitación de recursos en entornos de prueba.   
+Se evalúa si es posible desarrollar el sistema con las herramientas y conocimientos actuales.
 
-### 1.4 Conclusión Técnica
-El proyecto es técnicamente viable considerando la infraestructura disponible, la experiencia del equipo y las herramientas elegidas.
+Lenguajes de programación: PHP, JavaScript, HTML y CSS.
 
----
+Base de datos: MySQL.
 
-2. Factibilidad Operativa
-2.1 Impacto en Procesos
+Control de versiones: GitHub.
 
-Se integrará a los procesos existentes de reservas y gestión de usuarios.
+Infraestructura necesaria: servidor con PHP 8 o superior y MySQL 8.
 
-Se capacitará al personal para el uso del sistema y seguimiento de métricas.
+Recursos disponibles: computadoras personales de los integrantes del equipo y hosting básico.
 
-2.2 Recursos Humanos
+Conclusión técnica: el proyecto es viable técnicamente porque se cuenta con las herramientas, el software y la experiencia necesaria para su desarrollo.
 
-Equipo de desarrollo: 5 personas.
+3. Factibilidad Operativa
 
-Usuarios finales capacitados para el uso básico del sistema.
+Se analiza si el sistema puede ser utilizado de manera práctica por los usuarios y si se integra bien en las actividades previstas.
 
-2.3 Restricciones Operativas
+El sistema permite gestionar usuarios, servicios, reservas y pagos de manera sencilla.
 
-Dependencia de horarios de soporte para intervención ante incidentes.
+La interfaz será diseñada de forma intuitiva para que pueda ser usada por personas sin conocimientos técnicos.
 
-Necesidad de documentación clara para usuarios y administradores.
+El equipo de trabajo puede dar soporte en caso de problemas.
 
-2.4 Conclusión Operativa
+Conclusión operativa: el sistema es viable operativamente, ya que puede utilizarse sin necesidad de cambios importantes en los procesos actuales.
 
-El proyecto es operativamente viable y puede integrarse sin afectar significativamente los procesos actuales.
+4. Factibilidad Legal
 
+Se estudia si el proyecto cumple con las leyes y normas vigentes.
 
-3. Factibilidad Legal
-3.1 Cumplimiento Normativo
+Cumplimiento de la Ley de Protección de Datos Personales en Uruguay.
 
-Cumplimiento de la normativa de protección de datos personales (ej. Ley de Protección de Datos Personales de Uruguay).
+Correcto uso de las APIs de Google (para login con Google).
 
-3.2 Contratos y Licencias
+Respeto de las licencias de software utilizadas.
 
-Licencias de software libres o de terceros correctamente documentadas.
+Conclusión legal: el proyecto es legalmente viable siempre que se respete la normativa de protección de datos y las condiciones de uso de los servicios externos.
 
-3.3 Riesgos Legales
+5. Conclusiones Generales
 
-Uso indebido de datos de usuarios o clientes.
-
-Incumplimiento de licencias de software.
-
-3.4 Conclusión Legal
-
-El proyecto es legalmente viable siempre que se cumplan las regulaciones locales y se mantenga documentación adecuada sobre licencias.
-
-4. Conclusiones y Recomendaciones
-
-El proyecto Proyecto es viable desde los puntos de vista técnico, operativo y legal.
-
-Se recomienda seguir con la implementación considerando los riesgos y medidas de mitigación definidas.
-
-Mantener documentación actualizada y respaldos periódicos para asegurar continuidad.
+El proyecto es viable técnica, operativa y legalmente. Con los recursos disponibles y las herramientas seleccionadas, es posible desarrollar e implementar el sistema de manera exitosa.
 
