@@ -66,5 +66,5 @@ Responsable legal o administrativo: encargado de avisar a los usuarios si ocurre
 7. Conclusiones
 
 El plan de contingencia es necesario para garantizar que el sistema pueda recuperarse de cualquier problema sin afectar gravemente a los usuarios ni perder información. Con las medidas preventivas y los procedimientos aquí definidos, se busca que el proyecto se mantenga confiable y seguro.
----
+
 
