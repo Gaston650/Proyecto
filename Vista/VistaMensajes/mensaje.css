@@ -1,0 +1,105 @@
+/* Fuente y reset */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+  body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+header {
+    background: #075E54;
+    color: white;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+header h2 { margin: 0; font-size: 18px; }
+header a.volver {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 60px);
+    padding: 10px;
+}
+
+.chat-box {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    background: #e5ddd5;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.mensaje {
+    max-width: 70%;
+    padding: 10px;
+    border-radius: 10px;
+    position: relative;
+    word-wrap: break-word;
+}
+
+.mensaje.emisor {
+    background: #DCF8C6;
+    align-self: flex-end;
+    border-bottom-right-radius: 0;
+}
+
+.mensaje.receptor {
+    background: #fff;
+    align-self: flex-start;
+    border-bottom-left-radius: 0;
+}
+
+.mensaje .fecha {
+    display: block;
+    font-size: 10px;
+    color: #999;
+    margin-top: 5px;
+    text-align: right;
+}
+
+form {
+    display: flex;
+    gap: 5px;
+}
+
+form input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+form button {
+    padding: 10px 15px;
+    background: #075E54;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background: #128C7E;
+}
+
+.error { color: red; margin-bottom: 5px; }
+.exito { color: green; margin-bottom: 5px; }
