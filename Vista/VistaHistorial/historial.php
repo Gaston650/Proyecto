@@ -9,6 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $id_cliente = $_SESSION['user_id'];
 $estadoFiltro = $_GET['estado'] ?? null;
+$reseña_guardada = $_GET['reseña_guardada'] ?? null;
 
 $historialWrapper = new historialControladorWrapper();
 $historial = $historialWrapper->listarHistorial($id_cliente, $estadoFiltro);
@@ -21,6 +22,7 @@ $historial = $historialWrapper->listarHistorial($id_cliente, $estadoFiltro);
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Historial de Reservas</title>
 <link rel="stylesheet" href="historial.css">
+<link rel="stylesheet" href="modal.css">
 </head>
 <body>
 
@@ -28,14 +30,12 @@ $historial = $historialWrapper->listarHistorial($id_cliente, $estadoFiltro);
 <nav>
     <div class="usuario-info">
         <?php 
-            $img = (isset($_SESSION['user_image']) && !empty($_SESSION['user_image']))
-                ? $_SESSION['user_image']
-                : '../../img/perfil-vacio.png';
+            $img = (isset($_SESSION['user_image']) && !empty($_SESSION['user_image'])) ? $_SESSION['user_image'] : '../../img/perfil-vacio.png';
         ?>
-        <a href="../vistaEditarPerfil/editarPerfil.php" title="Editar perfil">
+        <a href="../vistaEditarPerfil/editarPerfil.php">
             <div class="foto-perfil" style="background-image: url(<?= htmlspecialchars($img) ?>);"></div>
         </a>
-        <span class="nombre-usuario"><?= htmlspecialchars($_SESSION['user_nombre'] ?? $_SESSION['nombre'] ?? $_SESSION['nombre_empresa'] ?? 'usuario') ?></span>
+        <span class="nombre-usuario"><?= htmlspecialchars($_SESSION['user_nombre'] ?? 'usuario') ?></span>
     </div>
     <div class="nav-links">
         <ul>
@@ -63,76 +63,87 @@ $historial = $historialWrapper->listarHistorial($id_cliente, $estadoFiltro);
 </form>
 
 <table class="tabla-historial">
-    <thead>
-        <tr>
-            <th>Servicio</th>
-            <th>Proveedor</th>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>Estado</th>
-            <th>Precio</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php if(empty($historial)): ?>
-        <tr>
-            <td colspan="7" style="text-align:center;">No hay reservas</td>
-        </tr>
+<thead>
+<tr>
+    <th>Servicio</th>
+    <th>Proveedor</th>
+    <th>Fecha</th>
+    <th>Hora</th>
+    <th>Estado</th>
+    <th>Precio</th>
+    <th>Acciones</th>
+</tr>
+</thead>
+<tbody>
+<?php if(empty($historial)): ?>
+<tr><td colspan="7" style="text-align:center;">No hay reservas</td></tr>
+<?php else: ?>
+<?php foreach($historial as $reserva): ?>
+<tr>
+    <td><?= htmlspecialchars($reserva['servicio']['titulo'] ?? 'N/A') ?></td>
+    <td><?= htmlspecialchars($reserva['servicio']['nombre_proveedor'] ?? 'N/A') ?></td>
+    <td><?= htmlspecialchars($reserva['fecha_reserva']) ?></td>
+    <td><?= htmlspecialchars($reserva['hora_reserva']) ?></td>
+    <td><span class="estado <?= htmlspecialchars($reserva['estado_reserva']) ?>"><?= ucfirst($reserva['estado_reserva']) ?></span></td>
+    <td><?= '$'.number_format($reserva['servicio']['precio'] ?? 0,2) ?></td>
+    <td>
+        <?php if($reserva['estado_reserva'] != 'cancelada'): ?>
+            <button class="ver-acciones-btn" data-id="acciones-<?= $reserva['id_reserva'] ?>">Ver Acciones</button>
         <?php else: ?>
-        <?php foreach($historial as $reserva): ?>
-        <tr>
-            <td><?= htmlspecialchars($reserva['servicio']['titulo'] ?? 'N/A') ?></td>
-            <td><?= htmlspecialchars($reserva['servicio']['nombre_proveedor'] ?? 'N/A') ?></td>
-            <td><?= htmlspecialchars($reserva['fecha_reserva']) ?></td>
-            <td><?= htmlspecialchars($reserva['hora_reserva']) ?></td>
-            <td><span class="estado <?= htmlspecialchars($reserva['estado_reserva']) ?>"><?= ucfirst($reserva['estado_reserva']) ?></span></td>
-            <td><?= '$'.number_format($reserva['servicio']['precio'] ?? 0,2) ?></td>
-            <td>
-                <?php if($reserva['estado_reserva'] != 'cancelada'): ?>
-                    <button class="ver-acciones-btn" onclick="mostrarAcciones('acciones-<?= $reserva['id_reserva'] ?>')">Ver Acciones</button>
-                <?php else: ?>
-                    Cancelada
-                <?php endif; ?>
-            </td>
-        </tr>
-        <tr id="acciones-<?= $reserva['id_reserva'] ?>" class="acciones-contenedor" style="display:none;">
-            <td colspan="7">
-                <form method="post" action="validarHistorial.php" class="accion-form">
-                    <input type="hidden" name="reserva_id" value="<?= $reserva['id_reserva'] ?>">
-                    <input type="text" name="motivo" placeholder="Motivo (opcional)" class="input-accion">
-                    <button name="cancelar" class="btn-cancelar">Cancelar</button>
-                </form>
-
-                <form method="post" action="validarHistorial.php" class="accion-form">
-                    <input type="hidden" name="reserva_id" value="<?= $reserva['id_reserva'] ?>">
-                    <input type="text" name="comentarios_cliente" placeholder="Comentario" value="<?= htmlspecialchars($reserva['comentarios_cliente'] ?? '') ?>" class="input-accion">
-                    <input type="number" name="calificacion" min="1" max="5" step="0.1" placeholder="Calificación" value="<?= htmlspecialchars($reserva['calificacion'] ?? '') ?>" class="input-accion">
-                    <button name="guardar_comentario" class="btn-guardar">Guardar</button>
-                </form>
-            </td>
-        </tr>
-        <?php endforeach; ?>
+            Cancelada
         <?php endif; ?>
-    </tbody>
+    </td>
+</tr>
+
+<tr id="acciones-<?= $reserva['id_reserva'] ?>" class="acciones-contenedor" style="display:none;">
+    <td colspan="7">
+        <?php if($reserva['estado_reserva'] == 'pendiente' || $reserva['estado_reserva'] == 'confirmada'): ?>
+        <form method="post" action="../../Controlador/minisControlador/validarHistorial.php" class="accion-form">
+            <input type="hidden" name="reserva_id" value="<?= $reserva['id_reserva'] ?>">
+            <input type="text" name="motivo" placeholder="Motivo (opcional)" class="input-accion">
+            <button name="cancelar" class="btn-cancelar">Cancelar</button>
+        </form>
+        <?php endif; ?>
+
+        <?php if($reserva['estado_reserva'] == 'completada' && empty($reserva['calificacion'])): ?>
+        <form method="post" action="../../Controlador/minisControlador/validarHistorial.php" class="accion-form">
+            <input type="hidden" name="reserva_id" value="<?= $reserva['id_reserva'] ?>">
+            <div class="star-rating">
+                <?php for($i=5; $i>=1; $i--): ?>
+                    <input type="radio" id="estrella<?= $i ?>-<?= $reserva['id_reserva'] ?>" name="calificacion" value="<?= $i ?>"><label for="estrella<?= $i ?>-<?= $reserva['id_reserva'] ?>">★</label>
+                <?php endfor; ?>
+            </div>
+            <textarea name="comentarios_cliente" placeholder="Escribe tu reseña..." required class="input-accion"></textarea>
+            <button name="guardar_comentario" class="btn-guardar">Guardar Reseña</button>
+        </form>
+        <?php endif; ?>
+    </td>
+</tr>
+<?php endforeach; ?>
+<?php endif; ?>
+</tbody>
 </table>
 
+<!-- Modal -->
+<div id="modal-reseña" class="modal">
+    <div class="modal-content">
+        <p>¡Tu reseña se ha guardado correctamente!</p>
+        <button id="cerrar-modal">Cerrar</button>
+    </div>
+</div>
+
+<script src="historial.js"></script>
+<script src="modalResena.js"></script>
+
+<?php if($reseña_guardada): ?>
 <script>
-function mostrarAcciones(id) {
-    const elemento = document.getElementById(id);
-    elemento.style.display = (elemento.style.display === 'none') ? 'block' : 'none';
-}
+document.addEventListener('DOMContentLoaded', () => {
+    mostrarModal();
+});
 </script>
+<?php endif; ?>
 
 </main>
-//<script src="../VistaPrincipal/verPagina.js"></script> 
 </body>
 </html>
-
-
-
-
-
-
-
- 
+<?php

@@ -15,11 +15,26 @@ $logo = '/ClickSoft/IMG/empresas/' . $_SESSION['empresa_logo'];
 $historialWrapper = new historialControladorWrapper();
 $reservas_proximas = $historialWrapper->listarReservasEmpresa($empresa_id);
 
-// Página actual para menú activo
-$current_page = basename($_SERVER['PHP_SELF']);
+// Instanciar mensajes
+$mensajeWrapper = new mensajesControladorWrapper();
+$mensajes_raw = $mensajeWrapper->obtenerMensajesEmpresa($empresa_id);
+
+// Contar mensajes no leídos
+$mensajes_no_leidos = 0;
+if($mensajes_raw){
+    while($m = $mensajes_raw->fetch_assoc()){
+        if(!$m['leido']) $mensajes_no_leidos++;
+    }
+}
 
 // Contador de reservas pendientes
 $pendientes = array_filter($reservas_proximas, fn($r) => $r['estado_reserva'] === 'pendiente');
+
+// Total de notificaciones: reservas pendientes + mensajes no leídos
+$total_notificaciones = count($pendientes) + $mensajes_no_leidos;
+
+// Página actual para menú activo
+$current_page = basename($_SERVER['PHP_SELF']);
 ?>
 
 <!DOCTYPE html>
@@ -55,10 +70,10 @@ $pendientes = array_filter($reservas_proximas, fn($r) => $r['estado_reserva'] ==
         </ul>
 
         <div class="notificaciones">
-            <a href="../VistaNotificaciones/notificaciones.php">
+            <a href="../VistaNotificaciones/notificacionesEmpresa.php">
                 <i class="fa-solid fa-bell"></i>
-                <?php if(count($pendientes) > 0): ?>
-                    <span class="contador"><?= count($pendientes); ?></span>
+                <?php if($total_notificaciones > 0): ?>
+                    <span class="contador"><?= $total_notificaciones; ?></span>
                 <?php endif; ?>
             </a>
         </div>
@@ -73,7 +88,7 @@ $pendientes = array_filter($reservas_proximas, fn($r) => $r['estado_reserva'] ==
     <section class="estadisticas">
         <div class="card">
             <h3>Reservas próximas</h3>
-            <p><?php echo count(array_filter($reservas_proximas, fn($r) => $r['estado_reserva'] === 'pendiente')); ?></p>
+            <p><?php echo count($pendientes); ?></p>
         </div>
         <div class="card">
             <h3>Ventas del mes</h3>

@@ -14,11 +14,17 @@ $logo_cliente = isset($_SESSION['user_image']) ? $_SESSION['user_image'] : '../.
 // Incluir superControlador
 require_once __DIR__ . '/../../Controlador/superControlador/superControlador.php';
 
-// Crear wrapper de servicios y favoritos
+// Crear conexión
+require_once __DIR__ . '/../../conexion.php';
+$conexion = new conexion();
+$conn = $conexion->conectar();
+
+// Crear wrappers
 $servicioWrapper = new servicioControladorWrapper();
 $favoritoWrapper = new controladorFavorito();
+$promocionWrapper = new promocionControladorWrapper($conn);
 
-// Capturar filtros de GET
+// Capturar filtros
 $filtros = [
     'buscar' => $_GET['buscar'] ?? '',
     'zona' => $_GET['zona'] ?? '',
@@ -32,7 +38,6 @@ $servicios = $servicioWrapper->obtenerServiciosFiltrados(
     $filtros['categoria']
 );
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -43,30 +48,30 @@ $servicios = $servicioWrapper->obtenerServiciosFiltrados(
 </head>
 <body>
 <header>
-   <nav>
-       <div class="usuario-info">
+    <nav>
+        <div class="usuario-info">
             <a href="../vistaEditarPerfil/editarPerfil.php" title="Editar perfil">
                 <div class="foto-perfil" style="background-image: url(<?php echo htmlspecialchars($logo_cliente); ?>);"></div>
             </a>
-           <span class="nombre-usuario"><?php echo htmlspecialchars($nombre_cliente); ?></span>
-       </div>
+            <span class="nombre-usuario"><?php echo htmlspecialchars($nombre_cliente); ?></span>
+        </div>
 
-       <div class="notificaciones">
-          <a href="#" title="Ver Notificaciones">
-            <ion-icon name="notifications-outline"></ion-icon>
-            <span class="contador">0</span>
-          </a>
-       </div>
+        <div class="notificaciones">
+            <a href="#" title="Ver Notificaciones">
+                <ion-icon name="notifications-outline"></ion-icon>
+                <span class="contador">0</span>
+            </a>
+        </div>
 
-       <div class="nav-links">
+        <div class="nav-links">
             <ul>
                 <li><a href="../VistaPrincipal/home.php">Inicio</a></li>
                 <li><a href="servicios.php" class="active">Servicios</a></li>
                 <li><a href="../VistaHistorial/historial.php">Historial</a></li>
                 <li><a href="../VistaReservas/reservas.php">Reservas</a></li>
             </ul>
-       </div>
-   </nav>
+        </div>
+    </nav>
 </header>
 
 <h2 class="titulo-servicios">Nuestros Servicios Disponibles</h2>
@@ -78,28 +83,14 @@ $servicios = $servicioWrapper->obtenerServiciosFiltrados(
         <input type="text" name="buscar" placeholder="Buscar servicio..." 
                value="<?php echo htmlspecialchars($filtros['buscar']); ?>">
 
-<select name="zona">
-    <option value="">Todas las zonas</option>
-    <option value="artigas" <?php if($filtros['zona']=="artigas") echo "selected"; ?>>Artigas</option>
-    <option value="canelones" <?php if($filtros['zona']=="canelones") echo "selected"; ?>>Canelones</option>
-    <option value="cerro largo" <?php if($filtros['zona']=="cerro largo") echo "selected"; ?>>Cerro Largo</option>
-    <option value="colonia" <?php if($filtros['zona']=="colonia") echo "selected"; ?>>Colonia</option>
-    <option value="durazno" <?php if($filtros['zona']=="durazno") echo "selected"; ?>>Durazno</option>
-    <option value="flores" <?php if($filtros['zona']=="flores") echo "selected"; ?>>Flores</option>
-    <option value="florida" <?php if($filtros['zona']=="florida") echo "selected"; ?>>Florida</option>
-    <option value="lavalleja" <?php if($filtros['zona']=="lavalleja") echo "selected"; ?>>Lavalleja</option>
-    <option value="maldonado" <?php if($filtros['zona']=="maldonado") echo "selected"; ?>>Maldonado</option>
-    <option value="montevideo" <?php if($filtros['zona']=="montevideo") echo "selected"; ?>>Montevideo</option>
-    <option value="paysandú" <?php if($filtros['zona']=="paysandú") echo "selected"; ?>>Paysandú</option>
-    <option value="río negro" <?php if($filtros['zona']=="río negro") echo "selected"; ?>>Río Negro</option>
-    <option value="rivera" <?php if($filtros['zona']=="rivera") echo "selected"; ?>>Rivera</option>
-    <option value="rocha" <?php if($filtros['zona']=="rocha") echo "selected"; ?>>Rocha</option>
-    <option value="salto" <?php if($filtros['zona']=="salto") echo "selected"; ?>>Salto</option>
-    <option value="san josé" <?php if($filtros['zona']=="san josé") echo "selected"; ?>>San José</option>
-    <option value="soriano" <?php if($filtros['zona']=="soriano") echo "selected"; ?>>Soriano</option>
-    <option value="tacuarembó" <?php if($filtros['zona']=="tacuarembó") echo "selected"; ?>>Tacuarembó</option>
-    <option value="treinta y tres" <?php if($filtros['zona']=="treinta y tres") echo "selected"; ?>>Treinta y Tres</option>
-</select>
+        <!-- Filtros zona -->
+        <select name="zona">
+            <option value="">Todas las zonas</option>
+            <option value="artigas" <?php if($filtros['zona']=="artigas") echo "selected"; ?>>Artigas</option>
+            <!-- Agregar todas las demás zonas -->
+        </select>
+
+        <!-- Filtros categoria -->
         <select name="categoria">
             <option value="">Todas las categorías</option>
             <option value="limpieza" <?php if($filtros['categoria']=="limpieza") echo "selected"; ?>>Limpieza</option>
@@ -115,6 +106,7 @@ $servicios = $servicioWrapper->obtenerServiciosFiltrados(
 <div class="servicios-grid">
 <?php if ($servicios && count($servicios) > 0): ?>
     <?php foreach($servicios as $servicio): 
+        $promo = $promocionWrapper->obtenerPromocionPorServicio($servicio['id_servicio']);
         $esFavorito = $favoritoWrapper->esFavorito($id_cliente, $servicio['id_servicio']);
         $favAccion = $esFavorito ? 'quitar' : 'agregar';
         $favTexto = $esFavorito ? '💔 Quitado' : '❤️ Favorito';
@@ -124,7 +116,25 @@ $servicios = $servicioWrapper->obtenerServiciosFiltrados(
 
             <h3><?php echo htmlspecialchars($servicio['titulo']); ?></h3>
             <p><?php echo htmlspecialchars($servicio['descripcion']); ?></p>
-            <p><strong>Precio:</strong> $<?php echo htmlspecialchars($servicio['precio']); ?></p>
+
+            <?php if ($promo && isset($promo['porcentaje_descuento'])): ?>
+                <div class="promo-box">
+                    <?php echo $promo['porcentaje_descuento']; ?>% de descuento
+                </div>
+                <p><strong>Precio original:</strong> <span class="precio-original">$<?php echo number_format($servicio['precio'], 2); ?></span></p>
+                <p><strong>Precio con descuento:</strong> 
+                    <span class="precio-descuento">
+                        $<?php echo number_format($servicio['precio'] * (1 - $promo['porcentaje_descuento']/100), 2); ?>
+                    </span>
+                </p>
+                <p><small>Vigente: <?php echo $promo['fecha_inicio']; ?> - <?php echo $promo['fecha_fin']; ?></small></p>
+                <?php if (!empty($promo['condiciones'])): ?>
+                    <p><em><?php echo htmlspecialchars($promo['condiciones']); ?></em></p>
+                <?php endif; ?>
+            <?php else: ?>
+                <p><strong>Precio:</strong> $<?php echo number_format($servicio['precio'], 2); ?></p>
+            <?php endif; ?>
+
             <p><strong>Disponibilidad:</strong> <?php echo htmlspecialchars($servicio['disponibilidad']); ?></p>
             <p><strong>Proveedor:</strong> <?php echo htmlspecialchars($servicio['id_empresa']); ?></p>
 
@@ -161,10 +171,23 @@ $servicios = $servicioWrapper->obtenerServiciosFiltrados(
     </div>
 </div>
 
+<!-- Modal de confirmación de reserva creada -->
+<?php if (isset($_GET['exito']) && $_GET['exito'] == 1): ?>
+<div id="modal-exito" class="modal" style="display:block;">
+    <div class="modal-content">
+        <span class="close" onclick="document.getElementById('modal-exito').style.display='none'">&times;</span>
+        <h2>Servicio contratado con éxito</h2>
+        <p>Tu reserva ha sido creada y podrás verla en la sección de 
+           <a href="../VistaReservas/reservas.php">Reservas</a>.
+        </p>
+    </div>
+</div>
+<?php endif; ?>
+
 <script src="../VistaPrincipal/verPagina.js"></script>   
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 <script src="modalContratar.js"></script>
+<script src="modalExito.js"></script>
 </body>
 </html>
-

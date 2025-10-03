@@ -29,11 +29,11 @@ $reservas = $reservasWrapper->verReservasCliente($id_cliente);
             <?php 
                 $img = !empty($_SESSION['user_image']) ? $_SESSION['user_image'] : '../../img/perfil-vacio.png';
             ?>
-            <a href="../vistaEditarPerfil/editarPerfil.php" title="Editar perfil">
+            <a href="../vistaEditarPerfil/editarPerfil.php">
                 <div class="foto-perfil" style="background-image: url(<?= htmlspecialchars($img) ?>);"></div>
             </a>
             <span class="nombre-usuario">
-                <?= htmlspecialchars($_SESSION['user_nombre'] ?? $_SESSION['nombre'] ?? 'Usuario') ?>
+                <?= htmlspecialchars($_SESSION['user_nombre'] ?? 'Usuario') ?>
             </span>
         </div>
         <div class="nav-links">
@@ -48,42 +48,35 @@ $reservas = $reservasWrapper->verReservasCliente($id_cliente);
 </header>
 
 <main>
-    <h2 class="titulo">📅 Mis Reservas Activas</h2>
-    <p class="subtitulo">Aquí puedes gestionar tus reservas pendientes y confirmadas.</p>
+<h2 class="titulo">📅 Mis Reservas Activas</h2>
+<p class="subtitulo">Aquí puedes gestionar tus reservas pendientes y confirmadas.</p>
 
-    <!-- Filtro -->
-    <div class="filtros">
-        <select class="filtro-estado" onchange="filtrarEstado(this.value)">
-            <option value="">Todos los estados</option>
-            <option value="pendiente">Pendiente</option>
-            <option value="confirmada">Confirmada</option>
-            <option value="cancelada">Cancelada</option>
-            <option value="completada">Completada</option>
-        </select>
-    </div>
+<div class="filtros">
+    <select class="filtro-estado" onchange="filtrarEstado(this.value)">
+        <option value="">Todos los estados</option>
+        <option value="pendiente">Pendiente</option>
+        <option value="confirmada">Confirmada</option>
+        <option value="cancelada">Cancelada</option>
+        <option value="completada">Completada</option>
+    </select>
+</div>
 
-    <!-- Lista de reservas -->
-    <div class="reservas-grid">
-        <?php while($r = $reservas->fetch_assoc()): ?>
-            <div class="reserva-card estado-<?= strtolower($r['estado_reserva']) ?>" data-id="<?= $r['id_reserva'] ?>">
-                <h3><?= htmlspecialchars($r['nombre_servicio']) ?></h3>
-                <p><strong>Proveedor:</strong> <?= htmlspecialchars($r['nombre_proveedor']) ?></p>
-                <p><strong>Fecha:</strong> <?= date('d/m/Y', strtotime($r['fecha_reserva'])) ?> - <?= date('H:i', strtotime($r['hora_reserva'])) ?> hs</p>
-                <p><strong>Estado:</strong> <span class="estado <?= strtolower($r['estado_reserva']) ?>"><?= ucfirst($r['estado_reserva']) ?></span></p>
-                <p><strong>Monto:</strong> $<?= number_format($r['monto'] ?? 0, 0, ',', '.') ?></p>
-                <div class="acciones">
-                    <?php if($r['estado_reserva'] === 'pendiente'): ?>
-                        <a href="reprogramarReserva.php?id=<?= $r['id_reserva'] ?>" class="btn-reprogramar">Reprogramar</a>
-                        <button class="btn-cancelar" onclick="abrirModal(<?= $r['id_reserva'] ?>)">Cancelar</button>
-                    <?php endif; ?>
-                    <a href="mensaje.php?cliente=<?= $r['id_cliente'] ?>&proveedor=<?= $r['id_servicio'] ?>" class="btn-mensaje">Enviar Mensaje</a>
-                </div>
+<div class="reservas-grid">
+    <?php while($r = $reservas->fetch_assoc()): ?>
+        <div class="reserva-card estado-<?= strtolower($r['estado_reserva']) ?>" data-id="<?= $r['id_reserva'] ?>">
+            <h3><?= htmlspecialchars($r['nombre_servicio']) ?></h3>
+            <p><strong>Proveedor:</strong> <?= htmlspecialchars($r['nombre_proveedor']) ?></p>
+            <p><strong>Fecha:</strong> <?= date('d/m/Y', strtotime($r['fecha_reserva'])) ?> - <?= date('H:i', strtotime($r['hora_reserva'])) ?> hs</p>
+            <p><strong>Estado:</strong> <span class="estado <?= strtolower($r['estado_reserva']) ?>"><?= ucfirst($r['estado_reserva']) ?></span></p>
+            <p><strong>Monto:</strong> $<?= number_format($r['monto'] ?? 0, 0, ',', '.') ?></p>
+            <div class="acciones">
+               <a href="../VistaMensajes/mensaje.php?proveedor=<?= $r['id_proveedor'] ?>&reserva=<?= $r['id_reserva'] ?>" class="btn-mensaje">Enviar Mensaje</a>
             </div>
-        <?php endwhile; ?>
-    </div>
+        </div>
+    <?php endwhile; ?>
+</div>
 </main>
 
-<!-- Modal Cancelar Reserva -->
 <div id="modalCancelar" class="modal">
     <div class="modal-contenido">
         <span class="cerrar" onclick="cerrarModal()">&times;</span>
@@ -95,7 +88,6 @@ $reservas = $reservasWrapper->verReservasCliente($id_cliente);
 </div>
 
 <script src="cancelar.js"></script>
-
 <script src="../VistaPrincipal/verPagina.js"></script>   
 </body>
 </html>

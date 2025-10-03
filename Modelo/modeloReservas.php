@@ -22,27 +22,32 @@ class ModeloReservas {
     }
 
    // Obtener reservas de un cliente
-    public static function obtenerReservasPorCliente($id_cliente) {
+      public static function obtenerReservasPorCliente($id_cliente) {
         $conn = (new conexion())->conectar();
 
         $stmt = $conn->prepare("
             SELECT r.*,
-                (SELECT titulo FROM servicios s WHERE s.id_servicio = r.id_servicio) AS nombre_servicio,
-                (SELECT nombre_empresa FROM empresas_proveedor e WHERE e.id_empresa = (SELECT id_empresa FROM servicios s WHERE s.id_servicio = r.id_servicio LIMIT 1)) AS nombre_proveedor,
-                (SELECT precio FROM servicios s WHERE s.id_servicio = r.id_servicio) AS monto
+                   s.titulo AS nombre_servicio,
+                   e.id_empresa AS id_proveedor,
+                   e.nombre_empresa AS nombre_proveedor,
+                   s.precio AS monto
             FROM reservas r
+            JOIN servicios s ON s.id_servicio = r.id_servicio
+            JOIN empresas_proveedor e ON e.id_empresa = s.id_empresa
             WHERE r.id_cliente = ?
             ORDER BY r.fecha_reserva, r.hora_reserva
         ");
         $stmt->bind_param("i", $id_cliente);
         $stmt->execute();
         $resultado = $stmt->get_result();
-
         $stmt->close();
         $conn->close();
 
         return $resultado;
     }
+
+
+
 
 
 
@@ -127,53 +132,52 @@ class ModeloReservas {
         return $resultado;
     }
 
-    public static function obtenerReservasPorProveedorFiltradas($id_proveedor, $estado = '', $fecha_inicio = '', $fecha_fin = '') {
-        $conn = (new conexion())->conectar();
+ public static function obtenerReservasPorProveedorFiltradas($id_proveedor, $estado = '', $fecha_inicio = '', $fecha_fin = '') {
+    $conn = (new conexion())->conectar();
 
-        $query = "
-            SELECT r.*,
-            (SELECT titulo FROM servicios s WHERE s.id_servicio = r.id_servicio) AS nombre_servicio,
-            (SELECT nombre FROM usuarios u WHERE u.id_usuario = r.id_cliente) AS nombre_cliente
-            FROM reservas r
-            WHERE r.id_servicio IN (SELECT id_servicio FROM servicios WHERE id_empresa = ?)
-            ";
+    $query = "
+        SELECT r.*,
+        (SELECT titulo FROM servicios s WHERE s.id_servicio = r.id_servicio) AS nombre_servicio,
+        (SELECT nombre FROM usuarios u WHERE u.id_usuario = r.id_cliente) AS nombre_cliente
+        FROM reservas r
+        WHERE r.id_servicio IN (SELECT id_servicio FROM servicios WHERE id_empresa = ?)
+    ";
 
-        $params = [$id_proveedor];
-        $types = "i";
+    $params = [$id_proveedor];
+    $types = "i";
 
-        if ($estado) {
-            $query .= " AND r.estado_reserva = ?";
-            $types .= "s";
-            $params[] = $estado;
-        }
-
-        if ($fecha_inicio) {
-            $query .= " AND r.fecha_reserva >= ?";
-            $types .= "s";
-            $params[] = $fecha_inicio;
-        }
-
-        if ($fecha_fin) {
-            $query .= " AND r.fecha_reserva <= ?";
-            $types .= "s";
-            $params[] = $fecha_fin;
-        }
-
-        $query .= " ORDER BY r.fecha_reserva, r.hora_reserva";
-
-        $stmt = $conn->prepare($query);
-
-    
-        $stmt->bind_param($types, ...$params);
-
-        $stmt->execute();
-        $resultado = $stmt->get_result();
-
-        $stmt->close();
-        $conn->close();
-
-        return $resultado;
+    if ($estado) {
+        $query .= " AND LOWER(r.estado_reserva) = LOWER(?)";
+        $types .= "s";
+        $params[] = $estado;
     }
+
+    if ($fecha_inicio) {
+        $query .= " AND r.fecha_reserva >= ?";
+        $types .= "s";
+        $params[] = $fecha_inicio;
+    }
+
+    if ($fecha_fin) {
+        // Sumamos 1 día a la fecha_fin para incluir todo el día
+        $query .= " AND r.fecha_reserva <= ?";
+        $types .= "s";
+        $params[] = $fecha_fin;
+    }
+
+    $query .= " ORDER BY r.fecha_reserva ASC, r.hora_reserva ASC";
+
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param($types, ...$params);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+
+    $stmt->close();
+    $conn->close();
+
+    return $resultado;
+}
+
 
 }
 ?>

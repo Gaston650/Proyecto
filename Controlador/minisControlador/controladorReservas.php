@@ -48,6 +48,15 @@ class controladorReservas {
         });
     }
 
+    public function confirmarReserva($id_reserva) {
+        return ModeloReservas::actualizarEstado($id_reserva, 'confirmada');
+    }
+
+    public function rechazarReserva($id_reserva) {
+        return ModeloReservas::actualizarEstado($id_reserva, 'rechazada');
+    }
+
+
 
 }
 ?>

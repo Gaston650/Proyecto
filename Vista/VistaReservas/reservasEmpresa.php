@@ -46,11 +46,19 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <header>
     <nav>
         <div class="empresa-info">
-            <div class="logo-empresa" style="background-image: url('<?php echo htmlspecialchars($logo ?? ''); ?>');"></div>
+            <a href="../vistaEditarPerfil/editarPerfilEmpresa.php" title="Editar perfil">
+                <div class="logo-empresa" style="background-image: url('<?php echo htmlspecialchars($logo); ?>');"></div>
+            </a>
             <span class="nombre-empresa"><?php echo htmlspecialchars($_SESSION['user_nombre']); ?></span>
         </div>
 
-        <ul class="nav-links">
+        <div class="menu-hamburguesa" id="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <ul class="nav-links" id="nav-links">
             <li><a href="../VistaPrincipal/homeEmpresa.php" class="<?= $current_page === 'homeEmpresa.php' ? 'active' : '' ?>">Inicio</a></li>
             <li><a href="../VistaServicios/serviciosEmpresa.php" class="<?= $current_page === 'serviciosEmpresa.php' ? 'active' : '' ?>">Mis Servicios</a></li>
             <li><a href="../VistaReservas/reservasEmpresa.php" class="<?= $current_page === 'reservasEmpresa.php' ? 'active' : '' ?>">Reservas</a></li>
@@ -60,7 +68,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <div class="notificaciones">
             <a href="../VistaNotificaciones/notificaciones.php">
                 <i class="fa-solid fa-bell"></i>
-                <?php if (count($pendientes) > 0): ?>
+                <?php if(count($pendientes) > 0): ?>
                     <span class="contador"><?= count($pendientes); ?></span>
                 <?php endif; ?>
             </a>
@@ -71,15 +79,19 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <main>
     <h2>📅 Reservas de mis servicios</h2>
 
+    <?php if(isset($_GET['mensaje'])): ?>
+        <div class="mensaje-exito"><?= htmlspecialchars($_GET['mensaje']); ?></div>
+    <?php endif; ?>
+
     <!-- Filtros -->
     <form method="GET" class="filtros">
         <label for="estado">Estado:</label>
         <select name="estado" id="estado">
             <option value="">Todos</option>
-            <option value="Pendiente" <?= $filtro_estado === 'Pendiente' ? 'selected' : '' ?>>Pendiente</option>
-            <option value="Confirmada" <?= $filtro_estado === 'Confirmada' ? 'selected' : '' ?>>Confirmada</option>
-            <option value="Cancelada" <?= $filtro_estado === 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
-            <option value="Completada" <?= $filtro_estado === 'Completada' ? 'selected' : '' ?>>Completada</option>
+            <option value="pendiente" <?= $filtro_estado === 'pendiente' ? 'selected' : '' ?>>Pendiente</option>
+            <option value="confirmada" <?= $filtro_estado === 'confirmada' ? 'selected' : '' ?>>Confirmada</option>
+            <option value="cancelada" <?= $filtro_estado === 'cancelada' ? 'selected' : '' ?>>Cancelada</option>
+            <option value="completada" <?= $filtro_estado === 'completada' ? 'selected' : '' ?>>Completada</option>
         </select>
 
         <label for="fecha_inicio">Desde:</label>
@@ -91,7 +103,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <button type="submit">Filtrar</button>
     </form>
 
-    <!-- Tabla de reservas -->
+    <!-- Tabla -->
     <div class="tabla-contenedor">
         <table>
             <thead>
@@ -107,36 +119,24 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <tbody>
                 <?php if ($reservas_filtradas && count($reservas_filtradas) > 0): ?>
                     <?php foreach ($reservas_filtradas as $r): ?>
-                        <tr>
+                        <tr data-id="<?= $r['id_reserva'] ?>">
                             <td><?= htmlspecialchars($r['nombre_cliente']); ?></td>
                             <td><?= htmlspecialchars($r['nombre_servicio']); ?></td>
                             <td><?= htmlspecialchars($r['fecha_reserva']); ?></td>
                             <td><?= htmlspecialchars($r['hora_reserva']); ?></td>
-                            <td><span class="estado <?= htmlspecialchars($r['estado_reserva']); ?>"><?= htmlspecialchars($r['estado_reserva']); ?></span></td>
                             <td>
-                                <?php if ($r['estado_reserva'] === 'Pendiente'): ?>
-                                    <form style="display:inline;" method="POST" action="../../Controlador/superControlador/superControlador.php">
-                                        <input type="hidden" name="reserva_id" value="<?= $r['id_reserva']; ?>">
-                                        <button type="submit" name="accion" value="confirmar" class="btn confirmar">Confirmar</button>
-                                    </form>
-                                    <form style="display:inline;" method="POST" action="../../Controlador/superControlador/superControlador.php">
-                                        <input type="hidden" name="reserva_id" value="<?= $r['id_reserva']; ?>">
-                                        <button type="submit" name="accion" value="cancelar" class="btn cancelar">Cancelar</button>
-                                    </form>
-                                <?php elseif ($r['estado_reserva'] === 'Confirmada'): ?>
-                                    <form style="display:inline;" method="POST" action="../../Controlador/superControlador/superControlador.php">
-                                        <input type="hidden" name="reserva_id" value="<?= $r['id_reserva']; ?>">
-                                        <button type="submit" name="accion" value="completada" class="btn completada">Marcar Completada</button>
-                                    </form>
-                                    <form style="display:inline;" method="POST" action="../../Controlador/superControlador/superControlador.php">
-                                        <input type="hidden" name="reserva_id" value="<?= $r['id_reserva']; ?>">
-                                        <button type="submit" name="accion" value="cancelar" class="btn cancelar">Cancelar</button>
-                                    </form>
-                                <?php endif; ?>
-                                <form style="display:inline;" method="POST" action="../../Controlador/superControlador/superControlador.php">
-                                    <input type="hidden" name="reserva_id" value="<?= $r['id_reserva']; ?>">
-                                    <button type="submit" name="accion" value="mensaje" class="btn mensaje">Enviar Mensaje</button>
-                                </form>
+                                <span class="estado <?= strtolower($r['estado_reserva']); ?>">
+                                    <?= ucfirst($r['estado_reserva']); ?>
+                                </span>
+                            </td>
+                            <td>
+                                <select class="estado-select">
+                                    <option value="pendiente" <?= $r['estado_reserva'] !== 'pendiente' ? 'disabled' : 'selected' ?>>Pendiente</option>
+                                    <option value="confirmada" <?= $r['estado_reserva']=='confirmada'?'selected':'' ?>>Confirmada</option>
+                                    <option value="completada" <?= $r['estado_reserva']=='completada'?'selected':'' ?>>Completada</option>
+                                    <option value="cancelada" <?= $r['estado_reserva']=='cancelada'?'selected':'' ?>>Cancelada</option>
+                                </select>
+                                <button class="btn actualizar">Actualizar</button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -148,7 +148,36 @@ $current_page = basename($_SERVER['PHP_SELF']);
             </tbody>
         </table>
     </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <p id="modal-text"></p>
+            <button id="modal-close">Cerrar</button>
+        </div>
+    </div>
+
 </main>
+
+<!-- Modal -->
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <p id="modal-text">Estado actualizado con éxito</p>
+    </div>
+</div>
+<script src="actualizarEstado.js"></script>
+<script src="modal_info.js"></script>
+
+
+
+
+
+
+
+
+
+
 
 </body>
 </html>

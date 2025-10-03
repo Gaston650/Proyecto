@@ -1,0 +1,125 @@
+/* Fuente general */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+
+body {
+  background: #ece5dd;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+header {
+  background: #075e54;
+  color: #fff;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h2 {
+  font-size: 18px;
+}
+
+header .volver {
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Caja del chat */
+.chat-box {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Mensaje */
+.mensaje {
+  max-width: 70%;
+  padding: 10px 15px;
+  border-radius: 15px;
+  position: relative;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Mensajes de la empresa (emisor) */
+.mensaje.emisor {
+  align-self: flex-end;
+  background: #dcf8c6;
+  border-bottom-right-radius: 0;
+}
+
+/* Mensajes del cliente (receptor) */
+.mensaje.receptor {
+  align-self: flex-start;
+  background: #fff;
+  border-bottom-left-radius: 0;
+}
+
+/* Nombre (solo para identificar) */
+.mensaje strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+/* Fecha */
+.fecha {
+  display: block;
+  font-size: 11px;
+  color: #777;
+  margin-top: 5px;
+  text-align: right;
+}
+
+/* Formulario fijo abajo */
+form {
+  display: flex;
+  padding: 10px;
+  background: #f0f0f0;
+  border-top: 1px solid #ccc;
+}
+
+form input[type="text"] {
+  flex: 1;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 20px;
+  outline: none;
+  font-size: 14px;
+}
+
+form button {
+  background: #075e54;
+  border: none;
+  color: #fff;
+  padding: 10px 15px;
+  margin-left: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+form button:hover {
+  background: #0a7869;
+}
