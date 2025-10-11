@@ -56,13 +56,6 @@ $servicios = $servicioWrapper->obtenerServiciosFiltrados(
             <span class="nombre-usuario"><?php echo htmlspecialchars($nombre_cliente); ?></span>
         </div>
 
-        <div class="notificaciones">
-            <a href="#" title="Ver Notificaciones">
-                <ion-icon name="notifications-outline"></ion-icon>
-                <span class="contador">0</span>
-            </a>
-        </div>
-
         <div class="nav-links">
             <ul>
                 <li><a href="../VistaPrincipal/home.php">Inicio</a></li>

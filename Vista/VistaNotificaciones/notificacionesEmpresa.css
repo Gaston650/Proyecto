@@ -40,22 +40,35 @@ header {
     background-color: #ddd;
 }
 
-/* Container de chats */
+/* Container de chats y notificaciones */
 .container {
     max-width: 600px;
     margin: 0 auto;
     background: #fff;
     border-radius: 10px;
-    padding: 10px;
+    padding: 15px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-/* Lista de chats */
-.chat-list {
-    list-style: none;
+/* Título de sección */
+.titulo-seccion {
+    margin-top: 25px;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #2c3e50;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 5px;
 }
 
-/* Item individual */
+/* Lista de chats y notificaciones */
+.chat-list, .notif-list {
+    list-style: none; /* quita bullets */
+    padding-left: 0;
+    margin: 10px 0 20px 0;
+}
+
+/* Item de chat */
 .chat-item {
     display: flex;
     justify-content: space-between;
@@ -64,10 +77,10 @@ header {
     border-bottom: 1px solid #eee;
     cursor: pointer;
     transition: background 0.2s;
+    border-radius: 8px;
 }
 .chat-item:hover {
     background: #f0f0f0;
-    border-radius: 8px;
 }
 
 /* Info del chat */
@@ -112,9 +125,104 @@ header {
     border-radius: 50%;
 }
 
-/* Mensaje sin chats */
-.chat-item:empty, .chat-item.no-messages {
+/* Item de notificación */
+.notif-item {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: default;
+    transition: background 0.2s;
+}
+.notif-item.no-leida {
+    border-left: 5px solid #3498db;
+    background-color: #ecf6ff;
+}
+.notif-item.leida {
+    border-left: 5px solid #95a5a6;
+    background-color: #f8f9fa;
+}
+.notif-item:hover {
+    background-color: #f9f9f9;
+}
+
+/* Info de notificación */
+.notif-info p {
+    margin-bottom: 5px;
+    color: #333;
+}
+.notif-info .fecha {
+    font-size: 0.75rem;
+    color: #777;
+}
+
+/* Mensaje vacío de chats o notificaciones */
+.chat-item:empty, .chat-item.no-messages,
+.notif-item.vacio {
     text-align: center;
     color: #888;
     cursor: default;
+    padding: 15px 10px;
+    font-style: italic;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px dashed #ccc;
 }
+.notif-item.reprogramacion { 
+    background-color: #fff3cd; 
+    border-left: 4px solid #ffc107; 
+}
+
+.notif-item.no-leida { 
+    font-weight: bold; 
+}
+
+.notif-badge { 
+    color: red; 
+    font-weight: bold; 
+    margin-left: 5px; 
+}
+.chat-badge { 
+    background: red; 
+    color: white; 
+    border-radius: 50%; 
+    padding: 2px 6px; 
+    font-size: 0.8em; 
+}
+
+/* Notificación de cancelación de reserva */
+.notif-item.cancelacion {
+    background-color: #ffe6e6; /* Fondo rojo claro */
+    border-left: 5px solid #ff4d4d; /* Borde rojo */
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.notif-item.cancelacion:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.notif-item.cancelacion .notif-info p {
+    color: #a70000; /* Texto rojo más oscuro */
+    font-weight: 500;
+}
+
+.notif-item.cancelacion .notif-info .fecha {
+    color: #800000; /* Fecha en rojo oscuro */
+    font-size: 0.85em;
+}
+
+.notif-item.cancelacion .notif-badge {
+    background-color: #ff1a1a; /* Badge rojo */
+    color: #fff;
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 3px 7px;
+    margin-left: 10px;
+    font-size: 0.8em;
+}
+
+
