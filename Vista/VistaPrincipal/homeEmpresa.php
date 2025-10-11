@@ -9,29 +9,49 @@ if (!isset($_SESSION['user_id']) || $_SESSION['tipo_usuario'] !== 'empresa') {
 }
 
 $empresa_id = $_SESSION['user_id'];
-$logo = '/ClickSoft/IMG/empresas/' . $_SESSION['empresa_logo'];
+$logo = '/ClickSoft/IMG/empresas/' . ($_SESSION['empresa_logo'] ?? 'default.png');
 
-// Instanciar historial
+// --------------------------
+// HISTORIAL / RESERVAS
+// --------------------------
 $historialWrapper = new historialControladorWrapper();
 $reservas_proximas = $historialWrapper->listarReservasEmpresa($empresa_id);
+$pendientes = array_filter($reservas_proximas, fn($r) => $r['estado_reserva'] === 'pendiente');
+$total_reservas = count($pendientes);
 
-// Instanciar mensajes
-$mensajeWrapper = new mensajesControladorWrapper();
-$mensajes_raw = $mensajeWrapper->obtenerMensajesEmpresa($empresa_id);
-
-// Contar mensajes no leídos
+// --------------------------
+// MENSAJES NO LEÍDOS
+// --------------------------
+$mensajeWrapper = new mensajesEmpresaWrapper();
+$mensajes_raw = $mensajeWrapper->obtenerMensajes($empresa_id);
 $mensajes_no_leidos = 0;
-if($mensajes_raw){
-    while($m = $mensajes_raw->fetch_assoc()){
-        if(!$m['leido']) $mensajes_no_leidos++;
-    }
+foreach ($mensajes_raw as $m) {
+    // En tu modelo, asegúrate de que exista 'leido'
+    $mensajes_no_leidos += isset($m['leido']) && $m['leido'] == 0 ? 1 : 0;
 }
 
-// Contador de reservas pendientes
-$pendientes = array_filter($reservas_proximas, fn($r) => $r['estado_reserva'] === 'pendiente');
+// --------------------------
+// NOTIFICACIONES NO LEÍDAS
+// --------------------------
+$notifWrapper = new notificacionControladorWrapper();
+$notificaciones_no_leidas = $notifWrapper->contarNoLeidas($empresa_id);
 
-// Total de notificaciones: reservas pendientes + mensajes no leídos
-$total_notificaciones = count($pendientes) + $mensajes_no_leidos;
+// --------------------------
+// TOTAL NOTIFICACIONES
+// --------------------------
+$total_notificaciones = $total_reservas + $mensajes_no_leidos + $notificaciones_no_leidas;
+
+// --------------------------
+// MARCAR COMO LEÍDAS AL VISITAR
+// --------------------------
+$notifWrapper->marcarLeidas($empresa_id);
+
+// Para mensajes: marcamos todos los mensajes que sean para la empresa como leídos
+foreach ($mensajes_raw as $m) {
+    if (isset($m['leido']) && $m['leido'] == 0) {
+        $mensajeWrapper->marcarMensajesLeidos($empresa_id, $m['id_emisor'], $m['id_reserva']);
+    }
+}
 
 // Página actual para menú activo
 $current_page = basename($_SERVER['PHP_SELF']);
@@ -70,10 +90,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </ul>
 
         <div class="notificaciones">
-            <a href="../VistaNotificaciones/notificacionesEmpresa.php">
+            <a href="../VistaNotificaciones/notificacionesEmpresa.php" id="campana-notificaciones">
                 <i class="fa-solid fa-bell"></i>
                 <?php if($total_notificaciones > 0): ?>
-                    <span class="contador"><?= $total_notificaciones; ?></span>
+                    <span class="contador" id="contador-notificaciones"><?= $total_notificaciones; ?></span>
                 <?php endif; ?>
             </a>
         </div>
@@ -88,7 +108,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <section class="estadisticas">
         <div class="card">
             <h3>Reservas próximas</h3>
-            <p><?php echo count($pendientes); ?></p>
+            <p><?= count($pendientes) ?></p>
         </div>
         <div class="card">
             <h3>Ventas del mes</h3>
@@ -130,12 +150,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <tbody>
                 <?php foreach($reservas_proximas as $reserva): ?>
                 <tr>
-                    <td><?php echo htmlspecialchars($reserva['nombre_cliente'] ?? 'Desconocido'); ?></td>
-                    <td><?php echo htmlspecialchars($reserva['titulo'] ?? 'Servicio eliminado'); ?></td>
-                    <td><?php echo htmlspecialchars($reserva['fecha_reserva']); ?></td>
-                    <td><?php echo htmlspecialchars($reserva['hora_reserva']); ?></td>
-                    <td><span class="estado <?php echo htmlspecialchars($reserva['estado_reserva']); ?>">
-                        <?php echo ucfirst($reserva['estado_reserva']); ?>
+                    <td><?= htmlspecialchars($reserva['nombre_cliente'] ?? 'Desconocido') ?></td>
+                    <td><?= htmlspecialchars($reserva['titulo'] ?? 'Servicio eliminado') ?></td>
+                    <td><?= htmlspecialchars($reserva['fecha_reserva']) ?></td>
+                    <td><?= htmlspecialchars($reserva['hora_reserva']) ?></td>
+                    <td><span class="estado <?= htmlspecialchars($reserva['estado_reserva']); ?>">
+                        <?= ucfirst($reserva['estado_reserva']); ?>
                     </span></td>
                 </tr>
                 <?php endforeach; ?>

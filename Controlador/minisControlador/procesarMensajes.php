@@ -1,36 +1,37 @@
 <?php
-function procesarMensajes($mensajes_raw) {
+function procesarMensajesCliente(array $mensajes_raw) {
     $mensajes = [];
 
-    if($mensajes_raw) {
-        while($m = $mensajes_raw->fetch_assoc()) {
-            // Determinar el id del cliente (usuario)
-            if ($m['tipo_emisor'] === 'usuario') {
-                $cliente_id = $m['id_emisor'];
-            } elseif ($m['tipo_receptor'] === 'usuario') {
-                $cliente_id = $m['id_receptor'];
-            } else {
-                continue; // Si no hay usuario, ignora este mensaje
+    foreach ($mensajes_raw as $row) {
+        // Determinar el id de la empresa (emisor o receptor)
+        if ($row['tipo_emisor'] === 'empresa') {
+            $empresa_id = $row['id_emisor'];
+            $nombre_empresa = $row['nombre_empresa'] ?? 'Empresa desconocida';
+        } elseif ($row['tipo_receptor'] === 'empresa') {
+            $empresa_id = $row['id_receptor'];
+            $nombre_empresa = $row['nombre_empresa'] ?? 'Empresa desconocida';
+        } else {
+            continue; // Ignorar mensajes sin empresa
+        }
+
+        // Inicializar si no existe
+        if (!isset($mensajes[$empresa_id])) {
+            $mensajes[$empresa_id] = [
+                'id_reserva' => $row['id_reserva'],
+                'nombre_empresa' => $nombre_empresa,
+                'ultimo_mensaje' => $row['contenido'],
+                'fecha_envio' => $row['fecha_envio'],
+                'no_leidos' => ($row['leido'] == 0) ? 1 : 0
+            ];
+        } else {
+            // Mantener el último mensaje según fecha
+            if (strtotime($row['fecha_envio']) > strtotime($mensajes[$empresa_id]['fecha_envio'])) {
+                $mensajes[$empresa_id]['ultimo_mensaje'] = $row['contenido'];
+                $mensajes[$empresa_id]['fecha_envio'] = $row['fecha_envio'];
             }
 
-            $id_reserva = $m['id_reserva'];
-
-            if(!isset($mensajes[$cliente_id])) {
-                $mensajes[$cliente_id] = [
-                    'ultimo_mensaje' => $m['contenido'],
-                    'fecha_envio' => $m['fecha_envio'],
-                    'nombre_cliente' => $m['nombre_cliente'],
-                    'no_leidos' => $m['leido'] ? 0 : 1,
-                    'id_reserva' => $id_reserva
-                ];
-            } else {
-                if(!$m['leido']) $mensajes[$cliente_id]['no_leidos']++;
-                if(strtotime($m['fecha_envio']) > strtotime($mensajes[$cliente_id]['fecha_envio'])) {
-                    $mensajes[$cliente_id]['ultimo_mensaje'] = $m['contenido'];
-                    $mensajes[$cliente_id]['fecha_envio'] = $m['fecha_envio'];
-                    $mensajes[$cliente_id]['id_reserva'] = $id_reserva;
-                }
-            }
+            // Contar mensajes no leídos
+            if ($row['leido'] == 0) $mensajes[$empresa_id]['no_leidos']++;
         }
     }
 

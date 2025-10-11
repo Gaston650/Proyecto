@@ -1,26 +1,45 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../Controlador/superControlador/superControlador.php';
+require_once __DIR__ . '/../../Controlador/minisControlador/procesarMensajes.php';
 
+// Verificar sesión
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../VistaSesion/inicioSesion.php?error=Debes iniciar sesión primero.");
     exit();
 }
 
-$id_emisor = $_SESSION['user_id'];
-$tipo_emisor = 'usuario';
-$id_receptor = $_GET['proveedor'] ?? null;
-$tipo_receptor = 'empresa';
+$id_cliente = $_SESSION['user_id'];
+$id_empresa  = $_GET['proveedor'] ?? null;
 $id_reserva  = $_GET['reserva'] ?? null;
 
-$controlador = new mensajeControlador();
-$data = $controlador->manejarConversacion($id_emisor, $tipo_emisor, $id_receptor, $tipo_receptor, $id_reserva);
+if (!$id_empresa || !$id_reserva) die("Error: faltan parámetros de la conversación.");
 
-$mensajes = $data['mensajes'];
-$exito = $data['exito'];
-$error = $data['error'];
+$wrapper = new mensajesClienteWrapper();
+
+// ✅ Marcar como leídos los mensajes de la empresa hacia el cliente
+$wrapper->marcarMensajesLeidos($id_cliente, $id_empresa, $id_reserva);
+
+// Enviar mensaje
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['contenido'])) {
+    $contenido = trim($_POST['contenido']);
+    $wrapper->enviarMensaje($id_cliente, $id_empresa, $id_reserva, $contenido);
+    header("Location: mensaje.php?proveedor=$id_empresa&reserva=$id_reserva");
+    exit();
+}
+
+// Obtener mensajes
+$conversation = $wrapper->obtenerConversacion($id_cliente, $id_empresa, $id_reserva)['mensajes'] ?? [];
+
+// Procesar para obtener nombre de la empresa
+$nombre_empresa = 'Proveedor';
+foreach ($conversation as $m) {
+    if ($m['tipo_emisor'] === 'empresa') {
+        $nombre_empresa = $m['nombre_emisor'] ?? 'Proveedor';
+        break;
+    }
+}
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -31,30 +50,29 @@ $error = $data['error'];
 </head>
 <body>
 <header>
-<h2>💬 Chat con el proveedor</h2>
-<a href="../VistaReservas/reservas.php" class="volver">← Volver</a>
+    <h2>💬 Chat con <?= htmlspecialchars($nombre_empresa) ?></h2>
+    <a href="../VistaNotificaciones/notificaciones.php" class="volver">← Volver</a>
 </header>
 
 <main>
-<?php if ($error): ?><p class="error"><?= htmlspecialchars($error) ?></p><?php endif; ?>
-
 <div class="chat-box">
-<?php if ($mensajes): ?>
-    <?php while($m = $mensajes->fetch_assoc()): ?>
-        <div class="mensaje <?= ($m['id_emisor'] == $id_emisor && $m['tipo_emisor'] == 'usuario') ? 'emisor' : 'receptor' ?>">
-            <strong><?= ($m['id_emisor'] == $id_emisor && $m['tipo_emisor'] == 'usuario') ? 'Tú' : 'Proveedor' ?>:</strong> <?= htmlspecialchars($m['contenido']) ?>
+<?php if (!empty($conversation)): ?>
+    <?php foreach ($conversation as $m): ?>
+        <div class="mensaje <?= ($m['id_emisor'] == $id_cliente && $m['tipo_emisor'] == 'usuario') ? 'emisor' : 'receptor' ?>">
+            <strong><?= ($m['id_emisor'] == $id_cliente) ? 'Tú' : htmlspecialchars($nombre_empresa) ?>:</strong>
+            <?= htmlspecialchars($m['contenido']) ?>
             <span class="fecha"><?= date('d/m/Y H:i', strtotime($m['fecha_envio'])) ?></span>
         </div>
-    <?php endwhile; ?>
+    <?php endforeach; ?>
+<?php else: ?>
+    <p class="vacio">No hay mensajes en esta conversación.</p>
 <?php endif; ?>
 </div>
 
-<?php if ($id_receptor && $id_reserva): ?>
-<form method="POST">
+<form method="POST" class="form-mensaje">
     <input type="text" name="contenido" placeholder="Escribe tu mensaje..." required>
     <button type="submit">Enviar</button>
 </form>
-<?php endif; ?>
 </main>
 </body>
 </html>

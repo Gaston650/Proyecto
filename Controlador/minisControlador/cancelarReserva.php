@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/../../Controlador/superControlador/superControlador.php';
+require_once __DIR__ . '/../superControlador/superControlador.php';
 
 // Verificar sesión
 if (!isset($_SESSION['user_id'])) {
@@ -15,16 +15,17 @@ if (!isset($_GET['id'])) {
 }
 
 $id_reserva = intval($_GET['id']);
+$id_cliente = $_SESSION['user_id'];
 
 // Instanciar wrapper de reservas
 $reservasWrapper = new reservasControladorWrapper();
 
 // Cancelar reserva
-if ($reservasWrapper->cancelarReserva($id_reserva)) {
-    header("Location: reservas.php?msg=cancelado");
+if ($reservasWrapper->cancelarReserva($id_reserva, $id_cliente)) {
+    header("Location: ../../Vista/VistaReservas/reservas.php?msg=cancelado");
     exit();
 } else {
-    header("Location: reservas.php?error=fallo_cancelar");
+    header("Location: ../../Vista/VistaReservas/reservas.php?error=fallo_cancelar");
     exit();
 }
 ?>

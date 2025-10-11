@@ -8,25 +8,33 @@ class mensajeControladorEmpresa {
         $this->modelo = new modeloMensaje();
     }
 
+    public function obtenerConversacion($id_cliente, $id_empresa, $id_reserva) {
+        return $this->modelo->obtenerConversacion($id_cliente, $id_empresa, $id_reserva);
+    }
+
+    public function marcarMensajesLeidos($id_empresa, $id_cliente, $id_reserva) {
+        return $this->modelo->marcarMensajesLeidos($id_empresa, $id_cliente, $id_reserva);
+    }
+
     public function obtenerMensajesParaEmpresa($id_empresa) {
         return $this->modelo->obtenerMensajesParaEmpresa($id_empresa);
     }
 
-    public function obtenerConversacionPorCliente($id_cliente, $id_empresa, $id_reserva = null) {
-        return $this->modelo->obtenerConversacionPorClienteReserva($id_cliente, $id_empresa, $id_reserva);
-    }
-
-    // Ahora requiere los tipos de emisor y receptor
     public function insertarMensaje($id_emisor, $tipo_emisor, $id_receptor, $tipo_receptor, $id_reserva, $contenido) {
         return $this->modelo->insertarMensaje($id_emisor, $tipo_emisor, $id_receptor, $tipo_receptor, $id_reserva, $contenido);
     }
 
-    public function marcarMensajesLeidosEmpresa($id_empresa, $id_cliente, $id_reserva) {
-        return $this->modelo->marcarMensajesLeidos($id_empresa, $id_cliente, $id_reserva);
-    }
-
-    public function contarNoLeidos($id_empresa) {
-        return $this->modelo->contarNoLeidos($id_empresa);
+    public function obtenerConexionParaDebug() {
+        return $this->modelo->getConexion();
     }
 }
 ?>
+
+
+
+
+
+
+
+
+

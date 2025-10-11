@@ -13,7 +13,8 @@ require_once __DIR__ . '/../minisControlador/controladorPromocion.php';
 require_once __DIR__ . '/../minisControlador/controladorResena.php';
 require_once __DIR__ . '/../minisControlador/controladorMensaje.php';
 require_once __DIR__ . '/../minisControlador/controladorMensajesEmpresa.php';
-
+require_once __DIR__ . '/../minisControlador/procesarMensajes.php';
+require_once __DIR__ . '/../minisControlador/controladorNotificaciones.php';
 
 class usuarioControladorWrapper {
     private $controlador;
@@ -115,8 +116,8 @@ class reservasControladorWrapper {
     public function __construct() {
         $this->controlador = new controladorReservas();
     }
-    public function crearReserva($id_cliente, $id_servicio, $fecha, $hora) {
-        return $this->controlador->crearReserva($id_cliente, $id_servicio, $fecha, $hora);
+    public function crearReserva($id_cliente, $id_servicio, $fecha, $hora, $comentarios = '') {
+        return $this->controlador->crearReserva($id_cliente, $id_servicio, $fecha, $hora, $comentarios);
     }
     public function verReservasCliente($id_cliente) {
         return $this->controlador->verReservasCliente($id_cliente);
@@ -124,15 +125,14 @@ class reservasControladorWrapper {
     public function verReservasProveedor($id_proveedor) {
         return $this->controlador->verReservasProveedor($id_proveedor);
     }
-  
     public function verReservasProveedorFiltradas($id_proveedor, $estado = '', $fecha_inicio = '', $fecha_fin = '') {
         return $this->controlador->verReservasProveedorFiltradas($id_proveedor, $estado, $fecha_inicio, $fecha_fin);
     }
-    public function cancelarReserva($id_reserva) {
-        return $this->controlador->cancelarReserva($id_reserva);
+    public function cancelarReserva($id_reserva, $id_cliente) {
+        return $this->controlador->cancelarReserva($id_reserva, $id_cliente);
     }
-    public function reprogramarReserva($id_reserva, $fecha, $hora) {
-        return $this->controlador->reprogramarReserva($id_reserva, $fecha, $hora);
+    public function reprogramarReserva($id_reserva, $fecha, $hora, $id_cliente) {
+        return $this->controlador->reprogramarReserva($id_reserva, $fecha, $hora, $id_cliente);
     }
     public function actualizarEstado($id_reserva, $estado) {
         return $this->controlador->actualizarEstado($id_reserva, $estado);
@@ -144,7 +144,6 @@ class reservasControladorWrapper {
         return $this->controlador->actualizarEstado($id_reserva, 'rechazada');
     }
 }
-
 
 class favoritosControladorWrapper {
     private $controlador;
@@ -170,25 +169,20 @@ class historialControladorWrapper {
     public function __construct() {
         $this->controlador = new controladorHistorial();
     }
-
     public function listarHistorial($id_cliente, $estado = null) {
         return $this->controlador->listarHistorial($id_cliente, $estado);
     }
-
     public function listarReservasEmpresa($id_empresa, $estado = null) {
         return $this->controlador->listarReservasEmpresa($id_empresa, $estado);
     }
-
     public function agregarComentario($id_cliente, $id_servicio, $comentario, $calificacion) {
         $resenaWrapper = new controladorResena();
         return $resenaWrapper->guardar($id_cliente, $id_servicio, $comentario, $calificacion);
     }
-
     public function cancelarReserva($id_reserva, $motivo = null) {
         return $this->controlador->cancelarReserva($id_reserva, $motivo);
     }
 }
-
 
 class promocionControladorWrapper {
     private $modelo;
@@ -212,33 +206,96 @@ class promocionControladorWrapper {
     }
 }
 
-class mensajesControladorWrapper {
-    private $controlador;
+class mensajesClienteWrapper {
+    private $controladorCliente;
 
     public function __construct() {
-        require_once __DIR__ . '/../minisControlador/controladorMensajesEmpresa.php';
-        $this->controlador = new mensajeControladorEmpresa();
+        $this->controladorCliente = new mensajeControlador();
     }
 
-    public function obtenerMensajesEmpresa($id_empresa) {
-        return $this->controlador->obtenerMensajesParaEmpresa($id_empresa);
+    public function obtenerMensajesCliente($id_cliente) {
+        return $this->controladorCliente->obtenerMensajesCliente($id_cliente);
     }
 
     public function obtenerConversacion($id_cliente, $id_empresa, $id_reserva) {
-        return $this->controlador->obtenerConversacionPorCliente($id_cliente, $id_empresa, $id_reserva);
+        return $this->controladorCliente->manejarConversacion($id_cliente, 'usuario', $id_empresa, 'empresa', $id_reserva);
     }
 
-    // Ahora requiere los tipos de emisor y receptor
-    public function enviarMensaje($id_emisor, $tipo_emisor, $id_receptor, $tipo_receptor, $id_reserva, $contenido) {
-        return $this->controlador->insertarMensaje($id_emisor, $tipo_emisor, $id_receptor, $tipo_receptor, $id_reserva, $contenido);
+    public function enviarMensaje($id_cliente, $id_empresa, $id_reserva, $contenido) {
+        return $this->controladorCliente->enviarMensaje($id_cliente, 'usuario', $id_empresa, 'empresa', $id_reserva, $contenido);
+    }
+
+    public function marcarMensajesLeidos($id_cliente, $id_empresa, $id_reserva) {
+        return $this->controladorCliente->marcarMensajesLeidos($id_empresa, $id_cliente, $id_reserva);
+    }
+
+    public function contarMensajesNoLeidos($id_cliente) {
+        $mensajes_raw = $this->obtenerMensajesCliente($id_cliente);
+        $mensajes = procesarMensajesCliente($mensajes_raw);
+        $total = 0;
+        foreach ($mensajes as $m) {
+            $total += $m['no_leidos'];
+        }
+        return $total;
+    }
+}
+
+class mensajesEmpresaWrapper {
+    private $controlador;
+
+    public function __construct() {
+        $this->controlador = new mensajeControladorEmpresa();
+    }
+
+    public function obtenerMensajes($id_empresa) {
+        return $this->controlador->obtenerMensajesParaEmpresa($id_empresa); 
+    }
+
+    public function obtenerConversacion($id_cliente, $id_empresa, $id_reserva) {
+        return $this->controlador->obtenerConversacion($id_cliente, $id_empresa, $id_reserva);
+    }
+
+    public function enviarMensaje($id_empresa, $id_cliente, $id_reserva, $contenido) {
+        return $this->controlador->insertarMensaje($id_empresa, 'empresa', $id_cliente, 'usuario', $id_reserva, $contenido);
     }
 
     public function marcarMensajesLeidos($id_empresa, $id_cliente, $id_reserva) {
-        return $this->controlador->marcarMensajesLeidosEmpresa($id_empresa, $id_cliente, $id_reserva);
+        return $this->controlador->marcarMensajesLeidos($id_empresa, $id_cliente, $id_reserva);
+    }
+}
+
+
+class notificacionControladorWrapper {
+    private $controlador;
+
+    public function __construct() {
+        $this->controlador = new notificacionControlador();
     }
 
-    public function contarNoLeidos($id_empresa) {
-        return $this->controlador->contarNoLeidos($id_empresa);
+    // Obtener notificaciones no leídas
+    public function obtenerNoLeidas($id_empresa) {
+        return $this->controlador->obtenerNoLeidas($id_empresa);
+    }
+
+    // Obtener todas las notificaciones (sin cambiar su estado)
+    public function obtenerTodas($id_empresa) {
+        return $this->controlador->obtenerTodas($id_empresa);
+    }
+
+    // Insertar notificación
+    public function insertarNotificacion($id_empresa, $mensaje, $tipo = 'sistema') {
+        return $this->controlador->insertarNotificacion($id_empresa, $mensaje, $tipo);
+    }
+
+    // Marcar todas las notificaciones como leídas
+    public function marcarLeidas($id_empresa) {
+        return $this->controlador->marcarLeidas($id_empresa);
+    }
+
+    // Contar notificaciones no leídas
+    public function contarNoLeidas($id_empresa) {
+        return $this->controlador->contarNoLeidas($id_empresa);
     }
 }
 ?>
+
