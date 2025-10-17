@@ -63,7 +63,7 @@ header {
 
 /* Lista de chats y notificaciones */
 .chat-list, .notif-list {
-    list-style: none; /* quita bullets */
+    list-style: none;
     padding-left: 0;
     margin: 10px 0 20px 0;
 }
@@ -132,28 +132,18 @@ header {
     border-radius: 8px;
     margin-bottom: 8px;
     cursor: default;
-    transition: background 0.2s;
+    transition: all 0.2s;
 }
+
+/* Notificaciones no leídas y leídas */
 .notif-item.no-leida {
     border-left: 5px solid #3498db;
     background-color: #ecf6ff;
+    font-weight: bold;
 }
 .notif-item.leida {
     border-left: 5px solid #95a5a6;
     background-color: #f8f9fa;
-}
-.notif-item:hover {
-    background-color: #f9f9f9;
-}
-
-/* Info de notificación */
-.notif-info p {
-    margin-bottom: 5px;
-    color: #333;
-}
-.notif-info .fecha {
-    font-size: 0.75rem;
-    color: #777;
 }
 
 /* Mensaje vacío de chats o notificaciones */
@@ -168,55 +158,52 @@ header {
     border-radius: 8px;
     border: 1px dashed #ccc;
 }
-.notif-item.reprogramacion { 
-    background-color: #fff3cd; 
-    border-left: 4px solid #ffc107; 
+
+/* Info de notificación */
+.notif-info p {
+    margin-bottom: 5px;
+    color: #333;
+}
+.notif-info .fecha {
+    font-size: 0.75rem;
+    color: #777;
 }
 
-.notif-item.no-leida { 
-    font-weight: bold; 
-}
-
+/* Badge de notificación */
 .notif-badge { 
     color: red; 
     font-weight: bold; 
     margin-left: 5px; 
 }
-.chat-badge { 
-    background: red; 
-    color: white; 
-    border-radius: 50%; 
-    padding: 2px 6px; 
-    font-size: 0.8em; 
+
+/* --- Notificaciones especiales --- */
+
+/* Reprogramación */
+.notif-item.reprogramacion { 
+    background-color: #fff3cd; 
+    border-left: 5px solid #ffc107; 
 }
 
-/* Notificación de cancelación de reserva */
+/* Cancelación */
 .notif-item.cancelacion {
-    background-color: #ffe6e6; /* Fondo rojo claro */
-    border-left: 5px solid #ff4d4d; /* Borde rojo */
-    padding: 12px 15px;
-    margin-bottom: 10px;
-    border-radius: 8px;
+    background-color: #ffe6e6; 
+    border-left: 5px solid #ff4d4d; 
     transition: transform 0.2s, box-shadow 0.2s;
 }
-
 .notif-item.cancelacion:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
-
 .notif-item.cancelacion .notif-info p {
-    color: #a70000; /* Texto rojo más oscuro */
+    color: #a70000; 
     font-weight: 500;
 }
-
 .notif-item.cancelacion .notif-info .fecha {
-    color: #800000; /* Fecha en rojo oscuro */
+    color: #800000; 
     font-size: 0.85em;
 }
-
 .notif-item.cancelacion .notif-badge {
-    background-color: #ff1a1a; /* Badge rojo */
+    background-color: #ff1a1a;
     color: #fff;
     font-weight: bold;
     border-radius: 50%;
@@ -225,4 +212,15 @@ header {
     font-size: 0.8em;
 }
 
-
+/* Pago realizado */
+.notif-item.pago-realizado {
+    background-color: #e0ffe0; 
+    color: #2e7d32; 
+    border-left: 5px solid #4caf50; 
+    font-weight: bold;
+    transition: background 0.2s, transform 0.2s;
+}
+.notif-item.pago-realizado:hover {
+    background-color: #c8f7c5;
+    transform: translateY(-1px);
+}

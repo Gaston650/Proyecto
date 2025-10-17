@@ -58,15 +58,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <li><a href="../VistaReservas/reservasEmpresa.php" class="<?= $current_page === 'reservasEmpresa.php' ? 'active' : '' ?>">Reservas</a></li>
         <li><a href="../VistaPromociones/promocionesEmpresa.php" class="<?= $current_page === 'promocionesEmpresa.php' ? 'active' : '' ?>">Promociones</a></li>
     </ul>
-
-    <div class="notificaciones">
-        <a href="../VistaNotificaciones/notificaciones.php">
-            <i class="fa-solid fa-bell"></i>
-            <?php if(count($pendientes) > 0): ?>
-                <span class="contador"><?= count($pendientes); ?></span>
-            <?php endif; ?>
-        </a>
-    </div>
 </nav>
 </header>
 

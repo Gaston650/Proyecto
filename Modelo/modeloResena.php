@@ -9,47 +9,61 @@ class modeloResena {
         $this->conn = $conexion->conectar();
     }
 
-    // Guardar nueva reseña
-    public function guardarResena($id_cliente, $id_servicio, $calificacion, $comentario) {
-        // Validar que la reserva exista
-        $stmt = $this->conn->prepare("SELECT * FROM reservas WHERE id_cliente = ? AND id_servicio = ?");
-        $stmt->bind_param("ii", $id_cliente, $id_servicio);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
-        if ($resultado->num_rows === 0) {
-            return "RESERVA_NO_EXISTE"; 
+    // Guardar reseña
+    public function guardar($id_cliente, $id_servicio, $comentario, $calificacion) {
+        $stmt = $this->conn->prepare("
+            INSERT INTO reseñas (id_cliente, id_servicio, comentario, calificacion, fecha)
+            VALUES (?, ?, ?, ?, NOW())
+        ");
+        $stmt->bind_param("iisi", $id_cliente, $id_servicio, $comentario, $calificacion);
+        if ($stmt->execute()) {
+            return true;
         }
-
-        // Validar si ya existe reseña
-        $stmt = $this->conn->prepare("SELECT * FROM reseñas WHERE id_cliente = ? AND id_servicio = ?");
-        $stmt->bind_param("ii", $id_cliente, $id_servicio);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
-        if ($resultado->num_rows > 0) {
-            return "RESEÑA_EXISTE"; 
-        }
-
-        // Insertar reseña
-        $stmt = $this->conn->prepare("INSERT INTO reseñas (id_cliente, id_servicio, calificacion, comentario, fecha)
-                                      VALUES (?, ?, ?, ?, NOW())");
-        $stmt->bind_param("iiis", $id_cliente, $id_servicio, $calificacion, $comentario);
-        return $stmt->execute();
+        return false;
     }
 
-    // Obtener reseña por cliente y servicio
+    // Obtener reseñas por servicio
+    public function obtenerResenasPorServicio($id_servicio) {
+        $stmt = $this->conn->prepare("
+            SELECT r.calificacion, r.comentario, u.nombre AS cliente_nombre
+            FROM reseñas r
+            JOIN usuarios u ON r.id_cliente = u.id_usuario
+            WHERE r.id_servicio = ?
+            ORDER BY r.fecha DESC
+        ");
+        $stmt->bind_param("i", $id_servicio);
+        $stmt->execute();
+        $resenas = $stmt->get_result();
+        return $resenas->fetch_all(MYSQLI_ASSOC);
+    }
+
+    // Obtener reseña específica de un cliente a un servicio
     public function obtenerResenaPorReserva($id_cliente, $id_servicio) {
-        $stmt = $this->conn->prepare("SELECT * FROM reseñas WHERE id_cliente = ? AND id_servicio = ?");
+        $stmt = $this->conn->prepare("
+            SELECT calificacion, comentario
+            FROM reseñas
+            WHERE id_cliente = ? AND id_servicio = ?
+        ");
         $stmt->bind_param("ii", $id_cliente, $id_servicio);
         $stmt->execute();
-        return $stmt->get_result()->fetch_assoc();
+        $res = $stmt->get_result();
+        return $res->fetch_assoc();
     }
 
-    // Actualizar reseña
-    public function actualizarResena($id_cliente, $id_servicio, $calificacion, $comentario) {
-        $stmt = $this->conn->prepare("UPDATE reseñas SET calificacion = ?, comentario = ?, fecha = NOW()
-                                      WHERE id_cliente = ? AND id_servicio = ?");
-        $stmt->bind_param("isii", $calificacion, $comentario, $id_cliente, $id_servicio);
-        return $stmt->execute();
+    public function obtenerPromedioPorEmpresa($id_empresa) {
+        $sql = "
+            SELECT AVG(r.calificacion) AS promedio
+            FROM reseñas r
+            INNER JOIN servicios s ON r.id_servicio = s.id_servicio
+            WHERE s.id_empresa = ?
+        ";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $id_empresa);
+        $stmt->execute();
+        $resultado = $stmt->get_result()->fetch_assoc();
+        return $resultado['promedio'];
     }
+
+
 }
 ?>

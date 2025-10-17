@@ -19,7 +19,6 @@ class controladorSesion {
     public function iniciarSesionUsuario($email, $password) {
     $usuario = $this->usuarioModelo->obtenerUsuario($email);
     if ($usuario && password_verify($password, $usuario['contraseña'])) {
-
         // Guardar datos del usuario actual
         $_SESSION['user_id'] = $usuario['id'];
         $_SESSION['user_nombre'] = $usuario['nombre'];
@@ -32,21 +31,21 @@ class controladorSesion {
     }
 }
 
-// Iniciar sesión para empresas
-public function iniciarSesionEmpresa($email, $password) {
-    $empresa = $this->empresaModelo->obtenerEmpresa($email);
-    if ($empresa && password_verify($password, $empresa['contraseña'])) {
-        // Guardar datos de la empresa actual
-        $_SESSION['user_id'] = $empresa['id_empresa'];
-        $_SESSION['user_nombre'] = $empresa['nombre_empresa'];
-        $_SESSION['empresa_logo'] = $empresa['logo']; // opcional
-        $_SESSION['tipo_usuario'] = 'empresa';
+    // Iniciar sesión para empresas
+    public function iniciarSesionEmpresa($email, $password) {
+        $empresa = $this->empresaModelo->obtenerEmpresa($email);
+        if ($empresa && password_verify($password, $empresa['contraseña'])) {
+            // Guardar datos de la empresa actual
+            $_SESSION['user_id'] = $empresa['id_empresa'];
+            $_SESSION['user_nombre'] = $empresa['nombre_empresa'];
+            $_SESSION['empresa_logo'] = $empresa['logo']; 
+            $_SESSION['tipo_usuario'] = 'empresa';
 
-        return true;
-    } else {
-        $_SESSION['error_login'] = "Debes iniciar sesión como empresa o verificar tus credenciales.";
-        return false;
+            return true;
+        } else {
+            $_SESSION['error_login'] = "Debes iniciar sesión como empresa o verificar tus credenciales.";
+            return false;
+        }
     }
-}
 }
 ?>
