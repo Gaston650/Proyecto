@@ -1,9 +1,33 @@
 <?php
+session_start();
+require_once __DIR__ . '/../../Controlador/superControlador/superControlador.php';
+require_once __DIR__ . '/../../Modelo/modeloReservas.php';
+
 // Recibimos datos desde GET
-$operacion = $_GET['pref_id'] ?? '129479925786';
-$precio = $_GET['price'] ?? 3000;
+$operacion = $_GET['pref_id'] ?? 'SIM-'.rand(100000,999999);
+$precio = $_GET['price'] ?? 0;
 $producto = $_GET['title'] ?? 'Producto';
+$id_reserva = $_GET['id_reserva'] ?? null;
 $tarjeta = "Visa **** 3704"; // simulado
+
+if ($id_reserva) {
+    // Registrar pago en la base de datos
+    $pagoWrapper = new pagoControladorWrapper();
+    $pagoWrapper->pagoRealizado($id_reserva, $precio);
+
+    // Obtener información de la reserva
+    $reserva = ModeloReservas::obtenerReservaPorId($id_reserva);
+    $id_empresa = $reserva['id_empresa'] ?? null;
+    $nombre_cliente = $reserva['nombre_cliente'] ?? 'Cliente';
+    $nombre_servicio = $reserva['nombre_servicio'] ?? 'tu servicio';
+
+    // Insertar notificación normal para la empresa
+    if ($id_empresa) {
+        $notifWrapper = new notificacionControladorWrapper();
+        $mensaje = "$nombre_cliente ha realizado el pago de la reserva para '$nombre_servicio'.";
+        $notifWrapper->insertarNotificacion($id_empresa, $mensaje);
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -34,8 +58,9 @@ button:active { transform: scale(0.98); }
     <hr>
     <p><?= htmlspecialchars($producto) ?></p>
     <p><strong>Total: $ <?= number_format($precio, 0, ",", ".") ?></strong></p>
-    <button onclick="window.location.href='tienda.php'">Volver a la tienda</button>
+    <button onclick="window.location.href='../VistaReservas/reservas.php'">Volver a las reservas</button>
 </div>
 
 </body>
 </html>
+

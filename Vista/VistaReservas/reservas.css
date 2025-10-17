@@ -105,7 +105,7 @@ main {
 .acciones {
   margin-top: 10px;
   display: flex;
-  gap: 10px; /* separación entre botones */
+  gap: 10px;
   flex-wrap: wrap;
 }
 
@@ -129,9 +129,26 @@ main {
 .btn-reprogramar { background: #3498db; }
 .btn-reprogramar:hover { background: #2980b9; transform: translateY(-2px); }
 
-/* Modal */
+.btn-pagar {
+  display: inline-block;
+  background-color: #28a745;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.3s ease;
+}
+
+.btn-pagar:hover {
+  background-color: #218838;
+}
+
+/* ======================
+   MODALES
+====================== */
 .modal {
-  display: none; /* oculto por defecto */
+  display: none; 
   position: fixed;
   z-index: 1000;
   left: 0;
@@ -147,7 +164,7 @@ main {
   display: flex;
 }
 
-.modal-contenido {
+.modal .modal-contenido {
   background: white;
   padding: 25px;
   border-radius: 12px;
@@ -158,52 +175,85 @@ main {
   position: relative;
 }
 
-.cerrar {
-  position: absolute;
-  right: 15px;
-  top: 10px;
-  font-size: 25px;
-  cursor: pointer;
+.modal .modal-contenido h2 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: #333;
 }
 
-.modal-contenido button, .modal-contenido a.btn-confirmar {
-  margin: 8px;
+.modal .modal-contenido p {
+  font-size: 15px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.modal .acciones-modal {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.modal .acciones-modal button,
+.modal .acciones-modal a.btn-confirmar {
   padding: 10px 20px;
-  border-radius: 6px;
+  border-radius: 8px;
+  font-weight: 500;
   border: none;
   cursor: pointer;
-  font-weight: 500;
-  transition: background 0.3s;
   text-decoration: none;
+  transition: transform 0.2s, background 0.3s;
   display: inline-block;
   color: white;
 }
 
-.btn-confirmar {
-  background: #e74c3c;
-}
-.btn-confirmar:hover {
-  background: #c0392b;
+.modal .acciones-modal a.btn-confirmar {
+  background-color: #e74c3c;
 }
 
-.btn-cerrar {
-  background: #bdc3c7;
-}
-.btn-cerrar:hover {
-  background: #95a5a6;
+.modal .acciones-modal a.btn-confirmar:hover {
+  background-color: #c0392b;
+  transform: translateY(-2px);
 }
 
-.btn-pagar {
-    display: inline-block;
-    background-color: #28a745;
-    color: white;
-    padding: 8px 14px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: 0.3s ease;
+.modal .acciones-modal button.btn-cancelar {
+  background-color: #7f8c8d;
 }
 
-.btn-pagar:hover {
-    background-color: #218838;
+.modal .acciones-modal button.btn-cancelar:hover {
+  background-color: #606c76;
+  transform: translateY(-2px);
 }
+
+#formReprogramar input[type="date"],
+#formReprogramar input[type="time"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  margin-bottom: 12px;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+#formReprogramar input[type="date"]:focus,
+#formReprogramar input[type="time"]:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.4);
+}
+
+.modal .modal-contenido .close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.modal .modal-contenido .close:hover {
+  color: #e74c3c;
+}
+

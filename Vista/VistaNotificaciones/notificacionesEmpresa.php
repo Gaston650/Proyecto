@@ -23,18 +23,25 @@ $notificaciones = $notifWrapper->obtenerTodas($id_empresa);
 
 // Clasificar notificaciones según tipo
 foreach ($notificaciones as &$n) {
+    $clases = ['notif-item'];
+
     if ($n['tipo'] === 'alerta') {
         if (strpos($n['mensaje'], 'ha reprogramado') !== false) {
-            $n['clase'] = 'alerta reprogramacion';
+            $clases[] = 'reprogramacion';
         } elseif (strpos($n['mensaje'], 'ha cancelado') !== false) {
-            $n['clase'] = 'alerta cancelacion';
+            $clases[] = 'cancelacion';
+        } elseif (strpos($n['mensaje'], 'pago realizado') !== false) {
+            $clases[] = 'pago-realizado';
         } else {
-            $n['clase'] = 'alerta';
+            $clases[] = 'alerta';
         }
     } else {
-        $n['clase'] = $n['estado'] === 'no leída' ? 'no-leida' : 'leida';
+        $clases[] = $n['estado'] === 'no leída' ? 'no-leida' : 'leida';
     }
+
+    $n['clase'] = implode(' ', $clases);
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="es">

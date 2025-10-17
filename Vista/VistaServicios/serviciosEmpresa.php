@@ -37,13 +37,6 @@ $logo = '/ClickSoft/IMG/empresas/' . $_SESSION['empresa_logo'];
             <li><a href="../VistaReservas/reservasEmpresa.php">Reservas</a></li>
             <li><a href="../VistaPromociones/promocionesEmpresa.php">Promociones</a></li>
         </ul>
-
-        <div class="notificaciones">
-            <a href="../VistaNotificaciones/notificaciones.php">
-                <i class="fa-solid fa-bell"></i>
-                <span class="contador">3</span>
-            </a>
-        </div>
     </nav>
 </header>
 

@@ -11,11 +11,14 @@ class controladorPerfilEmpresa {
         $this->modelo = new modeloPerfilEmpresa($conn);
     }
 
-    // Editar perfil y teléfono
-    public function editarPerfilEmpresa($idEmpresa, $descripcion, $habilidades, $experiencia, $zona, $telefono) {
+    // Editar perfil y teléfono + logo en empresas_proveedor
+    public function editarPerfilEmpresa($idEmpresa, $descripcion, $habilidades, $experiencia, $zona, $telefono, $logo = null) {
+        if ($logo) {
+            $this->modelo->actualizarLogo($idEmpresa, $logo);
+        }
         $perfilActualizado = $this->modelo->guardarPerfil($idEmpresa, $descripcion, $habilidades, $experiencia, $zona);
-        $telefonoActualizado = $this->modelo->actualizarTelefono($idEmpresa, $telefono);
-        return $perfilActualizado && $telefonoActualizado;
+        $this->modelo->actualizarTelefono($idEmpresa, $telefono);
+        return $perfilActualizado;
     }
 
     public function obtenerPerfil($idEmpresa) {
@@ -23,4 +26,3 @@ class controladorPerfilEmpresa {
     }
 }
 ?>
-

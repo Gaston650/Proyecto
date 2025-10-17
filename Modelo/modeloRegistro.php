@@ -74,20 +74,35 @@ class usuarioModelo {
     }
 
     public function loginUsuario($email) {
-    $sql = "SELECT id_usuario, nombre, email, contraseña FROM usuarios WHERE email = ?";
-    $stmt = $this->conexion->prepare($sql);
-    if (!$stmt) {
-        die("Error al preparar consulta loginUsuario: " . $this->conexion->error);
+        $sql = "SELECT id_usuario, nombre, email, contraseña FROM usuarios WHERE email = ?";
+        $stmt = $this->conexion->prepare($sql);
+        if (!$stmt) {
+            die("Error al preparar consulta loginUsuario: " . $this->conexion->error);
+        }
+
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $usuario = $resultado->fetch_assoc();
+        $stmt->close();
+
+        return $usuario; 
     }
 
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $resultado = $stmt->get_result();
-    $usuario = $resultado->fetch_assoc();
-    $stmt->close();
+    public function obtenerUsuarioPorId($id_usuario) {
+        $sql = "SELECT email FROM usuarios WHERE id_usuario = ?";
+        $stmt = $this->conexion->prepare($sql);
+        if (!$stmt) {
+            die("Error al preparar consulta obtenerUsuarioPorId: " . $this->conexion->error);
+        }
+        $stmt->bind_param("i", $id_usuario);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $usuario = $resultado->fetch_assoc();
+        $stmt->close();
+        return $usuario;
+    }
 
-    return $usuario; 
-}
 
 }
 ?>

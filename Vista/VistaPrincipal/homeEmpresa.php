@@ -12,6 +12,12 @@ $empresa_id = $_SESSION['user_id'];
 $logo = '/ClickSoft/IMG/empresas/' . ($_SESSION['empresa_logo'] ?? 'default.png');
 
 // --------------------------
+// VENTAS DEL MES
+// --------------------------
+$pagoWrapper = new pagoControladorWrapper();
+$total_ventas_mes = $pagoWrapper->obtenerVentasDelMes($empresa_id);
+
+// --------------------------
 // HISTORIAL / RESERVAS
 // --------------------------
 $historialWrapper = new historialControladorWrapper();
@@ -26,7 +32,6 @@ $mensajeWrapper = new mensajesEmpresaWrapper();
 $mensajes_raw = $mensajeWrapper->obtenerMensajes($empresa_id);
 $mensajes_no_leidos = 0;
 foreach ($mensajes_raw as $m) {
-    // En tu modelo, asegúrate de que exista 'leido'
     $mensajes_no_leidos += isset($m['leido']) && $m['leido'] == 0 ? 1 : 0;
 }
 
@@ -46,12 +51,19 @@ $total_notificaciones = $total_reservas + $mensajes_no_leidos + $notificaciones_
 // --------------------------
 $notifWrapper->marcarLeidas($empresa_id);
 
-// Para mensajes: marcamos todos los mensajes que sean para la empresa como leídos
+// Marcar mensajes como leídos
 foreach ($mensajes_raw as $m) {
     if (isset($m['leido']) && $m['leido'] == 0) {
         $mensajeWrapper->marcarMensajesLeidos($empresa_id, $m['id_emisor'], $m['id_reserva']);
     }
 }
+
+// --------------------------
+// CALIFICACIÓN PROMEDIO
+// --------------------------
+$resenaWrapper = new resenaControladorWrapper();
+$promedio_calificacion = $resenaWrapper->obtenerPromedioPorEmpresa($empresa_id);
+$promedio_calificacion = $promedio_calificacion ?? 0; // si no hay reseñas
 
 // Página actual para menú activo
 $current_page = basename($_SERVER['PHP_SELF']);
@@ -112,11 +124,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </div>
         <div class="card">
             <h3>Ventas del mes</h3>
-            <p>$ 12.350</p>
+            <p>$ <?= number_format($total_ventas_mes, 0, ',', '.') ?></p>
         </div>
         <div class="card">
             <h3>Calificación promedio</h3>
-            <p>4.6 ★</p>
+            <p><?= number_format($promedio_calificacion, 1) ?> ★</p>
         </div>
     </section>
 
@@ -168,3 +180,4 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <script src="menuHamburguesa.js"></script>
 </body>
 </html>
+

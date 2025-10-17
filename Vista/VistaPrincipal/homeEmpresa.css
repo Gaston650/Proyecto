@@ -230,6 +230,15 @@ main h2 {
     background: #e74c3c; /* rojo */
 }
 
+.estado.completada {
+    background: #3498db; /* azul */
+}
+
+/* Resaltar fila completada */
+.reservas-proximas tr.estado-completada {
+    background-color: #d6eaf8; /* azul clarito */
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .estadisticas {

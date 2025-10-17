@@ -1,15 +1,26 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../Controlador/superControlador/superControlador.php';
-
-$img = (isset($_SESSION['user_image']) && !empty($_SESSION['user_image']))
-    ? $_SESSION['user_image']
-    : '../../IMG/perfil-vacio.png';
+require_once __DIR__ . '/../../Modelo/modeloRegistro.php'; // agregamos el modelo
 
 $perfilWrapper = new perfilControladorWrapper();
 $perfil = $perfilWrapper->obtenerPerfil($_SESSION['user_id']) ?? [];
+
+// Imagen de perfil
+$img = !empty($perfil['foto_perfil'])
+    ? $perfil['foto_perfil']
+    : '../../IMG/perfil-vacio.png';
+
+// Método de pago
 $metodoPagoActual = $perfilWrapper->obtenerMetodoPago($_SESSION['user_id']) ?? 'tarjeta';
+
+// ✅ Obtenemos el correo desde el modelo
+$usuarioModelo = new usuarioModelo();
+$usuario = $usuarioModelo->obtenerUsuarioPorId($_SESSION['user_id']);
+$email = $usuario['email'] ?? '';
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -45,16 +56,18 @@ $metodoPagoActual = $perfilWrapper->obtenerMetodoPago($_SESSION['user_id']) ?? '
       <div class="form-group">
         <label for="nombre">Nombre completo</label>
         <input type="text" id="nombre" name="nombre"
-          value="<?php echo isset($_SESSION['user_nombre']) ? htmlspecialchars($_SESSION['user_nombre']) : ''; ?>">
+          value="<?php echo isset($_SESSION['user_nombre']) ? htmlspecialchars($_SESSION['user_nombre']) : ''; ?>" disabled>
       </div>
+<!-- Email (no editable) -->
+<div class="form-group">
+    <label for="email">Correo electrónico</label>
+    <input type="email" id="email" name="email" 
+        value="<?php echo htmlspecialchars($email); ?>" 
+        disabled>
+</div>
 
-      <!-- Email (no editable) -->
-      <div class="form-group">
-        <label for="email">Correo electrónico</label>
-        <input type="email" id="email" name="email" 
-          value="<?php echo isset($_SESSION['user_email']) ? htmlspecialchars($_SESSION['user_email']) : ''; ?>" 
-          disabled>
-      </div>
+
+
 
       <!-- Dirección -->
       <div class="form-group">

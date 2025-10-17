@@ -15,6 +15,9 @@ $reservas = $reservasWrapper->verReservasCliente($id_cliente);
 // Contador de mensajes
 $mensajesWrapper = new mensajesClienteWrapper();
 $mensajesNoLeidos = $mensajesWrapper->contarMensajesNoLeidos($id_cliente);
+
+// Wrapper de pagos
+$pagoWrapper = new pagoControladorWrapper();
 ?>
 
 <!DOCTYPE html>
@@ -64,6 +67,18 @@ $mensajesNoLeidos = $mensajesWrapper->contarMensajesNoLeidos($id_cliente);
 
 <div class="reservas-grid">
 <?php while($r = $reservas->fetch_assoc()): ?>
+    <?php
+        // Verificamos si la reserva tiene un pago realizado
+        $pagosReserva = $pagoWrapper->obtenerPagosPorReserva($r['id_reserva']);
+        if (!is_array($pagosReserva)) $pagosReserva = [];
+        $pagado = false;
+        foreach ($pagosReserva as $pago) {
+            if (isset($pago['metodo_pago']) && $pago['metodo_pago'] === 'realizado') {
+                $pagado = true;
+                break;
+            }
+        }
+    ?>
     <div class="reserva-card estado-<?= strtolower($r['estado_reserva']) ?>" data-id="<?= $r['id_reserva'] ?>">
         <h3><?= htmlspecialchars($r['nombre_servicio']) ?></h3>
         <p><strong>Proveedor:</strong> <?= htmlspecialchars($r['nombre_proveedor']) ?></p>
@@ -71,25 +86,58 @@ $mensajesNoLeidos = $mensajesWrapper->contarMensajesNoLeidos($id_cliente);
         <p><strong>Estado:</strong> <span class="estado <?= strtolower($r['estado_reserva']) ?>"><?= ucfirst($r['estado_reserva']) ?></span></p>
         <p><strong>Monto:</strong> $<?= number_format($r['monto'] ?? 0, 0, ',', '.') ?></p>
 
+        <?php if (!$pagado): ?>
         <div class="acciones">
             <a href="../VistaMensajes/mensaje.php?proveedor=<?= $r['id_proveedor'] ?>&reserva=<?= $r['id_reserva'] ?>" class="btn-mensaje">Enviar Mensaje</a>
 
             <?php if (strtolower($r['estado_reserva']) === 'completada'): ?>
-                <!-- Botón de pago -->
-                <a href="../VistaPagos/checkout.php?title=<?= urlencode($r['nombre_servicio']) ?>&price=<?= $r['monto'] ?>" class="btn-pagar">💳 Pagar</a>
+                <a href="../VistaPagos/checkout.php?title=<?= urlencode($r['nombre_servicio']) ?>&price=<?= $r['monto'] ?>&id_reserva=<?= $r['id_reserva'] ?>" class="btn-pagar">💳 Pagar</a>
             <?php elseif (strtolower($r['estado_reserva']) !== 'cancelada'): ?>
                 <button class="btn-reprogramar" onclick="abrirModalReprogramar(<?= $r['id_reserva'] ?>)">Reprogramar</button>
                 <button class="btn-cancelar" onclick="abrirModalCancelar(<?= $r['id_reserva'] ?>)">Cancelar</button>
             <?php endif; ?>
         </div>
+        <?php endif; ?>
     </div>
 <?php endwhile; ?>
 </div>
 </main>
 
+<!-- Modal Cancelar Reserva -->
+<div id="modalCancelar" class="modal">
+    <div class="modal-contenido">
+        <span class="close" onclick="cerrarModal()">&times;</span>
+        <h2>Cancelar Reserva</h2>
+        <p>¿Estás seguro que deseas cancelar esta reserva?</p>
+        <div class="acciones-modal">
+            <a id="confirmarCancelar" href="#" class="btn-confirmar">Sí, cancelar</a>
+            <button onclick="cerrarModal()" class="btn-cancelar">No</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Reprogramar Reserva -->
+<div id="modalReprogramar" class="modal">
+    <div class="modal-contenido">
+        <span class="close" onclick="cerrarModalReprogramar()">&times;</span>
+        <h2>Reprogramar Reserva</h2>
+        <p>Selecciona nueva fecha y hora:</p>
+        <form id="formReprogramar" onsubmit="return false;">
+            <label for="nuevaFecha">Fecha:</label>
+            <input type="date" id="nuevaFecha" required>
+            <label for="nuevaHora">Hora:</label>
+            <input type="time" id="nuevaHora" required>
+            <div class="acciones-modal">
+                <button id="confirmarReprogramar" class="btn-confirmar">Guardar</button>
+                <button type="button" onclick="cerrarModalReprogramar()" class="btn-cancelar">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
 <script src="reservas.js"></script>
 <script src="../VistaPrincipal/verPagina.js"></script>
 </body>
 </html>
-
-
+                

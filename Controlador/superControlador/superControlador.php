@@ -15,6 +15,8 @@ require_once __DIR__ . '/../minisControlador/controladorMensaje.php';
 require_once __DIR__ . '/../minisControlador/controladorMensajesEmpresa.php';
 require_once __DIR__ . '/../minisControlador/procesarMensajes.php';
 require_once __DIR__ . '/../minisControlador/controladorNotificaciones.php';
+require_once __DIR__ . '/../minisControlador/controladorPago.php';
+require_once __DIR__ . '/../minisControlador/controladorNotificacionPago.php';
 
 class usuarioControladorWrapper {
     private $controlador;
@@ -83,8 +85,13 @@ class perfilEmpresaControladorWrapper {
     public function __construct() {
         $this->controlador = new controladorPerfilEmpresa();
     }
-    public function editarPerfilEmpresa($idEmpresa, $descripcion, $habilidades, $experiencia, $zona, $telefono) {
-        return $this->controlador->editarPerfilEmpresa($idEmpresa, $descripcion, $habilidades, $experiencia, $zona, $telefono);
+
+    public function editarPerfilEmpresa($idEmpresa, $descripcion, $habilidades, $experiencia, $zona, $telefono, $logo) {
+        return $this->controlador->editarPerfilEmpresa($idEmpresa, $descripcion, $habilidades, $experiencia, $zona, $telefono, $logo);
+    }
+
+    public function obtenerPerfil($idEmpresa) {
+        return $this->controlador->obtenerPerfil($idEmpresa);
     }
 }
 
@@ -297,5 +304,77 @@ class notificacionControladorWrapper {
         return $this->controlador->contarNoLeidas($id_empresa);
     }
 }
-?>
 
+class pagoControladorWrapper {
+    private $controlador;
+
+    public function __construct() {
+        $this->controlador = new pagoControlador();
+    }
+
+    public function guardarPago($id_reserva, $monto, $estado = 'pendiente') {
+        return $this->controlador->guardarPago($id_reserva, $monto, $estado);
+    }
+
+    public function pagoRealizado($id_reserva, $monto) {
+        return $this->guardarPago($id_reserva, $monto, 'realizado');
+    }
+
+    public function pagoFallido($id_reserva, $monto) {
+        return $this->guardarPago($id_reserva, $monto, 'fallido');
+    }
+
+    public function pagoPendiente($id_reserva, $monto) {
+        return $this->guardarPago($id_reserva, $monto, 'pendiente');
+    }
+
+    public function obtenerPagosPorReserva($id_reserva) {
+        return $this->controlador->obtenerPagosPorReserva($id_reserva);
+    }
+
+    public function obtenerVentasDelMes($id_empresa) {
+        return $this->controlador->obtenerVentasDelMes($id_empresa);
+    }
+
+}
+
+class notificacionPagoControladorWrapper {
+    private $controlador;
+
+    public function __construct() {
+        $this->controlador = new notificacionPagoControlador();
+    }
+
+    // Genera notificación de pago para el proveedor
+    public function generarNotificacion($id_reserva, $monto) {
+        return $this->controlador->generarNotificacion($id_reserva, $monto);
+    }
+}
+
+class resenaControladorWrapper {
+    private $controlador;
+    public function __construct() {
+        $this->controlador = new controladorResena();
+    }
+
+    // Guardar reseña
+    public function guardar($id_cliente, $id_servicio, $comentario, $calificacion) {
+        return $this->controlador->guardar($id_cliente, $id_servicio, $comentario, $calificacion);
+    }
+
+    // Obtener todas las reseñas de un servicio
+    public function obtenerPorServicio($id_servicio) {
+        return $this->controlador->obtenerPorServicio($id_servicio);
+    }
+
+    // Obtener reseña de un cliente a un servicio
+    public function obtenerPorClienteYServicio($id_cliente, $id_servicio) {
+        return $this->controlador->obtenerPorClienteYServicio($id_cliente, $id_servicio);
+    }
+
+    // Obtener calificación promedio de una empresa
+    public function obtenerPromedioPorEmpresa($id_empresa) {
+        return $this->controlador->obtenerPromedioPorEmpresa($id_empresa);
+    }
+}
+?>

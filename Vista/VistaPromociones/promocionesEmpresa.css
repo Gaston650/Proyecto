@@ -56,6 +56,8 @@ nav {
     list-style: none;
     display: flex;
     gap: 15px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .nav-links li a {
@@ -71,15 +73,6 @@ nav {
 .nav-links li a.active {
     background: #007BFF;
     color: #fff;
-}
-
-.notificaciones {
-    position: relative;
-}
-
-.notificaciones a {
-    color: #333;
-    font-size: 1.3em;
 }
 
 /* ===== Formularios ===== */
