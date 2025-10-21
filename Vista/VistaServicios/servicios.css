@@ -96,41 +96,47 @@ nav .nav-links a:hover {
 /* ====== GRID SERVICIOS ====== */
 .servicios-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 20px;
     padding: 20px;
 }
 
 .servicio-card {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    padding: 15px;
-    text-align: center;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     transition: transform 0.2s;
+    cursor: pointer;
 }
 
 .servicio-card:hover {
     transform: translateY(-5px);
 }
 
-.servicio-img {
+.imagen-servicio {
     width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 8px;
+    height: 140px; /* 🔹 altura ajustada */
+    background-size: cover;
+    background-position: center;
 }
 
+.servicio-card h3 {
+    margin: 10px;
+    font-size: 1.1rem;
+    color: #333;
+    text-align: center;
+}
+
+
 /* ====== BOTONES ====== */
-/* Contenedor de botones */
 .servicio-botones {
     display: flex;
-    flex-direction: column; /* Apila los botones */
+    flex-direction: column;
     gap: 10px;
     margin-top: 10px;
 }
 
-/* Estilo unificado para Contratar y Favorito */
 .btn-contratar,
 .btn-favorito {
     display: inline-block;
@@ -143,10 +149,9 @@ nav .nav-links a:hover {
     text-align: center;
     font-size: 1rem;
     transition: background 0.2s, transform 0.1s;
-    width: 100%; /* Ocupa todo el ancho de la tarjeta */
+    width: 100%;
 }
 
-/* Contratar */
 .btn-contratar {
     background: #1e90ff;
     color: white;
@@ -155,7 +160,6 @@ nav .nav-links a:hover {
     background: #1c7ed6;
 }
 
-/* Favorito */
 .btn-favorito {
     background: #e98c22;
     color: white;
@@ -165,9 +169,8 @@ nav .nav-links a:hover {
     color: #fff;
 }
 
-/* Botón Ver Reseñas */
 .btn-ver-resenas {
-    background-color: #4CAF50; /* Verde agradable */
+    background-color: #4CAF50;
     color: white;
     border: none;
     padding: 10px 0;
@@ -175,7 +178,7 @@ nav .nav-links a:hover {
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    width: 100%; /* Ocupa todo el ancho de la tarjeta */
+    width: 100%;
     display: block;
     text-align: center;
 }
@@ -422,3 +425,137 @@ nav .nav-links a:hover {
     font-style: italic;
     padding: 10px;
 }
+
+/* ====== BOTÓN REPORTAR ====== */
+.btn-reportar {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 0;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
+    display: block;
+    text-align: center;
+}
+.btn-reportar:hover {
+    background-color: #c82333;
+    transform: scale(1.03);
+}
+
+/* ====== MODAL REPORTAR ====== */
+.modal-reportar {
+    display: none; 
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6); 
+    transition: all 0.3s ease;
+}
+
+.modal-reportar .modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 30px 25px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    position: relative;
+    animation: modalFade 0.3s ease;
+}
+
+.modal-reportar .close {
+    color: #aaa;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.modal-reportar .close:hover,
+.modal-reportar .close:focus {
+    color: #000;
+}
+
+.modal-reportar .modal-content h2 {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+}
+
+#form-reportar {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#form-reportar label {
+    font-weight: 500;
+    color: #555;
+}
+
+#form-reportar textarea {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    width: 100%;
+    min-height: 80px;
+    resize: vertical;
+}
+
+#form-reportar textarea:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 5px rgba(220,53,69,0.4);
+    outline: none;
+}
+
+#form-reportar button[type="submit"] {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 0;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+#form-reportar button[type="submit"]:hover {
+    background-color: #c82333;
+    transform: scale(1.03);
+}
+
+#modal-confirmacion {
+    display: none;
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+#modal-confirmacion .modal-content {
+    background: white;
+    margin: 15% auto;
+    padding: 20px;
+    width: 320px;
+    text-align: center;
+    border-radius: 12px;
+    animation: aparecer 0.3s ease;
+}
+@keyframes aparecer {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+

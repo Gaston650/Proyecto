@@ -22,8 +22,8 @@ class controladorServicio {
     }
 
     // Publicar un nuevo servicio
-    public function publicarServicio($id_empresa, $titulo, $descripcion, $ubicacion, $precio, $disponibilidad, $estado) {
-        return $this->modelo->publicarServicio($id_empresa, $titulo, $descripcion, $ubicacion, $precio, $disponibilidad, $estado);
+    public function publicarServicio($id_empresa, $titulo, $descripcion, $categoria, $ubicacion, $precio, $disponibilidad, $estado = 'activo', $imagen = null) {
+        return $this->modelo->publicarServicio($id_empresa, $titulo, $descripcion, $categoria, $ubicacion, $precio, $disponibilidad, $estado, $imagen);
     }
 
     // Eliminar un servicio
@@ -32,14 +32,18 @@ class controladorServicio {
     }
 
     // Editar un servicio
-    public function editarServicio($id, $titulo, $descripcion, $ubicacion, $precio, $disponibilidad, $estado) {
-        return $this->modelo->editarServicio($id, $titulo, $descripcion, $ubicacion, $precio, $disponibilidad, $estado);
+    public function editarServicio($id, $titulo, $descripcion, $categoria, $ubicacion, $precio, $disponibilidad, $estado = 'activo', $imagen = null) {
+        return $this->modelo->editarServicio($id, $titulo, $descripcion, $categoria, $ubicacion, $precio, $disponibilidad, $estado, $imagen);
     }
 
-    // Listar servicios activos con filtros
+    // Listar servicios activos con filtros (para clientes)
     public function listarServiciosFiltrados($buscar = '', $zona = '', $categoria = '') {
         return $this->modelo->obtenerServiciosFiltrados($buscar, $zona, $categoria);
     }
 
+    // Obtener todas las categorías
+    public function listarCategorias() {
+        return $this->modelo->obtenerCategorias();
+    }
 }
 ?>

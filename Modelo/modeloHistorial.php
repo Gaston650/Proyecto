@@ -122,5 +122,46 @@ class HistorialModelo {
                   WHERE id_reserva = $id_reserva";
         return $db->query($query);
     }
+
+        public function obtenerHistorialCompleto() {
+        $conexion = new conexion();
+        $db = $conexion->conectar();
+        
+        $historial = [];
+        
+        $sql = "SELECT r.id_reserva, r.estado_reserva, r.fecha_reserva, 
+                       COALESCE(s.titulo, 'Servicio eliminado') AS titulo_servicio, 
+                       COALESCE(s.precio, 0) AS precio,
+                       COALESCE(e.nombre_empresa, 'Desconocido') AS nombre_proveedor,
+                       COALESCE(u.nombre, 'Desconocido') AS nombre_cliente
+                FROM reservas r
+                LEFT JOIN servicios s ON r.id_servicio = s.id_servicio
+                LEFT JOIN empresas_proveedor e ON s.id_empresa = e.id_empresa
+                LEFT JOIN usuarios u ON r.id_cliente = u.id_usuario
+                ORDER BY r.id_reserva DESC";
+    
+        $res = $db->query($sql);
+        
+        if ($res && $res->num_rows > 0) {
+            while ($row = $res->fetch_assoc()) {
+                $historial[] = [
+                    'id_reserva' => $row['id_reserva'],
+                    'titulo_servicio' => $row['titulo_servicio'],
+                    'precio' => $row['precio'],
+                    'proveedor' => $row['nombre_proveedor'],
+                    'cliente' => $row['nombre_cliente'],
+                    'estado_reserva' => $row['estado_reserva'],
+                    'fecha_reserva' => $row['fecha_reserva']
+                ];
+            }
+        }
+    
+        return $historial;
+    }
+
+
+
 }
+
+
 ?>

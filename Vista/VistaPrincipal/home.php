@@ -3,9 +3,8 @@ session_start();
 
 require_once __DIR__ . '/../../conexion.php';
 require_once __DIR__ . '/../../Controlador/minisControlador/usuarioControlador.php';
-require_once __DIR__ . '/../../Modelo/modeloPerfil.php'; // Asegúrate de tener este modelo
+require_once __DIR__ . '/../../Modelo/modeloPerfil.php';
 
-// 🔐 Validar sesión
 if (
     !isset($_SESSION['user_id']) &&
     !isset($_SESSION['empresa_id']) &&
@@ -18,20 +17,19 @@ if (
 // ✅ Crear conexión para pasar al modelo
 $conn = (new Conexion())->conectar();
 $usuarioControlador = new UsuarioControlador($conn);
-$perfilModelo = new perfilModelo($conn); // modelo que maneja las fotos de perfil
+$perfilModelo = new perfilModelo($conn);
 
 // 🖼️ Obtener la imagen de perfil desde la base de datos
 $fotoPerfil = '../../IMG/perfil-vacio.png'; // por defecto
 
-if (isset($_SESSION['user_id'])) {
+if (isset($_SESSION['user_image']) && !empty($_SESSION['user_image'])) {
+    $fotoPerfil = $_SESSION['user_image'];
+}
+// Sino, intentar buscar en BD (usuarios tradicionales)
+elseif (isset($_SESSION['user_id'])) {
     $perfil = $perfilModelo->obtenerPerfil($_SESSION['user_id']);
     if ($perfil && !empty($perfil['foto_perfil'])) {
         $fotoPerfil = $perfil['foto_perfil'];
-    }
-} elseif (isset($_SESSION['empresa_id'])) {
-    $perfil = $perfilModelo->obtenerPerfilEmpresa($_SESSION['empresa_id']); // si tenés método para empresa
-    if ($perfil && !empty($perfil['logo'])) {
-        $fotoPerfil = $perfil['logo'];
     }
 }
 ?>
@@ -41,15 +39,6 @@ if (isset($_SESSION['user_id'])) {
     <meta charset="UTF-8">
     <title>Home - cliente</title>
     <link rel="stylesheet" href="home.css">
-    <style>
-        .foto-perfil {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-size: cover;
-            background-position: center;
-        }
-    </style>
 </head>
 <body>
    <header>

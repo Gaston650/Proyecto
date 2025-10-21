@@ -8,9 +8,11 @@ class usuario2Modelo {
         $db = new conexion();
         $this->conn = $db->conectar();
     }
-
+    
     public function obtenerUsuario($email){
-        $sql = "SELECT id_usuario AS id, nombre, contraseña, 'cliente' AS tipo FROM usuarios WHERE email = ?";
+        $sql = "SELECT id_usuario AS id, nombre, contraseña, tipo_usuario, estado 
+                FROM usuarios 
+                WHERE email = ?";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("s", $email);
         $stmt->execute();
