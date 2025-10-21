@@ -17,6 +17,8 @@ require_once __DIR__ . '/../minisControlador/procesarMensajes.php';
 require_once __DIR__ . '/../minisControlador/controladorNotificaciones.php';
 require_once __DIR__ . '/../minisControlador/controladorPago.php';
 require_once __DIR__ . '/../minisControlador/controladorNotificacionPago.php';
+require_once __DIR__ . '/../minisControlador/controladorAdmin.php';
+require_once __DIR__ . '/../minisControlador/controladorReporte.php';
 
 class usuarioControladorWrapper {
     private $controlador;
@@ -41,15 +43,17 @@ class empresaControladorWrapper {
 
 class sesionControladorWrapper {
     private $controlador;
+
     public function __construct() {
         $this->controlador = new controladorSesion();
     }
+
     public function login($tipo, $email, $password) {
-        if ($tipo === 'empresa') return $this->controlador->iniciarSesionEmpresa($email, $password);
-        else if ($tipo === 'cliente') return $this->controlador->iniciarSesionUsuario($email, $password);
-        return false;
+        // Llama al único método genérico pasando el tipo seleccionado
+        return $this->controlador->iniciarSesion($email, $password, $tipo);
     }
 }
+
 
 class cerrarSesionControladorWrapper {
     private $controlador;
@@ -97,24 +101,45 @@ class perfilEmpresaControladorWrapper {
 
 class servicioControladorWrapper {
     private $controlador;
+
     public function __construct() {
         $this->controlador = new controladorServicio();
     }
+
+    // Obtener servicios activos o de una empresa específica
     public function obtenerServicios($id_empresa = null) {
-        if ($id_empresa) return $this->controlador->listarServiciosEmpresa($id_empresa);
+        if ($id_empresa) {
+            // Devuelve servicios de la empresa con columna 'imagen'
+            return $this->controlador->listarServiciosEmpresa($id_empresa);
+        }
+        // Devuelve servicios activos con columna 'imagen'
         return $this->controlador->listarServiciosActivos(); 
     }
-    public function publicarServicio($id_empresa, $titulo, $descripcion, $ubicacion, $precio, $disponibilidad, $estado) {
-        return $this->controlador->publicarServicio($id_empresa, $titulo, $descripcion, $ubicacion, $precio, $disponibilidad, $estado);
+
+    // Publicar un nuevo servicio incluyendo categoría
+    public function publicarServicio($id_empresa, $titulo, $descripcion, $categoria, $ubicacion, $precio, $disponibilidad, $estado, $imagen = null) {
+        return $this->controlador->publicarServicio($id_empresa, $titulo, $descripcion, $categoria, $ubicacion, $precio, $disponibilidad, $estado, $imagen);
     }
+
+    // Eliminar un servicio
     public function eliminarServicio($id_servicio, $id_empresa) {
         return $this->controlador->borrarServicio($id_servicio, $id_empresa);
     }
-    public function actualizarServicio($id, $titulo, $descripcion, $ubicacion, $precio, $disponibilidad, $estado) {
-        return $this->controlador->editarServicio($id, $titulo, $descripcion, $ubicacion, $precio, $disponibilidad, $estado);
+
+    // Actualizar/editar un servicio
+    public function actualizarServicio($id, $titulo, $descripcion, $ubicacion, $precio, $disponibilidad, $estado, $imagen = null) {
+        return $this->controlador->editarServicio($id, $titulo, $descripcion, $ubicacion, $precio, $disponibilidad, $estado, $imagen);
     }
+
+    // Obtener servicios activos con filtros
     public function obtenerServiciosFiltrados($buscar = '', $zona = '', $categoria = '') {
+        // Devuelve servicios filtrados con columna 'imagen'
         return $this->controlador->listarServiciosFiltrados($buscar, $zona, $categoria);
+    }
+
+    // Obtener todas las categorías
+    public function obtenerCategorias() {
+        return $this->controlador->listarCategorias();
     }
 }
 
@@ -377,4 +402,137 @@ class resenaControladorWrapper {
         return $this->controlador->obtenerPromedioPorEmpresa($id_empresa);
     }
 }
+
+class adminControladorWrapper {
+    private $controlador;
+
+    public function __construct() {
+        $this->controlador = new ControladorAdmin();
+    }
+
+    // --- Usuarios ---
+    public function obtenerUsuarios() {
+        $usuarios = $this->controlador->obtenerUsuarios();
+
+        // Eliminar posibles duplicados por ID
+        $usuariosUnicos = [];
+        foreach ($usuarios as $u) {
+            $usuariosUnicos[$u['id_usuario']] = $u;
+        }
+
+        return array_values($usuariosUnicos);
+    }
+
+    public function crearUsuario($data) {
+        return $this->controlador->crearUsuario($data);
+    }
+
+    public function editarUsuario($id, $data) {
+        $data['rut'] = $data['rut'] ?? '';
+        $data['zona_cobertura'] = $data['zona_cobertura'] ?? '';
+        $data['logo'] = $data['logo'] ?? '';
+        return $this->controlador->editarUsuario($id, $data);
+    }
+
+    public function cambiarRol($id, $rol) {
+        return $this->controlador->cambiarRol($id, $rol);
+    }
+
+    public function eliminarUsuario($id) {
+        return $this->controlador->eliminarUsuario($id);
+    }
+
+    // --- Servicios ---
+    public function obtenerServicios() {
+        return $this->controlador->obtenerServicios();
+    }
+
+    public function crearServicio($id_empresa, $titulo, $descripcion, $precio, $categoria, $imagen = null) {
+        return $this->controlador->crearServicio($id_empresa, $titulo, $descripcion, $precio, $categoria, $imagen);
+    }
+
+    public function editarServicio($id, $data) {
+        // Llamada al controlador con array de datos
+        return $this->controlador->editarServicio($id, $data);
+    }
+
+    // Para compatibilidad con scripts que usan parámetros separados
+    public function actualizarServicio($id, $titulo, $descripcion, $ubicacion, $precio, $categoria, $estado, $imagen = null) {
+        $data = [
+            'titulo'      => $titulo,
+            'descripcion' => $descripcion,
+            'ubicacion'   => $ubicacion,
+            'precio'      => $precio,
+            'categoria'   => $categoria,
+            'estado'      => $estado,
+            'imagen'      => $imagen
+        ];
+        return $this->controlador->editarServicio($id, $data);
+    }
+
+    public function eliminarServicio($id) {
+        return $this->controlador->eliminarServicio($id);
+    }
+
+    public function obtenerEmpresaPorUsuario($id_usuario) {
+        return $this->controlador->obtenerEmpresaPorUsuario($id_usuario);
+    }
+
+    // Métodos para listar empresas proveedoras
+    public function obtenerEmpresas() {
+        return $this->controlador->obtenerEmpresas();
+    }
+
+    public function obtenerEmpresasProveedor() {
+        return $this->controlador->obtenerEmpresasProveedor();
+    }
+
+    // --- Categorías ---
+    public function obtenerCategorias() {
+        return $this->controlador->obtenerCategorias();
+    }
+
+    public function crearCategoria($data) {
+        return $this->controlador->crearCategoria($data);
+    }
+
+    public function editarCategoria($id, $data) {
+        return $this->controlador->editarCategoria($id, $data);
+    }
+
+    public function eliminarCategoria($id) {
+        return $this->controlador->eliminarCategoria($id);
+    }
+
+    // --- Historial ---
+    public function obtenerHistorial() {
+        return $this->controlador->obtenerHistorial();
+    }
+
+    // --- Reportes ---
+    public function obtenerReportes() {
+        return $this->controlador->obtenerReportes();
+    }
+
+    public function gestionarReporte($id_reporte, $accion) {
+        return $this->controlador->gestionarReporte($id_reporte, $accion);
+    }
+}
+
+class reporteControladorWrapper {
+    private $controlador;
+
+    public function __construct($conexion) {
+        $this->controlador = new controladorReporte($conexion);
+    }
+
+    public function crearReporte($id_usuario, $id_servicio, $motivo) {
+        return $this->controlador->crearReporte($id_usuario, $id_servicio, $motivo);
+    }
+
+    public function obtenerPorServicio($id_servicio) {
+        return $this->controlador->obtenerPorServicio($id_servicio);
+    }
+}
 ?>
+

@@ -8,9 +8,9 @@ class modeloServicio {
         $this->conn = $conn;
     }
 
-    // Obtener todos los servicios de una empresa
+    // Obtener todos los servicios de una empresa (incluye imagen)
     public function obtenerServiciosPorEmpresa($id_empresa) {
-        $sql = "SELECT id_servicio, titulo, descripcion, ubicacion, precio, disponibilidad, fecha_publicacion, estado
+        $sql = "SELECT id_servicio, titulo, descripcion, categoria, ubicacion, precio, disponibilidad, fecha_publicacion, estado, id_empresa, imagen
                 FROM servicios
                 WHERE id_empresa = ?";
         $stmt = $this->conn->prepare($sql);
@@ -22,34 +22,53 @@ class modeloServicio {
 
         $servicios = [];
         while ($row = $result->fetch_assoc()) {
+            if (empty($row['imagen'])) {
+                $row['imagen'] = '../../img/servicio-vacio.png';
+            }
             $servicios[] = $row;
         }
         return $servicios;
     }
 
-    // Obtener todos los servicios activos (para clientes)
+    // Obtener todos los servicios activos (para clientes) con imagen
     public function obtenerServiciosActivos() {
-    $sql = "SELECT id_servicio, titulo, descripcion, ubicacion, precio, disponibilidad, fecha_publicacion, estado, id_empresa
-            FROM servicios
-            WHERE estado = 'disponible'";
-    $result = $this->conn->query($sql);
+        $sql = "SELECT id_servicio, titulo, descripcion, categoria, ubicacion, precio, disponibilidad, fecha_publicacion, estado, id_empresa, imagen
+                FROM servicios
+                WHERE LOWER(estado) = 'disponible'";
+        $result = $this->conn->query($sql);
+        if(!$result) die("Error en query: " . $this->conn->error);
 
-    $servicios = [];
-    while ($row = $result->fetch_assoc()) {
-        $servicios[] = $row;
+        $servicios = [];
+        while ($row = $result->fetch_assoc()) {
+            if (empty($row['imagen'])) {
+                $row['imagen'] = '../../img/servicio-vacio.png';
+            }
+            $servicios[] = $row;
+        }
+        return $servicios;
     }
-    return $servicios;
-}
-
 
     // Publicar un nuevo servicio
-    public function publicarServicio($id_empresa, $titulo, $descripcion, $ubicacion, $precio, $disponibilidad, $estado) {
-        $sql = "INSERT INTO servicios (id_empresa, titulo, descripcion, ubicacion, precio, disponibilidad, estado, fecha_publicacion)
-                VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
+    public function publicarServicio($id_empresa, $titulo, $descripcion, $categoria, $ubicacion, $precio, $disponibilidad, $estado = 'Disponible', $imagen = null) {
+        $sql = "INSERT INTO servicios (id_empresa, titulo, descripcion, categoria, ubicacion, precio, disponibilidad, estado, imagen, fecha_publicacion)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+
         $stmt = $this->conn->prepare($sql);
         if(!$stmt) die("Error en prepare: " . $this->conn->error);
 
-        $stmt->bind_param("isssdss", $id_empresa, $titulo, $descripcion, $ubicacion, $precio, $disponibilidad, $estado);
+        $stmt->bind_param(
+            "issssdsss",
+            $id_empresa,
+            $titulo,
+            $descripcion,
+            $categoria,
+            $ubicacion,
+            $precio,
+            $disponibilidad,
+            $estado,
+            $imagen
+        );
+
         return $stmt->execute();
     }
 
@@ -63,62 +82,87 @@ class modeloServicio {
         return $stmt->execute();
     }
 
-    // Editar un servicio
-    public function editarServicio($id, $titulo, $descripcion, $ubicacion, $precio, $disponibilidad, $estado) {
-        $sql = "UPDATE servicios 
-                SET titulo = ?, descripcion = ?, ubicacion = ?, precio = ?, disponibilidad = ?, estado = ?
-                WHERE id_servicio = ?";
-        $stmt = $this->conn->prepare($sql);
-        if(!$stmt) die("Error en prepare: " . $this->conn->error);
-
-        $stmt->bind_param("sssdssi", $titulo, $descripcion, $ubicacion, $precio, $disponibilidad, $estado, $id);
+    // Editar un servicio (con opción de cambiar imagen)
+    public function editarServicio($id, $titulo, $descripcion, $categoria, $ubicacion, $precio, $disponibilidad, $estado = 'Disponible', $imagen = null) {
+        if ($imagen) {
+            $sql = "UPDATE servicios 
+                    SET titulo = ?, descripcion = ?, categoria = ?, ubicacion = ?, precio = ?, disponibilidad = ?, estado = ?, imagen = ?
+                    WHERE id_servicio = ?";
+            $stmt = $this->conn->prepare($sql);
+            if(!$stmt) die("Error en prepare: " . $this->conn->error);
+            $stmt->bind_param("ssssdsssi", $titulo, $descripcion, $categoria, $ubicacion, $precio, $disponibilidad, $estado, $imagen, $id);
+        } else {
+            $sql = "UPDATE servicios 
+                    SET titulo = ?, descripcion = ?, categoria = ?, ubicacion = ?, precio = ?, disponibilidad = ?, estado = ?
+                    WHERE id_servicio = ?";
+            $stmt = $this->conn->prepare($sql);
+            if(!$stmt) die("Error en prepare: " . $this->conn->error);
+            $stmt->bind_param("ssssdssi", $titulo, $descripcion, $categoria, $ubicacion, $precio, $disponibilidad, $estado, $id);
+        }
         return $stmt->execute();
     }
 
-    // Obtener servicios activos con filtros (para clientes)
-    public function obtenerServiciosFiltrados($buscar = '', $zona = '', $categoria = '') {
-        $sql = "SELECT id_servicio, titulo, descripcion, ubicacion, precio, disponibilidad, fecha_publicacion, estado, id_empresa
+    // Obtener servicios activos con filtros (para clientes), incluyendo imagen
+public function obtenerServiciosFiltrados($buscar = '', $zona = '', $categoria = '') {
+    $sql = "SELECT id_servicio, titulo, descripcion, categoria, ubicacion, precio, disponibilidad, fecha_publicacion, estado, id_empresa, imagen
             FROM servicios
-            WHERE estado = 'disponible'";
-        $params = [];
-        $types = "";
+            WHERE estado = 'Disponible'";
+    $params = [];
+    $types = "";
 
-        if (!empty($buscar)) {
-            $sql .= " AND (titulo LIKE ? OR descripcion LIKE ?)";
-            $busqueda = "%".$buscar."%";
-            $params[] = $busqueda;
-            $params[] = $busqueda;
-            $types .= "ss";
-        }
-
-        if (!empty($zona)) {
-            $sql .= " AND ubicacion = ?";
-            $params[] = $zona;
-            $types .= "s";
-        }
-
-        if (!empty($categoria)) {
-            $sql .= " AND categoria = ?";
-            $params[] = $categoria;
-            $types .= "s";
-        }
-
-        $stmt = $this->conn->prepare($sql);
-        if(!$stmt) die("Error en prepare: " . $this->conn->error);
-
-        if (!empty($params)) {
-            $stmt->bind_param($types, ...$params);
-        }
-
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        $servicios = [];
-        while ($row = $result->fetch_assoc()) {
-            $servicios[] = $row;
-        }
-        return $servicios;
+    if (!empty($buscar)) {
+        $sql .= " AND (LOWER(titulo) LIKE ? OR LOWER(descripcion) LIKE ?)";
+        $busqueda = "%".strtolower($buscar)."%";
+        $params[] = $busqueda;
+        $params[] = $busqueda;
+        $types .= "ss";
     }
 
+    if (!empty($zona)) {
+        $sql .= " AND LOWER(ubicacion) = ?";
+        $params[] = strtolower($zona);
+        $types .= "s";
+    }
+
+    if (!empty($categoria)) {
+        $sql .= " AND LOWER(categoria) = ?";
+        $params[] = strtolower($categoria);
+        $types .= "s";
+    }
+
+    $stmt = $this->conn->prepare($sql);
+    if(!$stmt) die("Error en prepare: " . $this->conn->error);
+
+    if (!empty($params)) {
+        $stmt->bind_param($types, ...$params);
+    }
+
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $servicios = [];
+    while ($row = $result->fetch_assoc()) {
+        if (empty($row['imagen'])) {
+            $row['imagen'] = '../../img/servicio-vacio.png';
+        }
+        $servicios[] = $row;
+    }
+    return $servicios;
+}
+
+
+
+    // Obtener todas las categorías
+    public function obtenerCategorias() {
+        $sql = "SELECT * FROM categorias ORDER BY nombre_categoria ASC";
+        $result = $this->conn->query($sql);
+        if(!$result) die("Error en query: " . $this->conn->error);
+
+        $categorias = [];
+        while ($row = $result->fetch_assoc()) {
+            $categorias[] = $row;
+        }
+        return $categorias;
+    }
 }
 ?>

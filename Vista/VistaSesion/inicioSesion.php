@@ -10,6 +10,7 @@
   <div class="contenedor">
     <div class="formulario">
 
+      <!-- Mostrar error si existe -->
       <?php if (isset($_GET['error'])): ?>
         <div style="color: red; text-align: center; margin-bottom: 15px;">
           <?php echo htmlspecialchars($_GET['error']); ?>
@@ -17,9 +18,11 @@
       <?php endif; ?>
 
       <h1>INICIAR SESIÓN</h1>  
+
       <form action="../../Controlador/minisControlador/validarSesion.php" method="POST">
         <input type="hidden" name="iniciar_sesion" value="1" />
 
+        <!-- Selección de tipo de usuario -->
         <div class="tipo-usuario" style="margin-bottom: 15px;">
           <label>
             <input type="radio" name="tipo_usuario" value="cliente" checked> Cliente
@@ -27,11 +30,16 @@
           <label style="margin-left: 15px;">
             <input type="radio" name="tipo_usuario" value="empresa"> Empresa
           </label>
+          <label style="margin-left: 15px;">
+            <input type="radio" name="tipo_usuario" value="administrador"> Administrador
+          </label>
         </div>
 
-        <label>Correo Electronico</label>
-        <input type="email" name="correo" placeholder="Correo Electronico" required />
+        <!-- Email -->
+        <label>Correo Electrónico</label>
+        <input type="email" name="correo" placeholder="Correo Electrónico" required />
 
+        <!-- Contraseña -->
         <div class="fila">
           <label>Contraseña</label>
           <a href="#" class="olvido">¿Olvidaste la contraseña?</a>
@@ -44,24 +52,26 @@
           </span>
         </div>
 
+        <!-- Botones -->
         <div class="botones">
-          <button type="submit" class="btn">INICIAR SESION</button>
+          <button type="submit" class="btn">INICIAR SESIÓN</button>
           <a href="../VistaRegistro/registrarCliente.php" class="btn">REGISTRARME</a>
         </div>
       </form>
-        <p class="conecta" id="conecta">O CONÉCTATE CON</p>
 
-        <div class="redes" id="botonGoogle">
-          <a href="../../loginGoogle/index.php" class="red google">
-            <img src="https://img.icons8.com/color/48/000000/google-logo.png" alt="Google" />
-            Google
-          </a>
-        </div>
+      <p class="conecta" id="conecta">O CONÉCTATE CON</p>
+      <div class="redes" id="botonGoogle">
+        <a href="../../loginGoogle/index.php" class="red google">
+          <img src="https://img.icons8.com/color/48/000000/google-logo.png" alt="Google" />
+          Google
+        </a>
+      </div>
       
     </div>
     <div class="imagen"></div>
   </div>
 
+  <!-- Scripts -->
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
   <script src="../../Ojo.js"></script>

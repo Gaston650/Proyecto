@@ -18,6 +18,22 @@ $mensajesNoLeidos = $mensajesWrapper->contarMensajesNoLeidos($id_cliente);
 
 // Wrapper de pagos
 $pagoWrapper = new pagoControladorWrapper();
+
+$conn = (new Conexion())->conectar();
+$perfilModelo = new perfilModelo($conn);
+// 🖼️ Obtener la imagen de perfil desde la base de datos
+$fotoPerfil = '../../IMG/perfil-vacio.png'; // por defecto
+
+if (isset($_SESSION['user_image']) && !empty($_SESSION['user_image'])) {
+    $fotoPerfil = $_SESSION['user_image'];
+}
+// Sino, intentar buscar en BD (usuarios tradicionales)
+elseif (isset($_SESSION['user_id'])) {
+    $perfil = $perfilModelo->obtenerPerfil($_SESSION['user_id']);
+    if ($perfil && !empty($perfil['foto_perfil'])) {
+        $fotoPerfil = $perfil['foto_perfil'];
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -34,14 +50,21 @@ $pagoWrapper = new pagoControladorWrapper();
 <header>
     <nav>
         <div class="usuario-info">
-            <?php 
-                $img = !empty($_SESSION['user_image']) ? $_SESSION['user_image'] : '../../img/perfil-vacio.png';
-            ?>
-            <a href="../vistaEditarPerfil/editarPerfil.php">
-                <div class="foto-perfil" style="background-image: url(<?= htmlspecialchars($img) ?>);"></div>
-            </a>
-            <span class="nombre-usuario"><?= htmlspecialchars($_SESSION['user_nombre'] ?? 'Usuario') ?></span>
-        </div>
+               <a href="../vistaEditarPerfil/editarPerfil.php" title="Editar perfil">
+                   <div class="foto-perfil" style="background-image: url('<?php echo htmlspecialchars($fotoPerfil); ?>');"></div>
+               </a>
+               <span class="nombre-usuario">
+               <?php
+                   if (isset($_SESSION['user_nombre'])) {
+                       echo htmlspecialchars($_SESSION['user_nombre']);
+                   } elseif (isset($_SESSION['nombre_empresa'])) {
+                       echo htmlspecialchars($_SESSION['nombre_empresa']);
+                   } else {
+                       echo 'Usuario';
+                   }
+               ?>
+               </span>
+           </div>
 
         <div class="notificaciones">
             <a href="../VistaNotificaciones/notificaciones.php" title="Ver Notificaciones">

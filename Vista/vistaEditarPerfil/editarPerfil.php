@@ -7,9 +7,17 @@ $perfilWrapper = new perfilControladorWrapper();
 $perfil = $perfilWrapper->obtenerPerfil($_SESSION['user_id']) ?? [];
 
 // Imagen de perfil
-$img = !empty($perfil['foto_perfil'])
-    ? $perfil['foto_perfil']
-    : '../../IMG/perfil-vacio.png';
+if (isset($_SESSION['user_image']) && !empty($_SESSION['user_image'])) {
+    // Si inició sesión con Google
+    $img = $_SESSION['user_image'];
+} elseif (!empty($perfil['foto_perfil'])) {
+    // Si tiene imagen guardada en la base de datos
+    $img = $perfil['foto_perfil'];
+} else {
+    // Imagen por defecto
+    $img = '../../IMG/perfil-vacio.png';
+}
+
 
 // Método de pago
 $metodoPagoActual = $perfilWrapper->obtenerMetodoPago($_SESSION['user_id']) ?? 'tarjeta';

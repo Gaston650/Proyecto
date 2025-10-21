@@ -27,10 +27,11 @@ $logo = '/ClickSoft/IMG/empresas/' . $_SESSION['empresa_logo'];
 <header>
     <nav>
         <div class="empresa-info">
-            <div class="logo-empresa" style="background-image: url('<?php echo htmlspecialchars($logo); ?>');"></div>
+            <a href="../vistaEditarPerfil/editarPerfilEmpresa.php" title="Editar perfil">
+                <div class="logo-empresa" style="background-image: url('<?php echo htmlspecialchars($logo); ?>');"></div>
+            </a>
             <span class="nombre-empresa"><?php echo htmlspecialchars($_SESSION['user_nombre']); ?></span>
         </div>
-
         <ul class="nav-links">
             <li><a href="../VistaPrincipal/homeEmpresa.php">Inicio</a></li>
             <li><a href="../VistaServicios/serviciosEmpresa.php" class="active">Mis Servicios</a></li>
