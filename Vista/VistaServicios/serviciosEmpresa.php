@@ -12,7 +12,7 @@ $servicioWrapper = new servicioControladorWrapper();
 $servicios = $servicioWrapper->obtenerServicios($empresa_id);
 
 // Logo de la empresa
-$logo = '/ClickSoft/IMG/empresas/' . $_SESSION['empresa_logo'];
+$logo = '/ClickSoft/IMG/empresas/' . $_SESSION['user_image'];
 ?>
 
 <!DOCTYPE html>

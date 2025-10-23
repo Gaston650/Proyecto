@@ -19,10 +19,17 @@ if (!$id_reserva || !$fecha || !$hora) {
     exit();
 }
 
-// Validar que la fecha y hora no sean pasadas
-$fechaHoraSeleccionada = strtotime($fecha . ' ' . $hora);
-$fechaHoraActual = strtotime(date('Y-m-d H:i'));
+// Crear DateTime de la fecha y hora seleccionada
+$fechaHoraSeleccionada = DateTime::createFromFormat('Y-m-d H:i', "$fecha $hora");
+$fechaHoraActual = new DateTime(); // fecha y hora actual
 
+if (!$fechaHoraSeleccionada) {
+    // Fecha mal formateada
+    header("Location: ../../Vista/VistaReservas/reservas.php?error=fecha_invalida");
+    exit();
+}
+
+// Comparación estricta
 if ($fechaHoraSeleccionada < $fechaHoraActual) {
     header("Location: ../../Vista/VistaReservas/reservas.php?error=fecha_invalida");
     exit();
@@ -31,7 +38,7 @@ if ($fechaHoraSeleccionada < $fechaHoraActual) {
 // Instanciar wrapper de reservas
 $reservasWrapper = new reservasControladorWrapper();
 
-// Reprogramar reserva (envía notificación al proveedor automáticamente)
+// Reprogramar reserva
 $resultado = $reservasWrapper->reprogramarReserva($id_reserva, $fecha, $hora, $id_cliente);
 
 if ($resultado) {
@@ -40,3 +47,4 @@ if ($resultado) {
     header("Location: ../../Vista/VistaReservas/reservas.php?error=fallo_reprogramar");
 }
 ?>
+

@@ -22,8 +22,9 @@ header {
 
 nav {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .empresa-info {
@@ -56,8 +57,8 @@ nav {
     list-style: none;
     display: flex;
     gap: 15px;
-    margin-left: auto;
-    margin-right: auto;
+    justify-content: center;
+    flex: 1;
 }
 
 .nav-links li a {
@@ -73,6 +74,23 @@ nav {
 .nav-links li a.active {
     background: #007BFF;
     color: #fff;
+}
+
+.notificaciones {
+    position: relative;
+    margin-left: auto;
+}
+
+.notificaciones .contador {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: red;
+    color: #fff;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-weight: bold;
 }
 
 /* ===== Formularios ===== */
@@ -182,7 +200,7 @@ table tr:hover {
     background: #eef4ff;
 }
 
-/* ===== Botón eliminar en tabla ===== */
+/* ===== Botones de tabla ===== */
 .btn-eliminar {
     color: #fff;
     background: #dc3545;
@@ -198,7 +216,6 @@ table tr:hover {
     background: #a71d2a;
 }
 
-/* ===== Botón editar en tabla ===== */
 .btn-editar {
     color: #fff;
     background: #007BFF;
@@ -241,7 +258,6 @@ table tr:hover {
     box-shadow: 0 4px 12px rgba(0,0,0,0.25);
     animation: fadeIn 0.3s ease;
 }
-
 
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-20px); }
@@ -286,4 +302,38 @@ table tr:hover {
 
 .modal-content .btn-cancel:hover {
     background: #5a6268;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .nav-links {
+        justify-content: center;
+        margin: 10px 0;
+        flex-wrap: wrap;
+    }
+
+    .empresa-info {
+        margin-bottom: 15px;
+    }
+
+    .form-section,
+    .crear-promocion,
+    .list-section {
+        width: 95%;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    table th, table td {
+        font-size: 0.85rem;
+        padding: 8px;
+    }
 }

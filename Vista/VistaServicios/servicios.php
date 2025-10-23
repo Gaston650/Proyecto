@@ -261,5 +261,6 @@ const resenasData = <?php echo json_encode($resenasPorServicios); ?>;
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 <script src="modalContratar.js"></script>
 <script src="modalResenas.js"></script>
+<script src="validarDia.js"></script>
 </body>
 </html>

@@ -19,16 +19,47 @@ require_once __DIR__ . '/../minisControlador/controladorPago.php';
 require_once __DIR__ . '/../minisControlador/controladorNotificacionPago.php';
 require_once __DIR__ . '/../minisControlador/controladorAdmin.php';
 require_once __DIR__ . '/../minisControlador/controladorReporte.php';
+require_once __DIR__ . '/../minisControlador/controladorRecEmpresa.php';
+
 
 class usuarioControladorWrapper {
     private $controlador;
-    public function __construct() {
-        $this->controlador = new usuarioControlador();
+
+    public function __construct($conn) {
+        $this->controlador = new UsuarioControlador($conn);
     }
+
+    // Registrar usuario tradicional
     public function registrar($nombre, $email, $password) {
         return $this->controlador->guardarUsuario($nombre, $email, $password);
     }
+
+    // Login con Google
+    public function loginGoogle($nombre, $email) {
+        return $this->controlador->loginGoogle($nombre, $email);
+    }
+
+    // Solicitar recuperación de contraseña
+    public function solicitarReset($email) {
+        return $this->controlador->solicitarReset($email);
+    }
+
+    // Cambiar contraseña usando token
+    public function cambiarContrasena($token, $password, $password2) {
+        return $this->controlador->cambiarContrasena($token, $password, $password2);
+    }
+
+    // Validar token 
+    public function validarToken($token) {
+        return $this->controlador->validarToken($token);
+    }
+
+    // Obtener usuario por ID
+    public function obtenerUsuarioPorId($id) {
+        return $this->controlador->obtenerUsuarioPorId($id);
+    }
 }
+
 
 class empresaControladorWrapper {
     private $controlador;
@@ -534,5 +565,29 @@ class reporteControladorWrapper {
         return $this->controlador->obtenerPorServicio($id_servicio);
     }
 }
-?>
 
+class empresaRecuperacionControladorWrapper {
+    private $controlador;
+
+    public function __construct($conn = null) {
+        $this->controlador = new empresaControlador($conn);
+    }
+
+    public function solicitarResetEmpresa($email) {
+        return $this->controlador->solicitarResetEmpresa($email);
+    }
+
+    public function validarTokenEmpresa($token) {
+        return $this->controlador->validarTokenEmpresa($token);
+    }
+
+    public function resetearContrasenaEmpresa($token, $nuevaContrasena) {
+        return $this->controlador->resetearContrasenaEmpresa($token, $nuevaContrasena);
+    }
+
+    // Acceder a empresa por ID para login automático
+    public function obtenerEmpresaPorId($id_empresa) {
+        return $this->controlador->obtenerEmpresaPorId($id_empresa);
+    }
+}
+?>

@@ -23,13 +23,19 @@ function abrirModalReprogramar(idReserva) {
     reservaAReprogramar = idReserva;
     modalReprogramar.classList.add('show');
     limpiarErrorReprogramar();
-    // Establecer fecha mínima como hoy
+
     const inputFecha = document.getElementById('nuevaFecha');
+    const inputHora = document.getElementById('nuevaHora');
+
     const hoy = new Date();
+    hoy.setDate(hoy.getDate() + 1); // Fecha mínima = mañana
     const yyyy = hoy.getFullYear();
     const mm = String(hoy.getMonth() + 1).padStart(2, '0');
     const dd = String(hoy.getDate()).padStart(2, '0');
+
     inputFecha.min = `${yyyy}-${mm}-${dd}`;
+    inputFecha.value = '';
+    inputHora.value = '';
 }
 
 function cerrarModalReprogramar() {
@@ -38,7 +44,6 @@ function cerrarModalReprogramar() {
     limpiarErrorReprogramar();
 }
 
-// Mensaje de error dentro del modal
 function mostrarErrorReprogramar(msg) {
     let errorDiv = document.getElementById('errorReprogramar');
     if (!errorDiv) {
@@ -66,19 +71,15 @@ confirmarReprogramar.addEventListener('click', () => {
         return;
     }
 
-    // Comparamos fechas ignorando horas
-    const hoy = new Date();
-    hoy.setHours(0,0,0,0);
+    const fechaHoraSeleccionada = new Date(`${fecha}T${hora}`);
+    const ahora = new Date();
+    ahora.setHours(0,0,0,0); // Solo comparar fechas, ignorando hora
 
-    const fechaSeleccionada = new Date(fecha);
-    fechaSeleccionada.setHours(0,0,0,0);
-
-    if (fechaSeleccionada < hoy) {
-        mostrarErrorReprogramar("No se puede reprogramar a una fecha pasada.");
+    if (fechaHoraSeleccionada <= ahora) { // <= para bloquear hoy y pasado
+        mostrarErrorReprogramar("No se puede reprogramar para hoy ni para días pasados.");
         return;
     }
 
-    // Redirige al controlador con fecha y hora
     window.location.href = `../../Controlador/minisControlador/reprogramarReserva.php?id=${reservaAReprogramar}&fecha=${fecha}&hora=${hora}`;
 });
 
@@ -86,4 +87,4 @@ confirmarReprogramar.addEventListener('click', () => {
 window.onclick = function(event) {
     if (event.target == modalCancelar) cerrarModal();
     if (event.target == modalReprogramar) cerrarModalReprogramar();
-}
+};

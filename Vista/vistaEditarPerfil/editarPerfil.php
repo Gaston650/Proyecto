@@ -95,22 +95,6 @@ $email = $usuario['email'] ?? '';
         <textarea id="biografia" name="biografia" rows="4"><?php echo htmlspecialchars($perfil['biografia'] ?? ''); ?></textarea>
       </div>
 
-      <!-- Método de pago -->
-      <div class="form-group">
-        <label for="metodo_pago">Método de pago predeterminado</label>
-        <select id="metodo_pago" name="metodo_pago">
-          <option value="tarjeta" <?php echo ($metodoPagoActual == 'tarjeta') ? 'selected' : ''; ?>>Tarjeta</option>
-          <option value="efectivo" <?php echo ($metodoPagoActual == 'efectivo') ? 'selected' : ''; ?>>Efectivo</option>
-          <option value="paypal" <?php echo ($metodoPagoActual == 'paypal') ? 'selected' : ''; ?>>PayPal</option>
-        </select>
-      </div>
-
-      <!-- Contraseña -->
-      <div class="form-group">
-        <label for="password">Cambiar contraseña</label>
-        <input type="password" id="password" name="password" placeholder="Nueva contraseña">
-      </div>
-
       <!-- Acciones -->
       <div class="actions">
         <button type="reset" class="btn-cancel">Cancelar</button>

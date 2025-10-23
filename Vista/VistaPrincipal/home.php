@@ -5,6 +5,7 @@ require_once __DIR__ . '/../../conexion.php';
 require_once __DIR__ . '/../../Controlador/minisControlador/usuarioControlador.php';
 require_once __DIR__ . '/../../Modelo/modeloPerfil.php';
 
+// 🔐 Verificación de sesión
 if (
     !isset($_SESSION['user_id']) &&
     !isset($_SESSION['empresa_id']) &&
@@ -14,18 +15,18 @@ if (
     exit();
 }
 
-// ✅ Crear conexión para pasar al modelo
+// ✅ Crear conexión y modelo
 $conn = (new Conexion())->conectar();
-$usuarioControlador = new UsuarioControlador($conn);
 $perfilModelo = new perfilModelo($conn);
 
-// 🖼️ Obtener la imagen de perfil desde la base de datos
-$fotoPerfil = '../../IMG/perfil-vacio.png'; // por defecto
+// 🖼️ Determinar imagen de perfil
+$fotoPerfil = '../../IMG/perfil-vacio.png'; // Imagen por defecto
 
-if (isset($_SESSION['user_image']) && !empty($_SESSION['user_image'])) {
+// Si inició sesión con Google (URL de imagen https)
+if (isset($_SESSION['user_image']) && str_starts_with($_SESSION['user_image'], 'https://')) {
     $fotoPerfil = $_SESSION['user_image'];
 }
-// Sino, intentar buscar en BD (usuarios tradicionales)
+// Si es usuario tradicional (foto en BD)
 elseif (isset($_SESSION['user_id'])) {
     $perfil = $perfilModelo->obtenerPerfil($_SESSION['user_id']);
     if ($perfil && !empty($perfil['foto_perfil'])) {
@@ -37,26 +38,29 @@ elseif (isset($_SESSION['user_id'])) {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Home - cliente</title>
+    <title>Home - Cliente</title>
     <link rel="stylesheet" href="home.css">
 </head>
 <body>
+
    <header>
        <nav>
            <div class="usuario-info">
                <a href="../vistaEditarPerfil/editarPerfil.php" title="Editar perfil">
-                   <div class="foto-perfil" style="background-image: url('<?php echo htmlspecialchars($fotoPerfil); ?>');"></div>
+                   <div class="foto-perfil"
+                        style="background-image: url('<?php echo htmlspecialchars($fotoPerfil, ENT_QUOTES, 'UTF-8'); ?>');">
+                   </div>
                </a>
                <span class="nombre-usuario">
-               <?php
-                   if (isset($_SESSION['user_nombre'])) {
-                       echo htmlspecialchars($_SESSION['user_nombre']);
-                   } elseif (isset($_SESSION['nombre_empresa'])) {
-                       echo htmlspecialchars($_SESSION['nombre_empresa']);
-                   } else {
-                       echo 'Usuario';
-                   }
-               ?>
+                   <?php
+                       if (isset($_SESSION['user_nombre'])) {
+                           echo htmlspecialchars($_SESSION['user_nombre']);
+                       } elseif (isset($_SESSION['nombre_empresa'])) {
+                           echo htmlspecialchars($_SESSION['nombre_empresa']);
+                       } else {
+                           echo 'Usuario';
+                       }
+                   ?>
                </span>
            </div>
 
@@ -129,21 +133,6 @@ elseif (isset($_SESSION['user_id'])) {
                </div>
            </div>
        </section>
-
-       <section class="contacto-rapido">
-           <h2>Contacto rápido</h2>
-           <p>¿Tienes dudas o quieres saber más? Completa el formulario y nos pondremos en contacto contigo.</p>
-           <form>
-               <div class="form-row">
-                   <input type="text" placeholder="Tu nombre" required>
-                   <input type="email" placeholder="Tu correo" required>
-               </div>
-               <div class="form-row">
-                   <textarea placeholder="Tu mensaje" required></textarea>
-               </div>
-               <button type="submit">Enviar mensaje</button>
-           </form>
-       </section>
    </main>
 
    <footer class="footer">
@@ -177,7 +166,7 @@ elseif (isset($_SESSION['user_id'])) {
                    <a href="https://www.instagram.com/diegomachado12_/" target="_blank" title="Diego Machado">
                        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram 3">
                    </a>
-                   <a href="https://www.instagram.com/s.porimi/" target="_blank" title="Sebastian Balduvino">
+                   <a href="https://www.instagram.com/s.porimi/" target="_blank" title="Sebastián Balduvino">
                        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram 4">
                    </a>
                    <a href="https://www.instagram.com/bunta860/" target="_blank" title="Bruno Orihuela">

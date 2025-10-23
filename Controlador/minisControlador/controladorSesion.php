@@ -5,14 +5,17 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once __DIR__ . '/../../Modelo/modeloUsuario.php';
 require_once __DIR__ . '/../../Modelo/modeloRegistrarEmpresa.php';
+require_once __DIR__ . '/../../Modelo/modeloPerfil.php'; // Importar modeloPerfil
 
 class controladorSesion {
     private $usuarioModelo;
     private $empresaModelo;
+    private $perfilModelo;
 
     public function __construct() {
         $this->usuarioModelo = new usuario2Modelo(); // modelo de usuarios
         $this->empresaModelo = new empresaModelo();  // modelo de empresas
+        $this->perfilModelo = new perfilModelo();    // modelo de perfiles
     }
 
     // Iniciar sesión según tipo seleccionado
@@ -30,11 +33,12 @@ class controladorSesion {
                 return false;
             }
 
-            // Datos de sesión
+            // ✅ Datos de sesión uniformes
             $_SESSION['user_id'] = $empresa['id_empresa'];
             $_SESSION['user_nombre'] = $empresa['nombre_empresa'];
-            $_SESSION['empresa_logo'] = $empresa['logo'];
             $_SESSION['tipo_usuario'] = 'empresa';
+            $_SESSION['email'] = $empresa['email'] ?? '';
+            $_SESSION['user_image'] = $empresa['logo'] ?? '../../IMG/perfil-vacio.png';
 
             return true;
         } else {
@@ -60,10 +64,19 @@ class controladorSesion {
                 return false;
             }
 
-            // Datos de sesión
-            $_SESSION['user_id'] = $usuario['id'];
+            // ✅ Datos de sesión uniformes
+            $_SESSION['user_id'] = $usuario['id_usuario'] ?? $usuario['id'];
             $_SESSION['user_nombre'] = $usuario['nombre'];
             $_SESSION['tipo_usuario'] = $usuario['tipo_usuario'];
+            $_SESSION['email'] = $usuario['email'] ?? '';
+
+            // 🔹 Obtener foto de perfil desde la tabla de perfiles
+            $perfil = $this->perfilModelo->obtenerPerfil($_SESSION['user_id']);
+            if ($perfil && !empty($perfil['foto_perfil'])) {
+                $_SESSION['user_image'] = $perfil['foto_perfil'];
+            } else {
+                $_SESSION['user_image'] = '../../IMG/perfil-vacio.png';
+            }
 
             return true;
         }
