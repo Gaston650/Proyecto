@@ -1,125 +1,164 @@
-/* Fuente general */
+/* ===== Fuente general ===== */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Montserrat", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
 }
 
 body {
-  background: #ece5dd;
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+    background: #ece5dd;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
 
+/* ===== Header ===== */
 header {
-  background: #075e54;
-  color: #fff;
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    background: #075e54;
+    color: #fff;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 header h2 {
-  font-size: 18px;
+    font-size: 18px;
 }
 
 header .volver {
-  color: #fff;
-  text-decoration: none;
-  font-size: 14px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: rgba(255,255,255,0.1);
+    transition: background 0.2s;
 }
 
+header .volver:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* ===== Main ===== */
 main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-/* Caja del chat */
+/* ===== Caja del chat ===== */
 .chat-box {
-  flex: 1;
-  padding: 15px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-/* Mensaje */
+/* ===== Mensajes ===== */
 .mensaje {
-  max-width: 70%;
-  padding: 10px 15px;
-  border-radius: 15px;
-  position: relative;
-  font-size: 14px;
-  line-height: 1.4;
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.4;
 }
 
 /* Mensajes de la empresa (emisor) */
 .mensaje.emisor {
-  align-self: flex-end;
-  background: #dcf8c6;
-  border-bottom-right-radius: 0;
+    align-self: flex-end;
+    background: #dcf8c6;
+    border-bottom-right-radius: 0;
 }
 
 /* Mensajes del cliente (receptor) */
 .mensaje.receptor {
-  align-self: flex-start;
-  background: #fff;
-  border-bottom-left-radius: 0;
+    align-self: flex-start;
+    background: #fff;
+    border-bottom-left-radius: 0;
 }
 
-/* Nombre (solo para identificar) */
+/* Nombre dentro del mensaje */
 .mensaje strong {
-  display: block;
-  font-size: 12px;
-  font-weight: 600;
-  margin-bottom: 3px;
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 3px;
 }
 
-/* Fecha */
+/* Fecha del mensaje */
 .fecha {
-  display: block;
-  font-size: 11px;
-  color: #777;
-  margin-top: 5px;
-  text-align: right;
+    display: block;
+    font-size: 11px;
+    color: #777;
+    margin-top: 5px;
+    text-align: right;
 }
 
-/* Formulario fijo abajo */
+/* ===== Formulario de envío ===== */
 form {
-  display: flex;
-  padding: 10px;
-  background: #f0f0f0;
-  border-top: 1px solid #ccc;
+    display: flex;
+    padding: 10px;
+    background: #f0f0f0;
+    border-top: 1px solid #ccc;
 }
 
 form input[type="text"] {
-  flex: 1;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 20px;
-  outline: none;
-  font-size: 14px;
+    flex: 1;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 20px;
+    outline: none;
+    font-size: 14px;
 }
 
 form button {
-  background: #075e54;
-  border: none;
-  color: #fff;
-  padding: 10px 15px;
-  margin-left: 10px;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background 0.3s ease;
+    background: #075e54;
+    border: none;
+    color: #fff;
+    padding: 10px 15px;
+    margin-left: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s ease;
 }
 
 form button:hover {
-  background: #0a7869;
+    background: #0a7869;
+}
+
+/* ===== Scroll personalizado ===== */
+.chat-box::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.2);
+    border-radius: 3px;
+}
+
+.chat-box::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .mensaje {
+        max-width: 85%;
+    }
+
+    header h2 {
+        font-size: 16px;
+    }
+
+    form input[type="text"] {
+        font-size: 13px;
+    }
 }

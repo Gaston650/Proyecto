@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&family=Tiny5&display=swap');
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: "Montserrat", sans-serif;
     margin: 0;
     background: #f4f6f9;
 }
@@ -11,12 +13,14 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 header a.volver {
     color: #fff;
     text-decoration: none;
     font-size: 14px;
+    margin-bottom: 5px;
 }
 
 header .btn-cerrar-sesion {
@@ -26,6 +30,7 @@ header .btn-cerrar-sesion {
     padding: 8px 12px;
     border-radius: 5px;
     cursor: pointer;
+    margin-bottom: 5px;
 }
 
 header .btn-cerrar-sesion:hover {
@@ -108,4 +113,60 @@ button.btn-cancel:hover {
     height: 80px;
     border-radius: 50%;
     object-fit: cover;
+}
+
+/* =====================
+   RESPONSIVE
+===================== */
+@media (max-width: 768px) {
+    main {
+        margin: 20px;
+        padding: 15px;
+    }
+
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .logo-empresa {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 10px;
+    }
+
+    button.btn-guardar,
+    button.btn-cancel {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    main {
+        margin: 15px;
+        padding: 10px;
+    }
+
+    .logo-empresa {
+        width: 60px;
+        height: 60px;
+    }
+
+    input, select, textarea {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    button.btn-guardar,
+    button.btn-cancel {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    header a.volver,
+    header .btn-cerrar-sesion {
+        font-size: 12px;
+    }
 }

@@ -17,6 +17,13 @@
         </div>
       <?php endif; ?>
 
+       <!-- Mostrar mensaje si existe -->
+      <?php if (isset($_GET['msg'])): ?>
+        <div style="color: green; text-align: center; margin-bottom: 15px;">
+          <?php echo htmlspecialchars($_GET['msg']); ?>
+        </div>
+      <?php endif; ?>
+
       <h1>INICIAR SESIÓN</h1>  
 
       <form action="../../Controlador/minisControlador/validarSesion.php" method="POST">
@@ -42,7 +49,7 @@
         <!-- Contraseña -->
         <div class="fila">
           <label>Contraseña</label>
-          <a href="#" class="olvido">¿Olvidaste la contraseña?</a>
+          <a href="../VistaReset/reset_request.php" class="olvido" id="linkOlvido">¿Olvidaste la contraseña?</a>
         </div>
         
         <div class="input-con-ico">
@@ -76,5 +83,6 @@
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
   <script src="../../Ojo.js"></script>
   <script src="ocultarGoogle.js"></script>
+  <script src="contrasenaOlvido.js"></script>
 </body>
 </html>

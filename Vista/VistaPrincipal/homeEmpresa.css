@@ -22,8 +22,10 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
 }
 
+/* Logo empresa a la izquierda */
 .empresa-info {
     display: flex;
     align-items: center;
@@ -50,10 +52,13 @@ nav {
     font-size: 1.2em;
 }
 
+/* Links centrados */
 .nav-links {
     list-style: none;
     display: flex;
-    gap: 15px;
+    gap: 20px;
+    justify-content: center;
+    flex: 1;
 }
 
 .nav-links li a {
@@ -71,6 +76,7 @@ nav {
     color: #fff;
 }
 
+/* Notificaciones a la derecha */
 .notificaciones {
     position: relative;
 }
@@ -85,21 +91,6 @@ nav {
     padding: 2px 6px;
     border-radius: 50%;
     font-weight: bold;
-}
-
-.menu-hamburguesa {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    cursor: pointer;
-}
-
-.menu-hamburguesa span {
-    width: 25px;
-    height: 3px;
-    background: #007BFF;
-    border-radius: 3px;
-    transition: all 0.3s ease;
 }
 
 main {
@@ -219,24 +210,23 @@ main h2 {
 }
 
 .estado.pendiente {
-    background: #f39c12; /* amarillo */
+    background: #f39c12;
 }
 
 .estado.confirmada {
-    background: #27ae60; /* verde */
+    background: #27ae60;
 }
 
 .estado.cancelada {
-    background: #e74c3c; /* rojo */
+    background: #e74c3c;
 }
 
 .estado.completada {
-    background: #3498db; /* azul */
+    background: #3498db;
 }
 
-/* Resaltar fila completada */
 .reservas-proximas tr.estado-completada {
-    background-color: #d6eaf8; /* azul clarito */
+    background-color: #d6eaf8;
 }
 
 /* Responsive */
@@ -247,43 +237,28 @@ main h2 {
     .acciones-grid {
         flex-direction: column;
     }
-    nav {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .nav-links {
-        flex-direction: column;
-        gap: 5px;
-        margin-bottom: 10px;
-    }
-    .empresa-info {
-        margin-bottom: 15px;
-    }
 }
 
 @media (max-width: 768px) {
-    .menu-hamburguesa {
-        display: flex;
+    nav {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    .empresa-info {
+        margin-bottom: 10px;
+        order: 1; /* siempre arriba */
     }
     .nav-links {
-        position: absolute;
-        top: 70px;
-        right: 0;
-        background: #fff;
+        order: 2; /* links centrados debajo del logo */
         flex-direction: column;
-        width: 200px;
-        border-radius: 8px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-        overflow: hidden;
-        max-height: 0;
-        transition: max-height 0.3s ease;
+        gap: 8px;
+        width: 100%;
+        align-items: center;
     }
-    .nav-links.show {
-        max-height: 500px;
-    }
-    nav {
-        position: relative;
-        display: flex;
+    .notificaciones {
+        order: 3; /* notificaciones al final en mobile */
+        margin-top: 10px;
     }
     main h2 {
         font-size: 20px;

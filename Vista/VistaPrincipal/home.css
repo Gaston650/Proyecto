@@ -1,42 +1,40 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&family=Tiny5&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
 
+/* === RESET BÁSICO === */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-body{
+body {
     overflow-x: hidden;
     font-family: "Montserrat", sans-serif;
 }
 
-
-
-nav{
+/* === NAVBAR === */
+nav {
     width: 100%;
     display: flex;
-    justify-content: space-between;  
+    justify-content: space-between;
     align-items: center;
     padding: 15px 30px;
+    position: sticky;
     top: 0;
-    left: 0;
     z-index: 1000;
-    
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-.nav-links{
+.nav-links {
     display: flex;
+    align-items: center;
 }
-
-/* Agrega o reemplaza estas reglas en tu home.css */
 
 .nav-links ul {
     display: flex;
-    gap: 10px; /* Espacio entre los links, ajusta a gusto */
+    gap: 10px;
     list-style: none;
-    margin: 0;
-    padding: 0;
 }
 
 nav .nav-links a {
@@ -44,15 +42,11 @@ nav .nav-links a {
     padding: 1rem;
     color: black;
     font-size: 1rem;
+    transition: color 0.3s;
 }
 
 nav .nav-links a:hover {
     color: #007bff;
-}
-
-
-nav .nav-links ul li{
-    list-style: none;
 }
 
 .nav-links a.active {
@@ -61,49 +55,38 @@ nav .nav-links ul li{
     font-weight: 600;
 }
 
-.foto-perfil {
-    width: 45px;
-    height: 45px;
-    background-size: cover;       
-    background-position: center;  
-    background-repeat: no-repeat;
-    border-radius: 50%;
-    box-shadow: 0 0 5px rgba(0,0,0,0.3); 
-    margin-right: 10px;
-    transition: transform 0.3s ease;
-              
-}
-.foto-perfil:hover {
-  transform: scale(1.1);
-}
-
-    
+/* === PERFIL === */
 .usuario-info {
     display: flex;
     align-items: center;
 }
 
+.foto-perfil {
+    width: 45px;
+    height: 45px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    margin-right: 10px;
+    transition: transform 0.3s ease;
+}
+.foto-perfil:hover {
+    transform: scale(1.1);
+}
 
 .nombre-usuario {
     font-size: 1rem;
     color: black;
-    margin-left: 8px; 
+    margin-left: 8px;
 }
 
-
+/* === HERO === */
 .hero {
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     padding: 60px 30px;
-    border-radius: 0;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-    margin: 40px 0 0 0;
-    width: 100vw;
-    max-width: 100vw;
     text-align: center;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    transform: translateX(-50%);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
 }
 
 .hero h2 {
@@ -111,7 +94,6 @@ nav .nav-links ul li{
     font-weight: 700;
     color: #22223b;
     margin-bottom: 18px;
-    letter-spacing: 1px;
 }
 
 .hero p {
@@ -122,6 +104,7 @@ nav .nav-links ul li{
     max-width: 600px;
 }
 
+/* === SOBRE NOSOTROS === */
 .sobre-nosotros {
     padding: 60px 40px;
     background: #f9f9f9;
@@ -133,6 +116,7 @@ nav .nav-links ul li{
     display: flex;
     align-items: center;
     gap: 40px;
+    flex-wrap: wrap;
 }
 
 .sobre-nosotros .texto {
@@ -150,12 +134,11 @@ nav .nav-links ul li{
     font-size: 1.1rem;
     color: #555;
     line-height: 1.6;
-    margin-bottom: 15px;
 }
 
 .sobre-nosotros .imagen {
     flex: 1;
-    text-align: right;
+    text-align: center;
 }
 
 .sobre-nosotros .imagen img {
@@ -163,6 +146,7 @@ nav .nav-links ul li{
     height: auto;
 }
 
+/* === VALORES === */
 .valores {
     display: flex;
     flex-direction: column;
@@ -182,6 +166,7 @@ nav .nav-links ul li{
     display: flex;
     align-items: center;
     gap: 40px;
+    flex-wrap: wrap;
 }
 
 .valor.invertido {
@@ -215,96 +200,11 @@ nav .nav-links ul li{
     height: auto;
 }
 
-.contacto-rapido {
-    background: linear-gradient(120deg, #f5f7fa 0%, #e9ecef 100%);
-    padding: 60px 0 70px 0;
-    text-align: center;
-}
-
-.contacto-rapido h2 {
-    font-size: 2rem;
-    color: #22223b;
-    margin-bottom: 12px;
-    font-weight: 700;
-}
-
-.contacto-rapido p {
-    color: #4a4e69;
-    margin-bottom: 28px;
-    font-size: 1.1rem;
-}
-
-.contacto-rapido form {
-    max-width: 500px;
-    margin: 0 auto;
-    background: #fff;
-    border-radius: 18px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-    padding: 32px 28px 24px 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-}
-
-.form-row {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-}
-
-.form-row input,
-.form-row textarea {
-    flex: 1 1 100%;
-}
-
-.contacto-rapido input,
-.contacto-rapido textarea {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    font-size: 1rem;
-    background: #f9fafb;
-    transition: border 0.2s;
-    resize: none;
-}
-
-.contacto-rapido input:focus,
-.contacto-rapido textarea:focus {
-    border: 1.5px solid #007bff;
-    outline: none;
-    background: #fff;
-}
-
-.contacto-rapido textarea {
-    min-height: 90px;
-    max-height: 200px;
-}
-
-.contacto-rapido button {
-    background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
-    color: #fff;
-    border: none;
-    padding: 14px 0;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 8px;
-    transition: background 0.2s, box-shadow 0.2s;
-    box-shadow: 0 2px 8px rgba(0,123,255,0.08);
-}
-
-.contacto-rapido button:hover {
-    background: linear-gradient(90deg, #0056b3 0%, #007bff 100%);
-    box-shadow: 0 4px 16px rgba(0,123,255,0.13);
-}
-
+/* === FOOTER === */
 .footer {
     background: #22223b;
     color: #fff;
     padding: 40px 0 20px 0;
-    margin-top: 0;
 }
 
 .footer-contenido {
@@ -313,47 +213,29 @@ nav .nav-links ul li{
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    align-items: flex-start;
     gap: 40px;
     padding: 0 30px;
-}
-
-.footer-info {
-    flex: 1 1 300px;
-}
-
-.footer-info h3 {
-    font-size: 1.6rem;
-    margin-bottom: 10px;
-    color: #fff;
-}
-
-.footer-info p {
-    color: #d1d5db;
-    font-size: 1rem;
-    margin-bottom: 8px;
-}
-
-.footer-links {
-    flex: 1 1 200px;
     text-align: center;
 }
 
-.footer-links h4 {
+.footer-info,
+.footer-links,
+.footer-instagram {
+    flex: 1 1 300px;
+}
+
+.footer-info h3,
+.footer-links h4,
+.footer-instagram h4 {
     color: #fff;
-    font-size: 1.1rem;
-    margin-bottom: 16px;
+    font-size: 1.2rem;
+    margin-bottom: 12px;
     font-weight: 600;
 }
 
 .footer-links ul {
     list-style: none;
     padding: 0;
-    margin: 0;
-}
-
-.footer-links ul li {
-    margin-bottom: 8px;
 }
 
 .footer-links ul li a {
@@ -361,25 +243,10 @@ nav .nav-links ul li{
     text-decoration: none;
     font-size: 1rem;
     transition: color 0.2s;
-    display: flex;
-    flex-direction: column;
-    margin-top: 1rem;
 }
 
 .footer-links ul li a:hover {
     color: #007bff;
-}
-
-.footer-instagram {
-    flex: 1 1 300px;
-    text-align: center;
-}
-
-.footer-instagram h4 {
-    color: #fff;
-    font-size: 1.1rem;
-    margin-bottom: 16px;
-    font-weight: 600;
 }
 
 .instagram-logos {
@@ -397,6 +264,115 @@ nav .nav-links ul li{
 
 .instagram-logos a:hover img {
     transform: scale(1.15) rotate(-8deg);
-    filter: invert(18%) sepia(98%) saturate(7499%) hue-rotate(316deg) brightness(97%) contrast(101%);
 }
 
+/* === RESPONSIVE DESIGN === */
+
+/* Tablets */
+@media (max-width: 992px) {
+    nav {
+        padding: 15px 20px;
+    }
+
+    .hero h2 {
+        font-size: 2rem;
+    }
+
+    .valor {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .valor.invertido {
+        flex-direction: column;
+    }
+
+    .valor .imagen img {
+        max-width: 280px;
+    }
+}
+
+/* Celulares */
+@media (max-width: 768px) {
+    /* Navbar responsive */
+    .nav-links ul {
+        display: none;
+        flex-direction: column;
+        background: white;
+        position: absolute;
+        top: 70px;
+        right: 0;
+        width: 200px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        border-radius: 0 0 8px 8px;
+        text-align: right;
+    }
+
+    .nav-links.active ul {
+        display: flex;
+    }
+
+    .menu-toggle {
+        display: block;
+        font-size: 1.8rem;
+        cursor: pointer;
+    }
+
+    .hero {
+        padding: 40px 20px;
+    }
+
+    .hero h2 {
+        font-size: 1.8rem;
+    }
+
+    .sobre-nosotros .contenedor {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .sobre-nosotros .texto {
+        text-align: center;
+    }
+
+    .valores {
+        padding: 40px 8%;
+    }
+
+    .footer-contenido {
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+    }
+}
+
+/* Teléfonos pequeños */
+@media (max-width: 480px) {
+    nav {
+        padding: 10px 15px;
+    }
+
+    .hero h2 {
+        font-size: 1.6rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    .valor .imagen img {
+        max-width: 240px;
+    }
+
+    .contacto-rapido h2 {
+        font-size: 1.6rem;
+    }
+
+    .contacto-rapido p {
+        font-size: 1rem;
+    }
+
+    .footer-info p {
+        font-size: 0.9rem;
+    }
+}

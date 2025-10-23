@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['tipo_usuario'] !== 'empresa') {
 }
 
 $empresa_id = $_SESSION['user_id'];
-$logo = '/ClickSoft/IMG/empresas/' . ($_SESSION['empresa_logo'] ?? 'default.png');
+$logo = '/ClickSoft/IMG/empresas/' . ($_SESSION['user_image'] ?? 'default.png');
 
 // --------------------------
 // VENTAS DEL MES
@@ -176,8 +176,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <?php endif; ?>
     </section>
 </main>
-
-<script src="menuHamburguesa.js"></script>
 </body>
 </html>
 

@@ -60,14 +60,6 @@
            <button type="submit" class="btn">REGISTRARTE</button>
         </div>
 
-        <p class="condiciones">
-          Al registrarte, aceptas nuestras condiciones de uso y nuestra política de privacidad.
-        </p>
-
-        <label class="checkbox">
-          <input type="checkbox" name="terminos" required /> Aceptar los términos y condiciones
-        </label>
-
         <p class="login">
           ¿Ya tienes una cuenta? <a href="../VistaSesion/inicioSesion.php">Iniciar Sesión</a>
         </p>

@@ -7,12 +7,13 @@
     font-family: "Montserrat", sans-serif;
 }
 
-body{
+body {
     overflow-x: hidden;
     background-color: #f9f9f9;
 }
 
-nav{
+/* ====== NAVBAR ====== */
+nav {
     width: 100%;
     display: flex;
     justify-content: space-between;  
@@ -25,7 +26,7 @@ nav{
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.nav-links{
+.nav-links {
     display: flex;
 }
 
@@ -54,6 +55,7 @@ nav .nav-links a:hover {
     font-weight: 600;
 }
 
+/* ====== PERFIL ====== */
 .foto-perfil {
     width: 45px;
     height: 45px;
@@ -81,6 +83,7 @@ nav .nav-links a:hover {
     margin-left: 8px; 
 }
 
+/* ====== CONTENIDO ====== */
 main {
     padding: 20px;
 }
@@ -88,24 +91,28 @@ main {
 .titulo {
     font-size: 28px;
     margin-bottom: 5px;
+    text-align: center;
 }
 
 .subtitulo {
     color: #555;
     margin-bottom: 20px;
+    text-align: center;
 }
 
 .filtros {
     margin-bottom: 15px;
+    text-align: center;
 }
 
 .filtro-estado {
-    padding: 5px 10px;
-    border-radius: 5px;
+    padding: 6px 12px;
+    border-radius: 6px;
     border: 1px solid #ccc;
+    font-size: 0.95rem;
 }
 
-/* Tabla de historial */
+/* ====== TABLA HISTORIAL ====== */
 .tabla-historial {
     width: 100%;
     border-collapse: collapse;
@@ -124,6 +131,7 @@ main {
     color: white;
 }
 
+/* Estados */
 .estado {
     padding: 5px 10px;
     border-radius: 12px;
@@ -131,16 +139,16 @@ main {
     text-transform: capitalize;
     color: #fff;
 }
-
 .estado.pendiente { background-color: #f39c12; }
 .estado.confirmada { background-color: #3498db; }
 .estado.cancelada { background-color: #e74c3c; }
 .estado.completada { background-color: #2ecc71; }
 
-/* Botones acciones */
+/* ====== BOTONES ====== */
 .tabla-historial td.acciones {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
     gap: 8px;
 }
 
@@ -159,24 +167,21 @@ main {
     background-color: #3498db;
     color: #fff;
 }
-
 .btn-detalle:hover {
     background-color: #2980b9;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
 .btn-calificar {
     background-color: #2ecc71;
     color: #fff;
 }
-
 .btn-calificar:hover {
     background-color: #27ae60;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
+/* ====== FORMULARIOS ====== */
 .acciones-contenedor {
     margin-top: 20px;
     padding: 15px;
@@ -193,19 +198,18 @@ main {
 }
 
 .input-accion {
-    padding: 6px 10px;
-    border-radius: 5px;
+    padding: 8px 10px;
+    border-radius: 6px;
     border: 1px solid #ccc;
     font-size: 0.95rem;
     width: 100%;
-    box-sizing: border-box;
 }
 
 .accion-form button {
     width: 100%;
     cursor: pointer;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     padding: 8px;
     color: white;
     font-weight: bold;
@@ -215,21 +219,18 @@ main {
 .btn-cancelar {
     background-color: #e74c3c;
 }
-
 .btn-cancelar:hover {
     background-color: #c0392b;
 }
-
 .btn-guardar {
     background-color: #27ae60;
 }
-
 .btn-guardar:hover {
     background-color: #1e8449;
 }
 
 .ver-acciones-btn {
-    padding: 4px 8px;
+    padding: 5px 10px;
     cursor: pointer;
     border: 1px solid #3498db;
     border-radius: 5px;
@@ -238,12 +239,11 @@ main {
     font-size: 0.9rem;
     transition: 0.2s;
 }
-
 .ver-acciones-btn:hover {
     background: #2980b9;
 }
 
-/* Estrellas */
+/* ====== ESTRELLAS ====== */
 .star-rating {
     direction: rtl;
     display: inline-flex;
@@ -269,7 +269,7 @@ main {
 .star-readonly span { color:#ccc; }
 .star-readonly .active { color: gold; }
 
-/* Modal */
+/* ====== MODAL ====== */
 .modal {
     display: none;
     position: fixed;
@@ -287,6 +287,8 @@ main {
     border-radius: 10px;
     text-align: center;
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 450px;
 }
 
 .modal-content button {
@@ -298,8 +300,96 @@ main {
     border-radius: 5px;
     cursor: pointer;
 }
-
 .modal-content button:hover {
     background: #0056b3;
 }
 
+/* ====== RESPONSIVE DESIGN ====== */
+
+/* Tablets */
+@media (max-width: 992px) {
+    nav {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 20px;
+    }
+
+    .nav-links ul {
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .usuario-info {
+        margin-top: 10px;
+    }
+
+    .tabla-historial th, .tabla-historial td {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+}
+
+/* Celulares */
+@media (max-width: 600px) {
+    nav {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .nav-links ul {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .nav-links a {
+        padding: 10px;
+        display: block;
+    }
+
+    .foto-perfil {
+        width: 40px;
+        height: 40px;
+    }
+
+    .titulo {
+        font-size: 1.6rem;
+    }
+
+    .subtitulo {
+        font-size: 0.9rem;
+    }
+
+    .tabla-historial {
+        display: block;
+        overflow-x: auto;
+        border-radius: 8px;
+    }
+
+    .tabla-historial th,
+    .tabla-historial td {
+        white-space: nowrap;
+        padding: 10px 8px;
+        font-size: 0.85rem;
+    }
+
+    .acciones {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .modal-content {
+        padding: 20px;
+        width: 95%;
+    }
+
+    .filtros {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .filtro-estado {
+        width: 90%;
+    }
+}

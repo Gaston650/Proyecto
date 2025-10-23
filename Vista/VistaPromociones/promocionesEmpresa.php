@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['tipo_usuario'] !== 'empresa') {
 }
 
 $empresa_id = $_SESSION['user_id'];
-$logo = '/ClickSoft/IMG/empresas/' . $_SESSION['empresa_logo'];
+$logo = '/ClickSoft/IMG/empresas/' . $_SESSION['user_image'];
 
 // Conexión
 $conexion = new conexion();

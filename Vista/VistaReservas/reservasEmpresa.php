@@ -27,7 +27,7 @@ $reservas_filtradas = $reservasWrapper->verReservasProveedorFiltradas(
 $pendientes = array_filter($reservas_filtradas, fn($r) => $r['estado_reserva'] === 'Pendiente');
 
 // Logo empresa
-$logo = '/ClickSoft/IMG/empresas/' . $_SESSION['empresa_logo'];
+$logo = '/ClickSoft/IMG/empresas/' . $_SESSION['user_image'];
 
 // Página actual para menú activo
 $current_page = basename($_SERVER['PHP_SELF']);
@@ -68,7 +68,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 </header>
 
 <main>
-    <h2>📅 Reservas de mis servicios</h2>
+    <h2>Reservas de mis servicios</h2>
 
     <?php if(isset($_GET['mensaje'])): ?>
         <div class="mensaje-exito"><?= htmlspecialchars($_GET['mensaje']); ?></div>

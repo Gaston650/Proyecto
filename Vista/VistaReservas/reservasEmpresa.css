@@ -22,8 +22,9 @@ header {
 
 nav {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .empresa-info {
@@ -56,8 +57,8 @@ nav {
     list-style: none;
     display: flex;
     gap: 15px;
-    margin-left: auto;
-    margin-right: auto;
+    justify-content: center;
+    flex: 1;
 }
 
 .nav-links li a {
@@ -75,7 +76,24 @@ nav {
     color: #fff;
 }
 
-/* Filtros */
+.notificaciones {
+    position: relative;
+    margin-left: auto;
+}
+
+.notificaciones .contador {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: red;
+    color: #fff;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+/* ===== Filtros ===== */
 .filtros {
     display: flex;
     flex-wrap: wrap;
@@ -126,7 +144,7 @@ nav {
     transform: translateY(-2px);
 }
 
-/* Tabla */
+/* ===== Tabla ===== */
 .tabla-contenedor {
     overflow-x: auto;
     margin: 20px auto;
@@ -161,7 +179,7 @@ tbody tr:hover {
     background-color: #f1f5f9;
 }
 
-/* Estados */
+/* ===== Estados ===== */
 .estado {
     padding: 5px 10px;
     border-radius: 12px;
@@ -171,23 +189,12 @@ tbody tr:hover {
     text-align: center;
 }
 
-.estado.pendiente {
-    background: #f39c12;
-}
+.estado.pendiente { background: #f39c12; }
+.estado.confirmada { background: #27ae60; }
+.estado.cancelada { background: #e74c3c; }
+.estado.completada { background: #28a745; }
 
-.estado.confirmada {
-    background: #27ae60;
-}
-
-.estado.cancelada {
-    background: #e74c3c;
-}
-
-.estado.completada {
-    background: #28a745;
-}
-
-/* Botones de acción */
+/* ===== Botones ===== */
 .btn {
     padding: 6px 12px;
     border: none;
@@ -211,7 +218,6 @@ tbody tr:hover {
 .btn.mensaje { background-color: #ffc107; color: #333; }
 .btn.mensaje:hover { background-color: #e0a800; }
 
-/* Input select estado y actualizar */
 .estado-select {
     padding: 6px 10px;
     border-radius: 6px;
@@ -239,7 +245,7 @@ tbody tr:hover {
     background-color: #1c7ed6;
 }
 
-/* Modal */
+/* ===== Modal ===== */
 .modal {
     display: none;
     position: fixed;
@@ -247,6 +253,8 @@ tbody tr:hover {
     left: 0; top: 0;
     width: 100%; height: 100%;
     background-color: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
 }
 
 .modal-content {
@@ -267,7 +275,7 @@ tbody tr:hover {
     color: #333;
 }
 
-/* Mensaje de sin reservas */
+/* ===== Mensaje sin reservas ===== */
 .sin-reservas {
     text-align: center;
     padding: 20px;
@@ -275,20 +283,53 @@ tbody tr:hover {
     font-style: italic;
 }
 
-/* Responsive */
+/* ===== Responsive ===== */
+@media (max-width: 1024px) {
+    .tabla-contenedor { max-width: 100%; }
+}
+
 @media (max-width: 768px) {
     nav {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
     }
 
     .nav-links {
-        flex-direction: column;
-        gap: 5px;
-        margin-bottom: 10px;
+        justify-content: center;
+        margin: 10px 0;
+        flex-wrap: wrap;
     }
 
     .empresa-info {
         margin-bottom: 15px;
+    }
+
+    .filtros {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .tabla-contenedor table thead { display: none; }
+    .tabla-contenedor table, 
+    .tabla-contenedor table tbody, 
+    .tabla-contenedor table tr, 
+    .tabla-contenedor table td { display: block; width: 100%; }
+    
+    .tabla-contenedor table tr { margin-bottom: 15px; background: #fff; border-radius: 12px; padding: 10px; }
+    
+    .tabla-contenedor table td { text-align: right; padding-left: 50%; position: relative; }
+    
+    .tabla-contenedor table td::before { 
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: 45%;
+        padding-left: 0;
+        font-weight: bold;
+        text-align: left;
     }
 }

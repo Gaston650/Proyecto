@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&family=Tiny5&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
-/* Reset básico */
+/* ===== Reset y Global ===== */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -14,18 +14,18 @@ body {
     padding: 20px;
 }
 
-/* Header */
+/* ===== Header ===== */
 header {
-    text-align: center;
-    padding: 10px 0;
-    font-size: 1.5rem;
-    color: #444;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* Botón volver */
-.volver {
+header .volver {
     display: inline-block;
-    margin: 15px 0;
     padding: 8px 12px;
     background-color: #eee;
     color: #333;
@@ -33,27 +33,51 @@ header {
     border-radius: 5px;
     transition: background 0.2s;
 }
-.volver i {
-    margin-right: 5px;
-}
-.volver:hover {
+header .volver:hover {
     background-color: #ddd;
 }
+header .volver i {
+    margin-right: 5px;
+}
 
-/* Container de chats y notificaciones */
+.empresa-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-empresa {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #007BFF;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+.logo-empresa:hover {
+    transform: scale(1.1);
+}
+
+.nombre-empresa {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+/* ===== Container principal ===== */
 .container {
     max-width: 600px;
-    margin: 0 auto;
+    margin: 20px auto;
     background: #fff;
     border-radius: 10px;
     padding: 15px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-/* Título de sección */
+/* ===== Títulos ===== */
 .titulo-seccion {
-    margin-top: 25px;
-    margin-bottom: 10px;
+    margin: 15px 0;
     font-size: 1.2rem;
     font-weight: bold;
     color: #2c3e50;
@@ -61,14 +85,15 @@ header {
     padding-bottom: 5px;
 }
 
-/* Lista de chats y notificaciones */
-.chat-list, .notif-list {
+/* ===== Listas de chats y notificaciones ===== */
+.chat-list,
+.notif-list {
     list-style: none;
     padding-left: 0;
     margin: 10px 0 20px 0;
 }
 
-/* Item de chat */
+/* ===== Item de chat ===== */
 .chat-item {
     display: flex;
     justify-content: space-between;
@@ -83,17 +108,18 @@ header {
     background: #f0f0f0;
 }
 
-/* Info del chat */
 .chat-info {
     flex: 1;
     display: flex;
     flex-direction: column;
 }
+
 .chat-nombre {
     font-weight: bold;
     margin-bottom: 4px;
     color: #111;
 }
+
 .chat-ultimo {
     font-size: 0.9rem;
     color: #555;
@@ -103,7 +129,6 @@ header {
     max-width: 300px;
 }
 
-/* Meta del chat (fecha y badge) */
 .chat-meta {
     display: flex;
     flex-direction: column;
@@ -111,11 +136,13 @@ header {
     margin-left: 10px;
     min-width: 60px;
 }
+
 .chat-fecha {
     font-size: 0.75rem;
     color: #999;
     margin-bottom: 5px;
 }
+
 .chat-badge {
     background-color: #ff3b30;
     color: #fff;
@@ -125,7 +152,7 @@ header {
     border-radius: 50%;
 }
 
-/* Item de notificación */
+/* ===== Item de notificación ===== */
 .notif-item {
     padding: 12px;
     border-bottom: 1px solid #eee;
@@ -135,59 +162,42 @@ header {
     transition: all 0.2s;
 }
 
-/* Notificaciones no leídas y leídas */
 .notif-item.no-leida {
     border-left: 5px solid #3498db;
     background-color: #ecf6ff;
     font-weight: bold;
 }
+
 .notif-item.leida {
     border-left: 5px solid #95a5a6;
     background-color: #f8f9fa;
 }
 
-/* Mensaje vacío de chats o notificaciones */
-.chat-item:empty, .chat-item.no-messages,
-.notif-item.vacio {
-    text-align: center;
-    color: #888;
-    cursor: default;
-    padding: 15px 10px;
-    font-style: italic;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    border: 1px dashed #ccc;
-}
-
-/* Info de notificación */
 .notif-info p {
     margin-bottom: 5px;
     color: #333;
 }
+
 .notif-info .fecha {
     font-size: 0.75rem;
     color: #777;
 }
 
-/* Badge de notificación */
-.notif-badge { 
-    color: red; 
-    font-weight: bold; 
-    margin-left: 5px; 
+.notif-badge {
+    color: red;
+    font-weight: bold;
+    margin-left: 5px;
 }
 
-/* --- Notificaciones especiales --- */
-
-/* Reprogramación */
-.notif-item.reprogramacion { 
-    background-color: #fff3cd; 
-    border-left: 5px solid #ffc107; 
+/* ===== Notificaciones especiales ===== */
+.notif-item.reprogramacion {
+    background-color: #fff3cd;
+    border-left: 5px solid #ffc107;
 }
 
-/* Cancelación */
 .notif-item.cancelacion {
-    background-color: #ffe6e6; 
-    border-left: 5px solid #ff4d4d; 
+    background-color: #ffe6e6;
+    border-left: 5px solid #ff4d4d;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 .notif-item.cancelacion:hover {
@@ -195,11 +205,11 @@ header {
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 .notif-item.cancelacion .notif-info p {
-    color: #a70000; 
+    color: #a70000;
     font-weight: 500;
 }
 .notif-item.cancelacion .notif-info .fecha {
-    color: #800000; 
+    color: #800000;
     font-size: 0.85em;
 }
 .notif-item.cancelacion .notif-badge {
@@ -212,15 +222,39 @@ header {
     font-size: 0.8em;
 }
 
-/* Pago realizado */
 .notif-item.pago-realizado {
-    background-color: #e0ffe0; 
-    color: #2e7d32; 
-    border-left: 5px solid #4caf50; 
+    background-color: #e0ffe0;
+    color: #2e7d32;
+    border-left: 5px solid #4caf50;
     font-weight: bold;
     transition: background 0.2s, transform 0.2s;
 }
 .notif-item.pago-realizado:hover {
     background-color: #c8f7c5;
     transform: translateY(-1px);
+}
+
+/* ===== Mensaje vacío ===== */
+.chat-item:empty,
+.chat-item.no-messages,
+.notif-item.vacio {
+    text-align: center;
+    color: #888;
+    cursor: default;
+    padding: 15px 10px;
+    font-style: italic;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px dashed #ccc;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 10px;
+    }
+    .chat-nombre, .chat-ultimo {
+        max-width: 200px;
+    }
 }

@@ -11,6 +11,9 @@ if (!isset($_SESSION['tipo_usuario']) || $_SESSION['tipo_usuario'] !== 'administ
 // Instanciamos wrapper
 $wrapper = new adminControladorWrapper();
 $adminNombre = $_SESSION['user_nombre'] ?? 'Administrador';
+
+// Obtener módulo actual (por defecto 'usuarios')
+$moduloActual = $_GET['modulo'] ?? 'usuarios';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -24,11 +27,11 @@ $adminNombre = $_SESSION['user_nombre'] ?? 'Administrador';
     <div class="sidebar">
         <h2>Admin Panel</h2>
         <ul>
-            <li><a href="?modulo=usuarios">Usuarios</a></li>
-            <li><a href="?modulo=servicios">Servicios</a></li>
-            <li><a href="?modulo=categorias">Categorías</a></li>
-            <li><a href="?modulo=reportes">Reportes</a></li>
-            <li><a href="?modulo=historial">Historial</a></li>
+            <li><a href="?modulo=usuarios" class="<?= $moduloActual === 'usuarios' ? 'active' : '' ?>">Usuarios</a></li>
+            <li><a href="?modulo=servicios" class="<?= $moduloActual === 'servicios' ? 'active' : '' ?>">Servicios</a></li>
+            <li><a href="?modulo=categorias" class="<?= $moduloActual === 'categorias' ? 'active' : '' ?>">Categorías</a></li>
+            <li><a href="?modulo=reportes" class="<?= $moduloActual === 'reportes' ? 'active' : '' ?>">Reportes</a></li>
+            <li><a href="?modulo=historial" class="<?= $moduloActual === 'historial' ? 'active' : '' ?>">Historial</a></li>
             <li><a href="../../Controlador/cerrar_sesion.php">Cerrar Sesión</a></li>
         </ul>
     </div>
