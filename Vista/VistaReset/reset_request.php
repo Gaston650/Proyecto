@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="POST">
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" placeholder="Ingresa tu correo electrónico" required>
-            <button type="submit">Solicitar enlace</button>
+            <button type="submit">Continuar</button>
         </form>
 
         <p class="back-login">

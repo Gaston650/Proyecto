@@ -102,16 +102,18 @@ class modeloServicio {
         return $stmt->execute();
     }
 
-    // Obtener servicios activos con filtros (para clientes), incluyendo imagen
-public function obtenerServiciosFiltrados($buscar = '', $zona = '', $categoria = '') {
-    $sql = "SELECT id_servicio, titulo, descripcion, categoria, ubicacion, precio, disponibilidad, fecha_publicacion, estado, id_empresa, imagen
-            FROM servicios
-            WHERE estado = 'Disponible'";
+   public function obtenerServiciosFiltrados($buscar = '', $zona = '', $categoria = '') {
+    $sql = "SELECT s.id_servicio, s.titulo, s.descripcion, s.categoria, s.ubicacion, s.precio, s.disponibilidad,
+                   s.fecha_publicacion, s.estado, s.id_empresa, s.imagen, e.nombre_empresa
+            FROM servicios s
+            LEFT JOIN empresas_proveedor e ON s.id_empresa = e.id_empresa
+            WHERE s.estado = 'Disponible'";
+
     $params = [];
     $types = "";
 
     if (!empty($buscar)) {
-        $sql .= " AND (LOWER(titulo) LIKE ? OR LOWER(descripcion) LIKE ?)";
+        $sql .= " AND (LOWER(s.titulo) LIKE ? OR LOWER(s.descripcion) LIKE ?)";
         $busqueda = "%".strtolower($buscar)."%";
         $params[] = $busqueda;
         $params[] = $busqueda;
@@ -119,13 +121,13 @@ public function obtenerServiciosFiltrados($buscar = '', $zona = '', $categoria =
     }
 
     if (!empty($zona)) {
-        $sql .= " AND LOWER(ubicacion) = ?";
+        $sql .= " AND LOWER(s.ubicacion) = ?";
         $params[] = strtolower($zona);
         $types .= "s";
     }
 
     if (!empty($categoria)) {
-        $sql .= " AND LOWER(categoria) = ?";
+        $sql .= " AND LOWER(s.categoria) = ?";
         $params[] = strtolower($categoria);
         $types .= "s";
     }
@@ -149,7 +151,6 @@ public function obtenerServiciosFiltrados($buscar = '', $zona = '', $categoria =
     }
     return $servicios;
 }
-
 
 
     // Obtener todas las categorías

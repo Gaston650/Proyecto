@@ -1,3 +1,10 @@
+<?php
+session_start();
+
+// Incluir autologin
+require_once __DIR__ . '/../../Controlador/minisControlador/autologin.php';
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -17,7 +24,7 @@
         </div>
       <?php endif; ?>
 
-       <!-- Mostrar mensaje si existe -->
+      <!-- Mostrar mensaje si existe -->
       <?php if (isset($_GET['msg'])): ?>
         <div style="color: green; text-align: center; margin-bottom: 15px;">
           <?php echo htmlspecialchars($_GET['msg']); ?>
@@ -83,6 +90,6 @@
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
   <script src="../../Ojo.js"></script>
   <script src="ocultarGoogle.js"></script>
-  <script src="contrasenaOlvido.js"></script>
+  <script src="ocultarOlvido.js"></script>
 </body>
 </html>

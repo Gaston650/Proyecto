@@ -1,57 +1,29 @@
 <?php
 session_start();
-require_once __DIR__ . '/../../Controlador/superControlador/superControlador.php';
+require_once __DIR__ . '/../Modelo/conexion.php';
+require_once __DIR__ . '/../Controlador/controladorServicio.php';
 
-// Validar sesión
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../../Vista/VistaSesion/inicioSesion.php?error=" . urlencode("Debes iniciar sesión primero."));
-    exit();
-}
+$conn = (new conexion())->conectar();
+$controlador = new controladorServicio($conn);
 
-$reservaWrapper = new reservasControladorWrapper();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id_servicio = $_POST['id_servicio'] ?? null;
+    $usuario = $_SESSION['usuario']['id'] ?? null;
 
-// Caso 1: Cliente creando reserva
-if (isset($_POST['id_servicio'], $_POST['fecha'], $_POST['hora'])) {
-    $id_cliente = $_SESSION['user_id'];
-    $id_servicio = $_POST['id_servicio'];
-    $fecha = $_POST['fecha'];
-    $hora = $_POST['hora'];
-    $comentarios = $_POST['comentarios'] ?? "";
-
-    $exito = $reservaWrapper->crearReserva($id_cliente, $id_servicio, $fecha, $hora, $comentarios);
-
-    if ($exito) {
-        // 🔹 Mandamos parámetro `exito=1` para abrir modal en servicios.php
-        header("Location: ../../Vista/VistaServicios/servicios.php?exito=1");
-    } else {
-        header("Location: ../../Vista/VistaServicios/servicios.php?error=" . urlencode("No se pudo crear la reserva. Verifique disponibilidad y datos."));
-    }
-    exit();
-}
-
-// Caso 2: Proveedor actualizando estado
-if (isset($_POST['id_reserva'], $_POST['estado'])) {
-    $id_reserva = $_POST['id_reserva'];
-    $estado = $_POST['estado'];
-
-    $exito = $reservaWrapper->actualizarEstado($id_reserva, $estado);
-
-    // Redirigir según tipo de usuario
-    if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] === 'empresa') {
-        $redirect = "reservasEmpresa.php";
-    } else {
-        $redirect = "reservas.php";
+    if (!$id_servicio || !$usuario) {
+        die("Datos incompletos para reservar.");
     }
 
-    if ($exito) {
-        header("Location: ../../Vista/VistaReservas/$redirect?mensaje=" . urlencode("Reserva actualizada con éxito"));
-    } else {
-        header("Location: ../../Vista/VistaReservas/$redirect?mensaje=" . urlencode("No se pudo actualizar la reserva"));
+    // Validar disponibilidad
+    $servicio = $controlador->obtenerServicio($id_servicio);
+    if (!$servicio || strtolower($servicio['disponibilidad']) !== 'disponible') {
+        die("El servicio no está disponible.");
     }
-    exit();
-}
 
-// Si no entra en ninguno de los dos casos
-header("Location: ../../Vista/VistaPrincipal/home.php?error=" . urlencode("Acción inválida"));
-exit();
+    // Actualizar disponibilidad a "Reservado"
+    $controlador->actualizarDisponibilidad($id_servicio, 'Reservado');
+
+    // Aquí se podría agregar registro de reserva en tabla de reservas
+    echo json_encode(['success' => true, 'mensaje' => 'Reserva realizada correctamente.']);
+}
 ?>

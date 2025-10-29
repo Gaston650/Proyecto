@@ -163,7 +163,8 @@ if (isset($_SESSION['user_image']) && !empty($_SESSION['user_image'])) {
         <?php endif; ?>
 
         <p><strong>Disponibilidad:</strong> <?php echo htmlspecialchars($servicio['disponibilidad']); ?></p>
-        <p><strong>Proveedor:</strong> <?php echo htmlspecialchars($servicio['id_empresa']); ?></p>
+        <p><strong>Proveedor:</strong> <?php echo htmlspecialchars($servicio['nombre_empresa']); ?></p>
+
 
         <div class="servicio-botones">
             <input type="hidden" name="id_servicio" value="<?php echo $servicio['id_servicio']; ?>">
@@ -194,7 +195,7 @@ if (isset($_SESSION['user_image']) && !empty($_SESSION['user_image'])) {
             <input type="hidden" name="id_servicio" id="input-id-servicio">
             <label for="motivo">Motivo del reporte:</label>
             <textarea name="motivo" id="motivo" rows="4" required></textarea>
-            <button type="submit">Enviar reporte</button>
+            <button type="submit" class="btn-reportar">Enviar reporte</button>
         </form>
     </div>
 </div>

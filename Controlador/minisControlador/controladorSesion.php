@@ -12,10 +12,11 @@ class controladorSesion {
     private $empresaModelo;
     private $perfilModelo;
 
-    public function __construct() {
-        $this->usuarioModelo = new usuario2Modelo(); // modelo de usuarios
-        $this->empresaModelo = new empresaModelo();  // modelo de empresas
-        $this->perfilModelo = new perfilModelo();    // modelo de perfiles
+    public function __construct($conn) {
+        // Pasar la conexión a los modelos
+        $this->usuarioModelo = new usuario2Modelo($conn); // modelo de usuarios
+        $this->empresaModelo = new empresaModelo($conn);  // modelo de empresas
+        $this->perfilModelo = new perfilModelo($conn);    // modelo de perfiles
     }
 
     // Iniciar sesión según tipo seleccionado

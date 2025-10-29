@@ -13,16 +13,23 @@ body {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    overflow: hidden; /* Evita doble scroll */
 }
 
 /* ===== Header ===== */
 header {
+    position: fixed; /* Fijo arriba */
+    top: 0;
+    left: 0;
+    width: 100%;
     background: #075e54;
     color: #fff;
     padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 header h2 {
@@ -49,6 +56,9 @@ main {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    margin-top: 70px; /* Espacio para el header fijo */
+    margin-bottom: 65px; /* Espacio para el form fijo */
+    overflow: hidden;
 }
 
 /* ===== Caja del chat ===== */
@@ -59,6 +69,7 @@ main {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    height: calc(100vh - 135px); /* Ajusta el alto visible (header + form) */
 }
 
 /* ===== Mensajes ===== */
@@ -102,12 +113,17 @@ main {
     text-align: right;
 }
 
-/* ===== Formulario de envío ===== */
+/* ===== Formulario fijo abajo ===== */
 form {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
     display: flex;
     padding: 10px;
     background: #f0f0f0;
     border-top: 1px solid #ccc;
+    z-index: 1000;
 }
 
 form input[type="text"] {

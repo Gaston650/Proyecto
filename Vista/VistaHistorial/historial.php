@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../Controlador/superControlador/superControlador.php';
+require_once __DIR__ . '/../../Controlador/minisControlador/autologin.php';
+
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../VistaSesion/inicioSesion.php?error=Debes iniciar sesión primero.");
@@ -15,20 +17,27 @@ $historialWrapper = new historialControladorWrapper();
 $historial = $historialWrapper->listarHistorial($id_cliente, $estadoFiltro);
 
 $conn = (new Conexion())->conectar();
-$perfilModelo = new perfilModelo($conn);
-// 🖼️ Obtener la imagen de perfil desde la base de datos
-$fotoPerfil = '../../IMG/perfil-vacio.png'; // por defecto
 
-if (isset($_SESSION['user_image']) && !empty($_SESSION['user_image'])) {
+// 🖼️ Determinar imagen de perfil
+$fotoPerfil = '../../IMG/perfil-vacio.png'; // Imagen por defecto
+
+// Prioridad: Google > BD > default
+if (!empty($_SESSION['imagen']) && str_starts_with($_SESSION['imagen'], 'https://')) {
+    // 1️⃣ Imagen de Google
+    $fotoPerfil = $_SESSION['imagen'];
+} elseif (!empty($_SESSION['user_image']) && $_SESSION['user_image'] !== '../../IMG/perfil-vacio.png') {
+    // 2️⃣ Imagen de BD
     $fotoPerfil = $_SESSION['user_image'];
-}
-// Sino, intentar buscar en BD (usuarios tradicionales)
-elseif (isset($_SESSION['user_id'])) {
-    $perfil = $perfilModelo->obtenerPerfil($_SESSION['user_id']);
-    if ($perfil && !empty($perfil['foto_perfil'])) {
-        $fotoPerfil = $perfil['foto_perfil'];
+} else {
+    // 3️⃣ Intentar obtener desde la tabla perfil por si no se guardó en sesión
+    if (isset($_SESSION['user_id'])) {
+        $perfil = $perfilModelo->obtenerPerfil($_SESSION['user_id']);
+        if ($perfil && !empty($perfil['foto_perfil'])) {
+            $fotoPerfil = $perfil['foto_perfil'];
+        }
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -44,20 +53,22 @@ elseif (isset($_SESSION['user_id'])) {
 
 <header>
 <nav>
-    <div class="usuario-info">
+  <div class="usuario-info">
                <a href="../vistaEditarPerfil/editarPerfil.php" title="Editar perfil">
-                   <div class="foto-perfil" style="background-image: url('<?php echo htmlspecialchars($fotoPerfil); ?>');"></div>
+                   <div class="foto-perfil"
+                        style="background-image: url('<?php echo htmlspecialchars($fotoPerfil, ENT_QUOTES, 'UTF-8'); ?>');">
+                   </div>
                </a>
                <span class="nombre-usuario">
-               <?php
-                   if (isset($_SESSION['user_nombre'])) {
-                       echo htmlspecialchars($_SESSION['user_nombre']);
-                   } elseif (isset($_SESSION['nombre_empresa'])) {
-                       echo htmlspecialchars($_SESSION['nombre_empresa']);
-                   } else {
-                       echo 'Usuario';
-                   }
-               ?>
+                   <?php
+                       if (isset($_SESSION['user_nombre'])) {
+                           echo htmlspecialchars($_SESSION['user_nombre']);
+                       } elseif (isset($_SESSION['nombre_empresa'])) {
+                           echo htmlspecialchars($_SESSION['nombre_empresa']);
+                       } else {
+                           echo 'Usuario';
+                       }
+                   ?>
                </span>
            </div>
     <div class="nav-links">

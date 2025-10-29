@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <form method="POST">
         <label for="email">Correo empresarial:</label>
         <input type="email" id="email" name="email" placeholder="Ingresa el correo de tu empresa" required>
-        <button type="submit">Solicitar enlace</button>
+        <button type="submit">Continuar</button>
     </form>
     <p class="back-login">
         <a href="../VistaSesion/inicioSesion.php">Volver a iniciar sesión</a>
