@@ -1,32 +1,52 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../Controlador/superControlador/superControlador.php';
-require_once __DIR__ . '/../../Modelo/modeloRegistro.php'; // agregamos el modelo
+require_once __DIR__ . '/../../Modelo/modeloRegistro.php'; // modelo
+require_once __DIR__ . '/../../Controlador/minisControlador/autologin.php';
+require_once __DIR__ . '/../../Modelo/modeloPerfil.php'; // modelo de perfil
+require_once __DIR__ . '/../../conexion.php';
 
+// ✅ Verificar que el usuario esté logueado
+if (empty($_SESSION['user_id'])) {
+    // No hay sesión activa, redirigir al login
+    header('Location: ../../index.php');
+    exit();
+}
+
+// Conexión y modelo de perfil
+$conexion = new conexion();
+$conn = $conexion->conectar();
+$perfilModelo = new perfilModelo($conn);
+
+// Obtener datos de perfil
 $perfilWrapper = new perfilControladorWrapper();
 $perfil = $perfilWrapper->obtenerPerfil($_SESSION['user_id']) ?? [];
 
-// Imagen de perfil
-if (isset($_SESSION['user_image']) && !empty($_SESSION['user_image'])) {
-    // Si inició sesión con Google
-    $img = $_SESSION['user_image'];
+// 🖼️ Determinar imagen de perfil (prioridad: Google > BD en sesión > tabla perfil > default)
+$fotoPerfil = '../../IMG/perfil-vacio.png'; // default
+
+if (!empty($_SESSION['imagen']) && str_starts_with($_SESSION['imagen'], 'https://')) {
+    // 1️⃣ Imagen de Google
+    $fotoPerfil = $_SESSION['imagen'];
+} elseif (!empty($_SESSION['user_image']) && $_SESSION['user_image'] !== '../../IMG/perfil-vacio.png') {
+    // 2️⃣ Imagen guardada en sesión desde BD
+    $fotoPerfil = $_SESSION['user_image'];
 } elseif (!empty($perfil['foto_perfil'])) {
-    // Si tiene imagen guardada en la base de datos
-    $img = $perfil['foto_perfil'];
-} else {
-    // Imagen por defecto
-    $img = '../../IMG/perfil-vacio.png';
+    // 3️⃣ Imagen desde la tabla perfil
+    $fotoPerfil = $perfil['foto_perfil'];
 }
 
+$img = $fotoPerfil;
 
 // Método de pago
 $metodoPagoActual = $perfilWrapper->obtenerMetodoPago($_SESSION['user_id']) ?? 'tarjeta';
 
-// ✅ Obtenemos el correo desde el modelo
+// Obtener correo del usuario
 $usuarioModelo = new usuarioModelo();
 $usuario = $usuarioModelo->obtenerUsuarioPorId($_SESSION['user_id']);
 $email = $usuario['email'] ?? '';
 ?>
+
 
 
 
@@ -105,7 +125,7 @@ $email = $usuario['email'] ?? '';
 
     <div class="volver-inicio">
       <a href="../VistaPrincipal/home.php" class="btn-volver">Volver al inicio</a>
-      <a href="../../Controlador/cerrar_sesion.php" class="btn-cerrar-sesion">Cerrar Sesión</a>
+      <a href="../../cerrar_sesion.php" class="btn-cerrar-sesion">Cerrar Sesión</a>
     </div>
   </div>
 

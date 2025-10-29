@@ -66,7 +66,10 @@ $departamentos = [
         <input type="number" id="precio" step="0.01" name="precio" placeholder="Precio en $" required>
 
         <label for="disponibilidad">Disponibilidad</label>
-        <input type="text" id="disponibilidad" name="disponibilidad" placeholder="Días y horarios disponibles" required>
+            <select id="disponibilidad" name="disponibilidad" required>
+                <option value="Disponible">Disponible</option>
+                <option value="No disponible">No disponible</option>
+            </select>
 
         <label for="estado">Estado</label>
         <select id="estado" name="estado" required>

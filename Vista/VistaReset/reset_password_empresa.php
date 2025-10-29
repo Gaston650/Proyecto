@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 .password-wrapper input {
     width: 100%;
-    padding: 10px 40px 10px 10px; /* espacio para el toggle */
+    padding: 10px 40px 10px 10px; 
     border-radius: 5px;
     border: 1px solid #cbd5e1;
     font-size: 14px;

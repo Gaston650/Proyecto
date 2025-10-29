@@ -14,6 +14,7 @@ require_once __DIR__ . '/../minisControlador/controladorResena.php';
 require_once __DIR__ . '/../minisControlador/controladorMensaje.php';
 require_once __DIR__ . '/../minisControlador/controladorMensajesEmpresa.php';
 require_once __DIR__ . '/../minisControlador/procesarMensajes.php';
+require_once __DIR__ . '/../minisControlador/autologin.php';
 require_once __DIR__ . '/../minisControlador/controladorNotificaciones.php';
 require_once __DIR__ . '/../minisControlador/controladorPago.php';
 require_once __DIR__ . '/../minisControlador/controladorNotificacionPago.php';
@@ -29,48 +30,54 @@ class usuarioControladorWrapper {
         $this->controlador = new UsuarioControlador($conn);
     }
 
-    // Registrar usuario tradicional
     public function registrar($nombre, $email, $password) {
         return $this->controlador->guardarUsuario($nombre, $email, $password);
     }
 
-    // Login con Google
+    public function loginUsuario($email, $password, $recordarme = false) {
+        return $this->controlador->loginUsuario($email, $password, $recordarme);
+    }
+
     public function loginGoogle($nombre, $email) {
         return $this->controlador->loginGoogle($nombre, $email);
     }
 
-    // Solicitar recuperación de contraseña
-    public function solicitarReset($email) {
-        return $this->controlador->solicitarReset($email);
+    public function verificarSesionPersistente() {
+        return $this->controlador->verificarSesionPersistente();
     }
 
-    // Cambiar contraseña usando token
-    public function cambiarContrasena($token, $password, $password2) {
-        return $this->controlador->cambiarContrasena($token, $password, $password2);
-    }
-
-    // Validar token 
-    public function validarToken($token) {
-        return $this->controlador->validarToken($token);
-    }
-
-    // Obtener usuario por ID
-    public function obtenerUsuarioPorId($id) {
-        return $this->controlador->obtenerUsuarioPorId($id);
+    public function logout() {
+        return $this->controlador->logout();
     }
 }
-
-
 class empresaControladorWrapper {
     private $controlador;
+
     public function __construct() {
-        $this->controlador = new empresaControlador();
+        $this->controlador = new EmpresaControlador();
     }
-    public function registrar($nombre, $email, $zona, $logoNombre, $rut, $password, $telefono) {
-        if ($this->controlador->obtenerEmpresa($email)) return "EMAIL_DUPLICADO";
-        return $this->controlador->guardarEmpresa($nombre, $email, $zona, $logoNombre, $rut, $password, $telefono);
+
+    public function registrar($nombre, $email, $zona, $logoNombre, $telefono, $password, $rut) {
+        return $this->controlador->registrarEmpresa($nombre, $email, $zona, $logoNombre, $telefono, $password, $rut);
+    }
+
+    public function loginEmpresa($email, $password, $recordarme = false) {
+        return $this->controlador->loginEmpresa($email, $password, $recordarme);
+    }
+
+    public function verificarSesionPersistente() {
+        return $this->controlador->verificarSesionPersistente();
+    }
+
+    public function logout() {
+        return $this->controlador->logout();
+    }
+
+    public function loginGoogle($nombre, $email) {
+        return $this->controlador->loginGoogle($nombre, $email);
     }
 }
+
 
 class sesionControladorWrapper {
     private $controlador;
@@ -173,6 +180,7 @@ class servicioControladorWrapper {
         return $this->controlador->listarCategorias();
     }
 }
+
 
 class reservasControladorWrapper {
     private $controlador;

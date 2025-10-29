@@ -32,7 +32,7 @@ $moduloActual = $_GET['modulo'] ?? 'usuarios';
             <li><a href="?modulo=categorias" class="<?= $moduloActual === 'categorias' ? 'active' : '' ?>">Categorías</a></li>
             <li><a href="?modulo=reportes" class="<?= $moduloActual === 'reportes' ? 'active' : '' ?>">Reportes</a></li>
             <li><a href="?modulo=historial" class="<?= $moduloActual === 'historial' ? 'active' : '' ?>">Historial</a></li>
-            <li><a href="../../Controlador/cerrar_sesion.php">Cerrar Sesión</a></li>
+            <li><a href="../../cerrar_sesion.php">Cerrar Sesión</a></li>
         </ul>
     </div>
 

@@ -218,40 +218,103 @@ nav .nav-links a:hover {
   background: #1c7ed6;
 }
 
-/* ====== MODALES ====== */
+/* ====== MODALES ESTILIZADOS ====== */
 .modal,
 .modal-exito,
 .modal-resenas,
 .modal-reportar {
-  display: none; 
+  display: none;
   position: fixed;
   z-index: 2000;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.6); 
+  overflow-y: auto;
+  background-color: rgba(0,0,0,0.6);
+  backdrop-filter: blur(2px);
   transition: all 0.3s ease;
 }
 
 .modal-content {
   background-color: #fff;
-  margin: 5% auto;
-  padding: 30px 25px;
+  margin: 6% auto;
+  padding: 25px 30px;
   border-radius: 15px;
   width: 90%;
   max-width: 450px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
   position: relative;
   animation: modalFade 0.3s ease;
+  font-family: "Montserrat", sans-serif;
+}
+
+@keyframes modalFade {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal h2 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: #1e90ff;
+  text-align: center;
+}
+
+.modal p {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.modal a {
+  color: #1e90ff;
+  text-decoration: none;
+  font-weight: 600;
+}
+.modal a:hover {
+  text-decoration: underline;
+}
+
+.modal input,
+.modal textarea {
+  width: 100%;
+  padding: 10px 12px;
+  margin: 8px 0 15px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+}
+
+.modal textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+.btn-contratar {
+  background: #1e90ff;
+  color: #fff;
+  font-weight: 600;
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+.btn-contratar:hover {
+  background: #1c7ed6;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 .close {
   color: #aaa;
   position: absolute;
-  top: 15px;
-  right: 20px;
+  top: 12px;
+  right: 18px;
   font-size: 28px;
   font-weight: bold;
   cursor: pointer;
@@ -259,8 +322,50 @@ nav .nav-links a:hover {
 }
 .close:hover,
 .close:focus {
-  color: #000;
+  color: #1e90ff;
 }
+
+/* Contenido de reseñas */
+#contenido-resenas {
+  max-height: 300px;
+  overflow-y: auto;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+
+/* Modal de confirmación especial */
+#modal-confirmacion h2 {
+  color: #28a745;
+  text-align: center;
+}
+#modal-confirmacion p {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+/* Botón Enviar Reporte en el modal */
+.btn-reporte {
+  background-color: #dc3545; /* rojo intenso */
+  color: white;
+  font-weight: 600;
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  text-align: center;
+  transition: all 0.2s ease;
+  margin-top: 10px;
+}
+
+.btn-reporte:hover {
+  background-color: #c82333; /* rojo más oscuro */
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
 
 /* ====== RESPONSIVE DESIGN ====== */
 
@@ -345,5 +450,3 @@ nav .nav-links a:hover {
     width: 100%;
   }
 }
-
-

@@ -193,6 +193,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
 </main>
 
 <script src="modalPromocion.js"></script>
+<script src="fechasPromocion.js"></script>
+
 
 </body>
 </html>

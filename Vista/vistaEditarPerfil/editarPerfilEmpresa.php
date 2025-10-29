@@ -27,7 +27,7 @@ $img = !empty($perfil['logo'])
 
 <header>
     <a href="../VistaPrincipal/homeEmpresa.php" class="volver">Volver al inicio</a>
-    <form action="../../Controlador/cerrar_sesion.php" method="POST" style="margin:0;">
+    <form action="../../cerrar_sesion.php" method="POST" style="margin:0;">
         <button type="submit" class="btn-cerrar-sesion">Cerrar Sesión</button>
     </form>
 </header>
