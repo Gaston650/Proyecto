@@ -2,6 +2,7 @@
 session_start();
 require_once __DIR__ . '/../../Controlador/superControlador/superControlador.php';
 
+// Verificar sesión de empresa
 if (!isset($_SESSION['user_id']) || $_SESSION['tipo_usuario'] !== 'empresa') {
     header("Location: ../VistaSesion/inicioSesion.php?error=Debes iniciar sesión como empresa.");
     exit();
@@ -11,9 +12,13 @@ $perfilWrapper = new perfilEmpresaControladorWrapper();
 $empresaId = $_SESSION['user_id'];
 $perfil = $perfilWrapper->obtenerPerfil($empresaId);
 
+// --- Imagen de perfil ---
+// 1. Primero usamos el logo que viene del perfil (base de datos)
+// 2. Si no existe, usamos la imagen de sesión (seteada al crear/login)
+// 3. Si no hay ninguna, usamos perfil-vacio.png
 $img = !empty($perfil['logo'])
-    ? '../../IMG/empresas/' . $perfil['logo']
-    : '../../IMG/perfil-vacio.png';
+    ? '../../IMG/empresas/' . $perfil['logo']  // relativa desde Vista/VistaEditarPerfil
+    : (!empty($_SESSION['user_image']) ? $_SESSION['user_image'] : '../../IMG/perfil-vacio.png');
 ?>
 
 <!DOCTYPE html>
@@ -53,7 +58,7 @@ $img = !empty($perfil['logo'])
 
         <div class="form-group">
             <label for="nombre">Nombre de la empresa</label>
-           <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($perfil['nombre_empresa'] ?? ''); ?>" disabled>
+            <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($perfil['nombre_empresa'] ?? ''); ?>" disabled>
         </div>
 
         <div class="form-group">
@@ -106,3 +111,4 @@ logoInput.addEventListener('change', function() {
 
 </body>
 </html>
+

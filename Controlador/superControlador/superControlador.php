@@ -50,14 +50,17 @@ class usuarioControladorWrapper {
         return $this->controlador->logout();
     }
 }
+
 class empresaControladorWrapper {
     private $controlador;
 
     public function __construct() {
-        $this->controlador = new EmpresaControlador();
+        // Debe coincidir exactamente con el nombre de la clase
+        $this->controlador = new controladorEmpresa();
     }
 
     public function registrar($nombre, $email, $zona, $logoNombre, $telefono, $password, $rut) {
+        // Llamamos al método que sí existe en controladorEmpresa
         return $this->controlador->registrarEmpresa($nombre, $email, $zona, $logoNombre, $telefono, $password, $rut);
     }
 
@@ -73,9 +76,6 @@ class empresaControladorWrapper {
         return $this->controlador->logout();
     }
 
-    public function loginGoogle($nombre, $email) {
-        return $this->controlador->loginGoogle($nombre, $email);
-    }
 }
 
 

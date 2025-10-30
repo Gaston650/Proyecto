@@ -1,7 +1,8 @@
 <?php
 session_start();
 
-require_once __DIR__ . '/controladorEmpresa.php';
+// Incluir el wrapper correcto desde el superControlador
+require_once __DIR__ . '/../../Controlador/superControlador/superControlador.php';
 
 // Solo procesar si se envió el formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar_empresa'])) {
@@ -38,28 +39,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar_empresa']))
     }
 
     if (!move_uploaded_file($logoTemp, $rutaDestino)) {
-        $_SESSION['mensaje_registro'] = "Error al subir el logo.";
+        $_SESSION['mensaje_registro'] = "Error al mover el logo al directorio destino.";
         $_SESSION['tipo_mensaje'] = "error";
         header("Location: ../../Vista/VistaRegistro/registrarEmpresa.php");
         exit();
     }
 
-    // Registrar empresa
-    $controlador = new empresaControladorWrapper2();
-    $resultado = $controlador->registrar($nombre, $email, $zona, $logoNombre, $rut, $password, $telefono);
+    // Registrar empresa usando el wrapper
+    $controlador = new empresaControladorWrapper();
+    $resultado = $controlador->registrar($nombre, $email, $zona, $logoNombre, $telefono, $password, $rut);
 
-    if ($resultado === "EMAIL_DUPLICADO") {
-        $_SESSION['mensaje_registro'] = "El correo ya está registrado.";
-        $_SESSION['tipo_mensaje'] = "error";
-    } elseif ($resultado) {
-        $_SESSION['mensaje_registro'] = "¡Registro exitoso! Ahora puedes iniciar sesión.";
-        $_SESSION['tipo_mensaje'] = "exito";
+    // Manejo de la respuesta según lo que devuelve controladorEmpresa
+    if (is_array($resultado)) {
+        if ($resultado['ok']) {
+            $_SESSION['mensaje_registro'] = $resultado['msg'];
+            $_SESSION['tipo_mensaje'] = "exito";
+        } else {
+            $_SESSION['mensaje_registro'] = $resultado['msg'];
+            $_SESSION['tipo_mensaje'] = "error";
+        }
     } else {
-        $_SESSION['mensaje_registro'] = "No se pudo registrar la empresa.";
+        $_SESSION['mensaje_registro'] = "Ocurrió un error inesperado al registrar la empresa.";
         $_SESSION['tipo_mensaje'] = "error";
     }
 
-    // Redirigir de nuevo a la vista de registro
+    // Redirigir a la vista de registro
     header("Location: ../../Vista/VistaRegistro/registrarEmpresa.php");
     exit();
 }

@@ -3,7 +3,6 @@ session_start();
 require_once __DIR__ . '/../../Controlador/superControlador/superControlador.php';
 require_once __DIR__ . '/../../Controlador/minisControlador/autologin.php';
 
-
 // Verificar sesión
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../VistaSesion/inicioSesion.php?error=Debes iniciar sesión primero.");
@@ -22,6 +21,10 @@ $mensajesNoLeidos = $mensajesWrapper->contarMensajesNoLeidos($id_cliente);
 $pagoWrapper = new pagoControladorWrapper();
 
 $conn = (new Conexion())->conectar();
+
+// ✅ Instanciamos el modelo de perfil antes de usarlo
+require_once __DIR__ . '/../../Modelo/modeloPerfil.php';
+$perfilModelo = new perfilModelo($conn);
 
 // 🖼️ Determinar imagen de perfil
 $fotoPerfil = '../../IMG/perfil-vacio.png'; // Imagen por defecto
@@ -42,8 +45,8 @@ if (!empty($_SESSION['imagen']) && str_starts_with($_SESSION['imagen'], 'https:/
         }
     }
 }
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
