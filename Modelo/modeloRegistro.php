@@ -13,14 +13,25 @@ class usuarioModelo {
     }
 
     public function insertarUsuario($nombre, $email, $password) {
-        $sql = "INSERT INTO usuarios (nombre, email, password) VALUES (?, ?, ?)";
-        $stmt = $this->conexion->prepare($sql);
-        if (!$stmt) die("Error al preparar consulta insertarUsuario: " . $this->conexion->error);
-        $stmt->bind_param("sss", $nombre, $email, $password);
-        $success = $stmt->execute();
-        $stmt->close();
-        return $success;
+    $sql = "INSERT INTO usuarios (nombre, email, password) VALUES (?, ?, ?)";
+    $stmt = $this->conexion->prepare($sql);
+    if (!$stmt) {
+        return ['exito' => false, 'error' => "Error al preparar consulta: " . $this->conexion->error];
     }
+
+    $stmt->bind_param("sss", $nombre, $email, $password);
+
+    if ($stmt->execute()) {
+        $stmt->close();
+        return ['exito' => true, 'error' => '']; // ✅ Éxito
+    } else {
+        $error = $stmt->error;
+        $stmt->close();
+        return ['exito' => false, 'error' => $error]; // ❌ Error al ejecutar
+    }
+}
+
+
 
     public function obtenerUsuarioPorEmail($email) {
         $sql = "SELECT id_usuario, nombre, email, password, tipo_usuario, remember_token FROM usuarios WHERE email = ?";

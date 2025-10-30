@@ -5,8 +5,9 @@ class UsuarioControlador {
     private $usuarioModelo;
 
     public function __construct($conn) {
-        $this->usuarioModelo = new usuarioModelo();
+        $this->usuarioModelo = new usuarioModelo($conn);
     }
+
 
     public function guardarUsuario($nombre, $email, $password) {
         $hashed = password_hash($password, PASSWORD_DEFAULT);
