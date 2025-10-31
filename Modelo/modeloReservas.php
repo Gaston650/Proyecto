@@ -3,23 +3,75 @@ require_once __DIR__ . '/../conexion.php';
 
 class ModeloReservas {
 
-    // Crear reserva
-    public static function crearReserva($id_cliente, $id_servicio, $fecha, $hora, $comentarios = '') {
-        $db = new conexion();
-        $conn = $db->conectar();
+// Crear reserva
+public static function crearReserva($id_cliente, $id_servicio, $fecha, $hora, $comentarios = '') {
+    $db = new conexion();
+    $conn = $db->conectar();
 
-        $stmt = $conn->prepare("
-            INSERT INTO reservas (id_cliente, id_servicio, fecha_reserva, hora_reserva, comentarios_cliente)
-            VALUES (?, ?, ?, ?, ?)
-        ");
-        $stmt->bind_param("iisss", $id_cliente, $id_servicio, $fecha, $hora, $comentarios);
+    // 1️⃣ Obtener disponibilidad del servicio
+    $stmt = $conn->prepare("SELECT disponibilidad FROM servicios WHERE id_servicio = ?");
+    $stmt->bind_param("i", $id_servicio);
+    $stmt->execute();
+    $servicio = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
 
-        $resultado = $stmt->execute();
-        $stmt->close();
+    if (!$servicio) {
         $conn->close();
-
-        return $resultado;
+        return ['success' => false, 'mensaje' => 'Servicio no encontrado'];
     }
+
+    // 2️⃣ Validar que la fecha corresponda a un día disponible
+    $dias_disponibles = array_map('trim', explode(',', $servicio['disponibilidad']));
+    $dias_disponibles = array_map('strtolower', $dias_disponibles); // todo a minúsculas
+
+    $nombre_dia = strtolower(date('l', strtotime($fecha))); // 'monday', 'tuesday', etc.
+    $mapa_dias = [
+        'monday' => 'lunes',
+        'tuesday' => 'martes',
+        'wednesday' => 'miércoles',
+        'thursday' => 'jueves',
+        'friday' => 'viernes',
+        'saturday' => 'sábado',
+        'sunday' => 'domingo'
+    ];
+
+    if (!in_array($mapa_dias[$nombre_dia], $dias_disponibles)) {
+        $conn->close();
+        return ['success' => false, 'mensaje' => 'El servicio no está disponible en ese día'];
+    }
+
+    // 3️⃣ Verificar que no exista reserva para ese servicio en la misma fecha y hora
+    $stmt = $conn->prepare("
+        SELECT * FROM reservas
+        WHERE id_servicio = ? AND fecha_reserva = ? AND hora_reserva = ?
+    ");
+    $stmt->bind_param("iss", $id_servicio, $fecha, $hora);
+    $stmt->execute();
+    $existe = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    if ($existe) {
+        $conn->close();
+        return ['success' => false, 'mensaje' => 'Ya existe una reserva para este servicio en esa fecha y hora'];
+    }
+
+    // 4️⃣ Crear la reserva
+    $stmt = $conn->prepare("
+        INSERT INTO reservas (id_cliente, id_servicio, fecha_reserva, hora_reserva, comentarios_cliente)
+        VALUES (?, ?, ?, ?, ?)
+    ");
+    $stmt->bind_param("iisss", $id_cliente, $id_servicio, $fecha, $hora, $comentarios);
+    $resultado = $stmt->execute();
+    $stmt->close();
+    $conn->close();
+
+    if ($resultado) {
+        return ['success' => true, 'mensaje' => 'Reserva realizada correctamente'];
+    } else {
+        return ['success' => false, 'mensaje' => 'Error al crear la reserva'];
+    }
+}
+
 
     // Obtener servicio por id (para notificación)
     public static function obtenerServicioPorId($id_servicio) {

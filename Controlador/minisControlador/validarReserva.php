@@ -1,29 +1,32 @@
 <?php
 session_start();
-require_once __DIR__ . '/../Modelo/conexion.php';
-require_once __DIR__ . '/../Controlador/controladorServicio.php';
+require_once __DIR__ . '/../../Modelo/modeloReservas.php';
+require_once __DIR__ . '/../../Controlador/minisControlador/controladorServicio.php';
 
 $conn = (new conexion())->conectar();
-$controlador = new controladorServicio($conn);
+$controladorServicio = new controladorServicio($conn);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_servicio = $_POST['id_servicio'] ?? null;
-    $usuario = $_SESSION['usuario']['id'] ?? null;
+    $fecha = $_POST['fecha'] ?? null;
+    $hora = $_POST['hora'] ?? null;
+    $comentarios = $_POST['comentarios'] ?? '';
+    $usuario = $_SESSION['user_id'] ?? null;
 
-    if (!$id_servicio || !$usuario) {
-        die("Datos incompletos para reservar.");
+    if (!$id_servicio || !$usuario || !$fecha) {
+        $_SESSION['error'] = 'Datos incompletos para reservar.';
+        header('Location: ../../Vista/VistaReservas/reservas.php');
+        exit;
     }
 
-    // Validar disponibilidad
-    $servicio = $controlador->obtenerServicio($id_servicio);
-    if (!$servicio || strtolower($servicio['disponibilidad']) !== 'disponible') {
-        die("El servicio no está disponible.");
+    $resultado = ModeloReservas::crearReserva($usuario, $id_servicio, $fecha, $hora, $comentarios);
+
+    if ($resultado['success']) {
+        $_SESSION['success'] = $resultado['mensaje'];
+    } else {
+        $_SESSION['error'] = $resultado['mensaje'];
     }
 
-    // Actualizar disponibilidad a "Reservado"
-    $controlador->actualizarDisponibilidad($id_servicio, 'Reservado');
-
-    // Aquí se podría agregar registro de reserva en tabla de reservas
-    echo json_encode(['success' => true, 'mensaje' => 'Reserva realizada correctamente.']);
+    header('Location: ../../Vista/VistaReservas/reservas.php');
+    exit;
 }
-?>

@@ -4,8 +4,13 @@ require_once __DIR__ . '/../../Modelo/modeloRegistrarEmpresa.php';
 class controladorEmpresa {
     private $empresaModelo;
 
-    public function __construct() {
-        $this->empresaModelo = new empresaModelo();
+    // Permitir inyección de dependencias para tests
+    public function __construct($modelo = null) {
+        if ($modelo) {
+            $this->empresaModelo = $modelo;
+        } else {
+            $this->empresaModelo = new empresaModelo();
+        }
     }
 
     // Registrar empresa
@@ -14,7 +19,6 @@ class controladorEmpresa {
             return ['ok' => false, 'msg' => 'El correo ya está registrado.'];
         }
 
-        // Pasa la contraseña sin hashear, el modelo la hashea
         $resultado = $this->empresaModelo->insertarEmpresa($nombre, $email, $zona, $logoNombre, $password, $rut);
 
         if ($resultado) {
