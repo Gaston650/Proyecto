@@ -165,5 +165,28 @@ class modeloServicio {
         }
         return $categorias;
     }
+
+    // Obtener un servicio por su ID
+public function obtenerServicioPorId($id_servicio) {
+    $sql = "SELECT * FROM servicios WHERE id_servicio = ?";
+    $stmt = $this->conn->prepare($sql);
+    if(!$stmt) die("Error en prepare: " . $this->conn->error);
+
+    $stmt->bind_param("i", $id_servicio);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_assoc();
+}
+
+    // Actualizar disponibilidad de un servicio
+    public function actualizarDisponibilidad($id_servicio, $disponibilidad) {
+        $sql = "UPDATE servicios SET disponibilidad = ? WHERE id_servicio = ?";
+        $stmt = $this->conn->prepare($sql);
+        if(!$stmt) die("Error en prepare: " . $this->conn->error);
+
+        $stmt->bind_param("si", $disponibilidad, $id_servicio);
+        return $stmt->execute();
+    }
+
 }
 ?>

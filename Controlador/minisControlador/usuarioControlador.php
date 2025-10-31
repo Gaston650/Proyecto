@@ -4,10 +4,15 @@ require_once __DIR__ . '/../../Modelo/modeloRegistro.php';
 class UsuarioControlador {
     private $usuarioModelo;
 
-    public function __construct($conn) {
-        $this->usuarioModelo = new usuarioModelo($conn);
+    // Permitimos inyectar un modelo para tests
+    public function __construct($conn = null, $modelo = null) {
+        if ($modelo !== null) {
+            $this->usuarioModelo = $modelo;
+        } else {
+            $conn = $conn ?? new conexion();
+            $this->usuarioModelo = new usuarioModelo($conn);
+        }
     }
-
 
     public function guardarUsuario($nombre, $email, $password) {
         $hashed = password_hash($password, PASSWORD_DEFAULT);
@@ -20,7 +25,6 @@ class UsuarioControlador {
         if (!$usuario || !password_verify($password, $usuario['password'] ?? '')) {
             return ['ok' => false, 'msg' => 'Correo o contraseña incorrectos.'];
         }
-
 
         if (session_status() === PHP_SESSION_NONE) session_start();
 

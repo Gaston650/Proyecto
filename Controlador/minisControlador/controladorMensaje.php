@@ -4,12 +4,13 @@ require_once __DIR__ . '/../../Modelo/modeloMensaje.php';
 class mensajeControlador {
     private $modelo;
 
-    public function __construct() {
-        $this->modelo = new modeloMensaje();
+    // Constructor permite inyectar un mock (para tests)
+    public function __construct($modelo = null) {
+        $this->modelo = $modelo ?? new modeloMensaje();
     }
 
     public function manejarConversacion($id_cliente, $tipo_emisor, $id_empresa, $tipo_receptor, $id_reserva) {
-        $resultado = ['mensajes'=>null,'exito'=>null,'error'=>null];
+        $resultado = ['mensajes' => null, 'exito' => null, 'error' => null];
 
         if (!$id_empresa || !$id_reserva) return $resultado;
 
@@ -40,7 +41,6 @@ class mensajeControlador {
         return $this->modelo->insertarMensaje($id_emisor, $tipo_emisor, $id_receptor, $tipo_receptor, $id_reserva, $contenido);
     }
 
-    // Nuevo método público para marcar mensajes leídos
     public function marcarMensajesLeidos($id_empresa, $id_cliente, $id_reserva) {
         return $this->modelo->marcarMensajesLeidos($id_empresa, $id_cliente, $id_reserva);
     }
